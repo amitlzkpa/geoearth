@@ -17,9 +17,12 @@ async function build() {
 
 
 async function startServer() {
+
+  let PORT = process.env.PORT || 8080;
+
 	await connect.server({
     root: './public',
-    port: process.env.PORT || 8080,
+    port: PORT,
     livereload: true
 	});
 }
