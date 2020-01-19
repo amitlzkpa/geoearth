@@ -19,6 +19,7 @@ async function build() {
 async function startServer() {
 	await connect.server({
     root: './public',
+    port: process.env.PORT || 8080,
     livereload: true
 	});
 }
