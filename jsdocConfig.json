@@ -6,7 +6,7 @@
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "opts": {
-    "destination": "./docs",
+    "destination": "./public/docs",
     "template": "templates/default",
     "encoding": "utf8",
     "recurse": true,

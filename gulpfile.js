@@ -10,7 +10,7 @@ async function build() {
 
   await gulp.src(['./**/*.*', '!node_modules/', '!build/', '!docs/' ])
       	// .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('./public/build'));
 
 };
 
@@ -18,7 +18,7 @@ async function build() {
 
 async function startServer() {
 	await connect.server({
-    root: '.',
+    root: './public',
     livereload: true
 	});
 }
@@ -52,6 +52,7 @@ async function dev() {
 async function main() {
 
 	await build();
+  await generateDocs();
 
 };
 
