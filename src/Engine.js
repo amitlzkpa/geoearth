@@ -41,7 +41,7 @@ function Engine(options) {
     @method
     @name Engine#loadModule
     @param {Object} module - Instance of module to be loaded.
-   */
+  */
   loadModule = function(module) {
 
   }

@@ -1,5 +1,15 @@
 {
+  "title": "Engine",
+  "source": {
+    "include": [ "README.md" ],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
   "opts": {
-    "destination": "./docs/api"
+    "destination": "./docs",
+    "template": "templates/default",
+    "encoding": "utf8",
+    "recurse": true,
+    "tutorials": "./tutorials/"
   }
 }

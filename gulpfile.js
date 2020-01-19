@@ -8,7 +8,7 @@ const jsdoc = require('gulp-jsdoc3');
 
 async function build() {
 
-  await gulp.src('src/**/*.*')
+  await gulp.src(['./**/*.*', '!node_modules/', '!build/', '!docs/' ])
       	// .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('build'));
 
