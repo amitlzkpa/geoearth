@@ -1,34 +1,33 @@
 require('dotenv').config();
 const gulp = require('gulp');
 const rename = require('gulp-rename');
-const connect = require('gulp-connect');
 const jsdoc = require('gulp-jsdoc3');
+const exec = require('child_process').exec;
 
+
+
+
+async function serve() {
+
+  let { stdout, stderr } = await exec('node server.js');
+
+  if (stderr) {
+    console.error(`error: ${stderr}`);
+  }
+
+}
 
 
 async function build() {
 
   await gulp.src(['src/**/*.*' ])
-      	// .pipe(rename({suffix: '.min'}))
+        // .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('./public/build'));
 
-};
-
-
-
-async function startServer() {
-
-  let PORT = process.env.PORT || 8080;
-
-	await connect.server({
-    root: './public',
-    port: PORT,
-    livereload: true
-	});
 }
 
 
-async function generateDocs() {
+async function docs() {
 
   var config = require('./jsdocConfig.json');
   gulp.src(['./src/**.js'], {read: false})
@@ -37,32 +36,37 @@ async function generateDocs() {
 }
 
 
-
 async function dev() {
 
-	await startServer();
+	await serve();
 	await build();
-  await generateDocs();
+  await docs();
 
-  gulp.watch('src/**', async function() {
+  gulp.watch([
+    'src/**',
+    'tutorials/**',
+    'README.md',
+    'server.js'
+    ], async function() {
   	await build();
-    await generateDocs();
+    await docs();
   });
 
-};
-
+}
 
 
 async function main() {
 
+  await serve();
 	await build();
-  await generateDocs();
+  await docs();
 
-};
+}
 
 
 
-exports.generateDocs = generateDocs;
+exports.serve = serve;
+exports.docs = docs;
 exports.build = build;
 exports.dev = dev;
 exports.default = main;
