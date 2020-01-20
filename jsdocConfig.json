@@ -1,5 +1,5 @@
 {
-  "title": "Engine",
+  "title": "Geoearth",
   "source": {
     "include": [ "README.md" ],
     "includePattern": ".+\\.js(doc|x)?$",
