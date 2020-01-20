@@ -24,6 +24,9 @@ async function build() {
         // .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('./public/build'));
 
+  await gulp.src(['page/**/*.*' ])
+        .pipe(gulp.dest('./public'));
+
 }
 
 
