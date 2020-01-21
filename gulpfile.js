@@ -47,6 +47,7 @@ async function dev() {
 
   gulp.watch([
     'src/**',
+    'page/**',
     'tutorials/**',
     'README.md',
     'server.js'
