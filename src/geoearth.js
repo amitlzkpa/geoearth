@@ -125,10 +125,10 @@ class GeoEarth {
 
 
 
-    // this.init();
-    // if (this.autoStart) {
-    //   this.animate();
-    // }
+    if (this.autoStart) {
+      this.init();
+      this.animate.bind(this)();
+    }
 
 
   }
@@ -194,13 +194,13 @@ class GeoEarth {
 
     this.container.appendChild(this.renderer.domElement);
 
-    this.container.addEventListener('mousedown', this.onMouseDown, false);
+    this.container.addEventListener('mousedown', this.onMouseDown.bind(this), false);
 
-    this.container.addEventListener('mousewheel', this.onMouseWheel, false);
+    this.container.addEventListener('mousewheel', this.onMouseWheel.bind(this), false);
 
-    document.addEventListener('keydown', this.onDocumentKeyDown, false);
+    document.addEventListener('keydown', this.onDocumentKeyDown.bind(this), false);
 
-    window.addEventListener('resize', this.onWindowResize, false);
+    window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
     this.container.addEventListener('mouseover', function() {
       this.overRenderer = true;
@@ -214,9 +214,9 @@ class GeoEarth {
   onMouseDown(event) {
     event.preventDefault();
 
-    this.container.addEventListener('mousemove', onMouseMove, false);
-    this.container.addEventListener('mouseup', onMouseUp, false);
-    this.container.addEventListener('mouseout', onMouseOut, false);
+    this.container.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+    this.container.addEventListener('mouseup', this.onMouseUp.bind(this), false);
+    this.container.addEventListener('mouseout', this.onMouseOut.bind(this), false);
 
     this.mouseOnDown.x = - event.clientX;
     this.mouseOnDown.y = event.clientY;
@@ -241,16 +241,16 @@ class GeoEarth {
   }
 
   onMouseUp(event) {
-    this.container.removeEventListener('mousemove', onMouseMove, false);
-    this.container.removeEventListener('mouseup', onMouseUp, false);
-    this.container.removeEventListener('mouseout', onMouseOut, false);
+    this.container.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
+    this.container.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
+    this.container.removeEventListener('mouseout', this.onMouseOut.bind(this), false);
     this.container.style.cursor = 'auto';
   }
 
   onMouseOut(event) {
-    this.container.removeEventListener('mousemove', onMouseMove, false);
-    this.container.removeEventListener('mouseup', onMouseUp, false);
-    this.container.removeEventListener('mouseout', onMouseOut, false);
+    this.container.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
+    this.container.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
+    this.container.removeEventListener('mouseout', this.onMouseOut.bind(this), false);
   }
 
   onMouseWheel(event) {
@@ -287,13 +287,11 @@ class GeoEarth {
   }
 
   animate() {
-    console.log("animate", this.frameCount);
-    requestAnimationFrame(this.animate);
+    requestAnimationFrame(this.animate.bind(this));
     this.render();
   }
 
   render() {
-    console.log("render1", this.frameCount);
     this.zoom(this.curZoomSpeed);
 
     this.rotation.x += (this.target.x - this.rotation.x) * 0.1;
@@ -309,7 +307,6 @@ class GeoEarth {
     this.renderer.render(this.scene, this.camera);
 
     this.frameCount++;
-    console.log("render2", this.frameCount);
   }
 
 
