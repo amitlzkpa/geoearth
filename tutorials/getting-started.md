@@ -2,15 +2,15 @@
 
 ## Include
 ```
-<script src="/globe/third-party/three.min.js"></script>
-<script src="/globe/globe.js"></script>
+<script src="/three.min.js"></script>
+<script src="/geoearth.js"></script>
 ```
 
 ## Initialize
 **Full Screen**:
 Javascript:
 ```
-var globe = new DAT.Globe(null, opts);
+var geoearth = new GeoEarth(null, opts);
 ```
 
 **Windowed**:
@@ -23,13 +23,13 @@ HTML:
 Javascript:
 ```
 var container = document.getElementById("container");
-var globe = new DAT.Globe(container, opts);
+var geoearth = new GeoEarth(container, opts);
 ```
 
 ## Load Data
 ```
 var sampleData = await fetch('/data/sample.geojson');
 var geojson = await sampleData.json();
-globe.addFeatureCollection(geojson);
+geoearth.addFeatureCollection(geojson);
 ```
 
