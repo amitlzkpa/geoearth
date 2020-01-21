@@ -1,4 +1,3 @@
-// WIP: trying to make it a class
 
 
 /**

@@ -1,0 +1,15 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "MultiPoint",
+    "coordinates": [
+      [-73.935242, 40.730610],
+      [-0.12574, 51.5085297],
+      [139.6917114, 35.6894989],
+      [2.3487999, 48.8534088]
+    ]
+  },
+  "properties": {
+    "name": "Fallen Cities"
+  }
+}

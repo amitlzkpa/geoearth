@@ -9,11 +9,11 @@ const exec = require('child_process').exec;
 
 async function serve() {
 
-  let { stdout, stderr } = await exec('node server.js');
-
-  if (stderr) {
-    console.error(`error: ${stderr}`);
-  }
+  exec('node server.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
 
 }
 
