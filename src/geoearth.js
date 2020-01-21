@@ -194,7 +194,7 @@ class GeoEarth {
 
     this.container.appendChild(this.renderer.domElement);
 
-    this.container.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+    this.container.addEventListener('mousedown', this.onMouseDown, false);
 
     this.container.addEventListener('mousewheel', this.onMouseWheel.bind(this), false);
 
@@ -211,12 +211,12 @@ class GeoEarth {
     }, false);
   }
 
-  onMouseDown(event) {
+  onMouseDown = function(event) {
     event.preventDefault();
 
-    this.container.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-    this.container.addEventListener('mouseup', this.onMouseUp.bind(this), false);
-    this.container.addEventListener('mouseout', this.onMouseOut.bind(this), false);
+    this.container.addEventListener('mousemove', this.onMouseMove, false);
+    this.container.addEventListener('mouseup', this.onMouseUp, false);
+    this.container.addEventListener('mouseout', this.onMouseOut, false);
 
     this.mouseOnDown.x = - event.clientX;
     this.mouseOnDown.y = event.clientY;
@@ -225,9 +225,9 @@ class GeoEarth {
     this.targetOnDown.y = this.target.y;
 
     this.container.style.cursor = 'move';
-  }
+  }.bind(this)
 
-  onMouseMove(event) {
+  onMouseMove = function(event) {
     this.mouse.x = - event.clientX;
     this.mouse.y = event.clientY;
 
@@ -238,28 +238,28 @@ class GeoEarth {
 
     this.target.y = this.target.y > (Math.PI / 2) ? (Math.PI / 2) : this.target.y;
     this.target.y = this.target.y < - (Math.PI / 2) ? - (Math.PI / 2) : this.target.y;
-  }
+  }.bind(this)
 
-  onMouseUp(event) {
-    this.container.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
-    this.container.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
-    this.container.removeEventListener('mouseout', this.onMouseOut.bind(this), false);
+  onMouseUp = function(event) {
+    this.container.removeEventListener('mousemove', this.onMouseMove, false);
+    this.container.removeEventListener('mouseup', this.onMouseUp, false);
+    this.container.removeEventListener('mouseout', this.onMouseOut, false);
     this.container.style.cursor = 'auto';
-  }
+  }.bind(this)
 
-  onMouseOut(event) {
-    this.container.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
-    this.container.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
-    this.container.removeEventListener('mouseout', this.onMouseOut.bind(this), false);
-  }
+  onMouseOut = function(event) {
+    this.container.removeEventListener('mousemove', this.onMouseMove, false);
+    this.container.removeEventListener('mouseup', this.onMouseUp, false);
+    this.container.removeEventListener('mouseout', this.onMouseOut, false);
+  }.bind(this)
 
-  onMouseWheel(event) {
+  onMouseWheel = function(event) {
     event.preventDefault();
     if (this.overRenderer) {
       this.zoom(event.wheelDeltaY * 0.3);
     }
     return false;
-  }
+  }.bind(this)
 
   onDocumentKeyDown(event) {
     switch (event.keyCode) {
