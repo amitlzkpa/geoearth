@@ -12,7 +12,6 @@ async function serve() {
   exec('node server.js', function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
-    cb(err);
   });
 
 }
