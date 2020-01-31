@@ -80,6 +80,9 @@
         var container = document.getElementById("geo-container");
         var geoearth = new GeoEarth(container, opts);
 
+        var json = await fetch('./data/populated_places.geojson');
+        geoearth.addFeature(await json.json());
+
       }
 
       main();
