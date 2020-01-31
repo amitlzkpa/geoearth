@@ -73,41 +73,58 @@
         var geoearth = new GeoEarth(container, opts);
 
 
-        // San Francisco 
-        geoearth.addPoint( [-122.4194183, 37.774929], {size: 4} );
+        var San_Francisco = [-122.4194183, 37.774929];
+        var Shanghai = [121.45806, 31.22222];
+        var Singapore = [103.851959, 1.290270];
+        var Mumbai = [72.877426, 19.076090];
+        var Bogota = [-74.081749, 4.6097102];
+        var Lagos = [6.4540701, 3.39467];
+        var New_York = [-74.006, 40.714];
+        var London = [-0.12574, 51.50853];
+        var Cairo = [30.033333, 31.233334];
+        var Moscow = [37.618423, 55.751244];
+        var Melbourne = [144.9633179, -37.8139992];
+        var Buenos_Aires = [-58.37723, -34.61315];
 
-        // Shanghai
-        geoearth.addPoint( [121.45806, 31.22222], {size: 4} );
 
-        // Singapore
-        geoearth.addPoint( [103.851959, 1.290270], {size: 4} );
+        geoearth.addPoint( San_Francisco , {size: 4} );
+        geoearth.addPoint( Shanghai , {size: 4} );
+        geoearth.addPoint( Singapore , {size: 4} );
+        geoearth.addPoint( Mumbai , {size: 4} );
+        geoearth.addPoint( Bogota , {size: 4} );
+        geoearth.addPoint( Lagos , {size: 4} );
+        geoearth.addPoint( New_York, {size: 4} );
+        geoearth.addPoint( London, {size: 4} );
+        geoearth.addPoint( Cairo, {size: 4} );
+        geoearth.addPoint( Moscow, {size: 4} );
+        geoearth.addPoint( Melbourne, {size: 4} );
+        geoearth.addPoint( Buenos_Aires, {size: 4} );
 
-        // Mumbai
-        geoearth.addPoint( [72.877426, 19.076090], {size: 4} );
 
-        // Bogota
-        geoearth.addPoint( [-74.081749, 4.6097102], {size: 4} );
+        geoearth.addLineString([New_York, San_Francisco], {color: 0x0000ff});
+        geoearth.addLineString([New_York, Bogota], {color: 0x0000ff});
+        geoearth.addLineString([Bogota, San_Francisco], {color: 0x0000ff});
+        geoearth.addLineString([Bogota, Buenos_Aires], {color: 0x0000ff});
 
-        // Lagos
-        geoearth.addPoint( [6.4540701, 3.39467], {size: 4} );
+        geoearth.addLineString([New_York, London], {color: 0x0000ff});
+        geoearth.addLineString([Lagos, New_York], {color: 0x0000ff});
 
-        // New York
-        geoearth.addPoint( [-74.006, 40.714], {size: 4} );
+        geoearth.addLineString([London, Moscow], {color: 0x0000ff});
+        geoearth.addLineString([Cairo, Moscow], {color: 0x0000ff});
+        geoearth.addLineString([Cairo, Lagos], {color: 0x0000ff});
+        geoearth.addLineString([Cairo, Mumbai], {color: 0x0000ff});
+        geoearth.addLineString([Lagos, Buenos_Aires], {color: 0x0000ff});
 
-        // London
-        geoearth.addPoint( [-0.12574, 51.50853], {size: 4} );
+        geoearth.addLineString([Mumbai, Shanghai], {color: 0x0000ff});
+        geoearth.addLineString([Mumbai, Singapore], {color: 0x0000ff});
+        geoearth.addLineString([Mumbai, Moscow], {color: 0x0000ff});
 
-        // Cairo
-        geoearth.addPoint( [30.033333, 31.233334], {size: 4} );
+        geoearth.addLineString([Shanghai, Moscow], {color: 0x0000ff});
+        geoearth.addLineString([Shanghai, Melbourne], {color: 0x0000ff});
+        geoearth.addLineString([Shanghai, Singapore], {color: 0x0000ff});
+        geoearth.addLineString([Melbourne, Singapore], {color: 0x0000ff});
 
-        // Moscow
-        geoearth.addPoint( [37.618423, 55.751244], {size: 4} );
-
-        // Melbourne
-        geoearth.addPoint( [144.9633179, -37.8139992], {size: 4} );
-
-        // Buenos Aires
-        geoearth.addPoint( [-58.37723, -34.61315], {size: 4} );
+        // geoearth.addLineString([Shanghai, San_Francisco], {color: 0x0000ff});
 
 
 
