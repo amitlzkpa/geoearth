@@ -32,8 +32,11 @@
     </nav>
 
 
+    <br />
+
+
     <div class="container">
-      <div class="columns is-vcentered">
+      <div class="columns">
         <div class="column is-two-thirds">
           <div id="geo-container">
           </div>
@@ -69,8 +72,44 @@
         var container = document.getElementById("geo-container");
         var geoearth = new GeoEarth(container, opts);
 
-        var json = await fetch('./data/populated_places.geojson');
-        geoearth.addFeature(await json.json());
+
+        // San Francisco 
+        geoearth.addPoint( [-122.4194183, 37.774929], {size: 4} );
+
+        // Shanghai
+        geoearth.addPoint( [121.45806, 31.22222], {size: 4} );
+
+        // Singapore
+        geoearth.addPoint( [103.851959, 1.290270], {size: 4} );
+
+        // Mumbai
+        geoearth.addPoint( [72.877426, 19.076090], {size: 4} );
+
+        // Bogota
+        geoearth.addPoint( [-74.081749, 4.6097102], {size: 4} );
+
+        // Lagos
+        geoearth.addPoint( [6.4540701, 3.39467], {size: 4} );
+
+        // New York
+        geoearth.addPoint( [-74.006, 40.714], {size: 4} );
+
+        // London
+        geoearth.addPoint( [-0.12574, 51.50853], {size: 4} );
+
+        // Cairo
+        geoearth.addPoint( [30.033333, 31.233334], {size: 4} );
+
+        // Moscow
+        geoearth.addPoint( [37.618423, 55.751244], {size: 4} );
+
+        // Melbourne
+        geoearth.addPoint( [144.9633179, -37.8139992], {size: 4} );
+
+        // Buenos Aires
+        geoearth.addPoint( [-58.37723, -34.61315], {size: 4} );
+
+
 
       }
 
