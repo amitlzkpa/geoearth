@@ -42,12 +42,57 @@
           </div>
         </div>
         <div class="column">
-          <h1 class="title is-2">
+          <p class="title is-2">
             GeoEarth
-          </h1>
-          <h2 class="subtitle is-4">
+          </p>
+          <p class="subtitle is-4">
             Javascript library to visualize GeoJson on a globe
-          </h2>
+          </p>
+
+          <hr />
+          <hr />
+
+          <p class="title is-4">
+            Interactive
+          </p>
+          <p class="">
+            Play with your 3D geographic data.
+          </p>
+          <hr />
+          <p class="title is-4">
+            Web Based
+          </p>
+          <p class="">
+            Use Javascript to visualize a globe in the browser.
+          </p>
+          <hr />
+          <p class="title is-4">
+            Open Source
+          </p>
+          <p class="">
+            Hack it, break it, improve it.
+          </p>
+
+          <hr />
+          <hr />
+
+          <p class="title is-4">
+            Get Started
+          </p>
+          <pre>
+var opts = {
+  colorFn: 0xff0000,
+  textureImage: './textures/earth-black.jpg',
+  earthRadius: 160,
+  // disableAtmosphere: true
+  // autoStart: false
+};
+var container = document.getElementById("geo-container");
+var geoearth = new GeoEarth(container, opts);
+geoearth.addPoint( [72.877426, 19.076090] , {size: 4} );
+          </pre>
+
+
         </div>
       </div>
     </div>
@@ -114,6 +159,7 @@
         geoearth.addLineString([Cairo, Lagos], {color: 0x0000ff});
         geoearth.addLineString([Cairo, Mumbai], {color: 0x0000ff});
         geoearth.addLineString([Lagos, Buenos_Aires], {color: 0x0000ff});
+        geoearth.addLineString([Lagos, Singapore], {color: 0x0000ff});
 
         geoearth.addLineString([Mumbai, Shanghai], {color: 0x0000ff});
         geoearth.addLineString([Mumbai, Singapore], {color: 0x0000ff});
