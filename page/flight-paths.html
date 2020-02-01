@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth Sample - Cities</title>
+  </head>
+  <body>
+    <div id="geo-container"></div>
+    <script src="/js/three.min.js"></script>
+    <script src="/build/geoearth.js"></script>
+
+
+    <script type="text/javascript">
+
+      async function main() {
+
+        var opts = {
+          colorFn: 0xff0000,
+          textureImage: './textures/earth-black.jpg',
+          earthRadius: 160,
+          // disableAtmosphere: true
+          // autoStart: false
+        };
+        var container = document.getElementById("geo-container");
+        var geoearth = new GeoEarth(container, opts);
+
+
+        var San_Francisco = [-122.4194183, 37.774929];
+        var Shanghai = [121.45806, 31.22222];
+        var Singapore = [103.851959, 1.290270];
+        var Mumbai = [72.877426, 19.076090];
+        var Bogota = [-74.081749, 4.6097102];
+        var Lagos = [6.4540701, 3.39467];
+        var New_York = [-74.006, 40.714];
+        var London = [-0.12574, 51.50853];
+        var Cairo = [30.033333, 31.233334];
+        var Moscow = [37.618423, 55.751244];
+        var Melbourne = [144.9633179, -37.8139992];
+        var Buenos_Aires = [-58.37723, -34.61315];
+
+
+        geoearth.addLineString([New_York, San_Francisco], {color: 0x0000ff});
+        geoearth.addLineString([New_York, Bogota], {color: 0x0000ff});
+        geoearth.addLineString([Bogota, San_Francisco], {color: 0x0000ff});
+        geoearth.addLineString([Bogota, Buenos_Aires], {color: 0x0000ff});
+
+        geoearth.addLineString([New_York, London], {color: 0x0000ff});
+        geoearth.addLineString([Lagos, New_York], {color: 0x0000ff});
+
+        geoearth.addLineString([London, Moscow], {color: 0x0000ff});
+        geoearth.addLineString([Cairo, Moscow], {color: 0x0000ff});
+        geoearth.addLineString([Cairo, Lagos], {color: 0x0000ff});
+        geoearth.addLineString([Cairo, Mumbai], {color: 0x0000ff});
+        geoearth.addLineString([Lagos, Buenos_Aires], {color: 0x0000ff});
+        geoearth.addLineString([Lagos, Singapore], {color: 0x0000ff});
+
+        geoearth.addLineString([Mumbai, Shanghai], {color: 0x0000ff});
+        geoearth.addLineString([Mumbai, Singapore], {color: 0x0000ff});
+        geoearth.addLineString([Mumbai, Moscow], {color: 0x0000ff});
+
+        geoearth.addLineString([Shanghai, Moscow], {color: 0x0000ff});
+        geoearth.addLineString([Shanghai, Melbourne], {color: 0x0000ff});
+        geoearth.addLineString([Shanghai, Singapore], {color: 0x0000ff});
+        geoearth.addLineString([Melbourne, Singapore], {color: 0x0000ff});
+
+
+      }
+
+      main();
+
+    </script>
+
+  </body>
+</html>
