@@ -24,7 +24,9 @@
         var container = document.getElementById("geo-container");
         var geoearth = new GeoEarth(container, opts);
 
-        
+
+        var json = await fetch('./data/continents_2.geojson');
+        geoearth.addGeoJson(await json.json());
 
 
       }
