@@ -23,6 +23,9 @@ async function build() {
         // .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('./public/build'));
 
+  await gulp.src(['assets/**/*.*' ])
+        .pipe(gulp.dest('./public/assets'));
+
   await gulp.src(['page/**/*.*' ])
         .pipe(gulp.dest('./public'));
 
@@ -46,6 +49,7 @@ async function dev() {
 
   gulp.watch([
     'src/**',
+    'assets/**',
     'page/**',
     'tutorials/**',
     'README.md',
