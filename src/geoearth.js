@@ -129,6 +129,13 @@ class GeoEarth {
   constructor(container, opts) {
 
 
+    if (!container) {
+      container = document.createElement("div");
+      container.style.width = window.innerWidth + "px";
+      container.style.height = window.innerHeight + "px";
+      document.body.appendChild(container);
+    }
+
 
     this.instance = this;
     this.container = container;
