@@ -619,6 +619,26 @@ class GeoEarth {
     // var d = GeoEarth.getHaversineDistance(inPts[0], inPts[1]);
     // console.log(d);
 
+    var divs = 100;
+    var corr = 0;
+    var mul = 1;
+    var isCrossingDL = false;
+    if (Math.sign(inPts[0][0]) !== Math.sign(inPts[1][0])
+    && Math.abs(inPts[0][0]) > 90 && Math.abs(inPts[1][0]) > 90) {
+      isCrossingDL = true;
+      if(inPts[1][0] > inPts[0][0]) {
+        var q = inPts[0];
+        inPts[0] = inPts[1];
+        inPts[1] = q;
+      }
+    }
+    if (isCrossingDL) {
+      corr = Math.abs(180 - inPts[0][0]) + 180;
+      mul = -1;
+      inPts[0][0] = 0;
+      inPts[1][0] += corr;
+    }
+
     var pts = [];
 
     var idx = 1;
@@ -630,7 +650,7 @@ class GeoEarth {
       var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
       for(var j = 0; j<divs; j++) {
-        pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
+        pts.push([firstPt[0] + (j * deltaLng) + (corr * mul), firstPt[1] + (j * deltaLat)]);
       }
       idx++;
     }
