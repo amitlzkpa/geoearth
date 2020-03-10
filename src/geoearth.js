@@ -593,11 +593,11 @@ class GeoEarth {
       var secondPt = inPts[idx];
       var firstPt = inPts[idx-1];
     
-      var deltaLat = (secondPt[0] - firstPt[0]) / divs;
-      var deltaLng = (secondPt[1] - firstPt[1]) / divs;
+      var deltaLng = (secondPt[0] - firstPt[0]) / divs;
+      var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
       for(var j = 0; j<divs; j++) {
-        pts.push([firstPt[0] + (j * deltaLat), firstPt[1] + (j * deltaLng)]);
+        pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
       }
       idx++;
     }
@@ -708,11 +708,11 @@ class GeoEarth {
         var secondPt = inPts[idx];
         var firstPt = inPts[idx-1];
       
-        var deltaLat = (secondPt[0] - firstPt[0]) / divs;
-        var deltaLng = (secondPt[1] - firstPt[1]) / divs;
+        var deltaLng = (secondPt[0] - firstPt[0]) / divs;
+        var deltaLat = (secondPt[1] - firstPt[1]) / divs;
   
         for(var j = 0; j<divs; j++) {
-          pts.push([firstPt[0] + (j * deltaLat), firstPt[1] + (j * deltaLng)]);
+          pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
         }
         idx++;
       }
@@ -803,11 +803,11 @@ class GeoEarth {
         var secondPt = inPts[idx];
         var firstPt = inPts[idx-1];
       
-        var deltaLat = (secondPt[0] - firstPt[0]) / divs;
-        var deltaLng = (secondPt[1] - firstPt[1]) / divs;
+        var deltaLng = (secondPt[0] - firstPt[0]) / divs;
+        var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
         for(var j = 0; j<divs; j++) {
-          pts.push([firstPt[0] + (j * deltaLat), firstPt[1] + (j * deltaLng)]);
+          pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
         }
         idx++;
       }
@@ -946,11 +946,11 @@ class GeoEarth {
           var secondPt = inPts[idx];
           var firstPt = inPts[idx-1];
         
-          var deltaLat = (secondPt[0] - firstPt[0]) / divs;
-          var deltaLng = (secondPt[1] - firstPt[1]) / divs;
+          var deltaLng = (secondPt[0] - firstPt[0]) / divs;
+          var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
           for(var j = 0; j<divs; j++) {
-            pts.push([firstPt[0] + (j * deltaLat), firstPt[1] + (j * deltaLng)]);
+            pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
           }
           idx++;
         }
