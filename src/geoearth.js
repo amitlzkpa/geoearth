@@ -374,10 +374,38 @@ class GeoEarth {
     return (180 - lng) * Math.PI / 180;
   }
 
+  /**
+   * Method to calculate haversine distance with the given radius.
+   *
+   * @param {Array} p1 - Array representing first point in decimal coordinates.
+   * @param {Array} p2 - Array representing second point in decimal coordinates.
+   * @param {float} radius - Radius to use for distance calculation (default is Earth's radius in m).
+   * @return {float} haversine distance with the given radius.
+   *
+   * @example
+   *
+   *     getHaversineDistance([-122.4194183, 37.774929], [144.9633179, -37.8139992], 200);
+   *
+   */
+  static getHaversineDistance(p1, p2, radius=6371e3) {
 
+    // ref: https://www.movable-type.co.uk/scripts/latlong.html
+    // WIP
+    // needs verification; especially coordinate conversions
+    var φ1 = GeoEarth.latToSphericalCoords(p1[1]);
+    var φ2 = GeoEarth.latToSphericalCoords(p2[1]);
+    var Δφ = GeoEarth.latToSphericalCoords(p2[1] - p1[1]);
+    var Δλ = GeoEarth.lngToSphericalCoords(p2[0] - p1[0]);
 
+    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
+    var d = radius * c;
 
+    return d;
+  }
 
 
 
