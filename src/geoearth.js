@@ -154,12 +154,9 @@ class GeoEarth {
 
   init() {
 
-    this.container.style.color = '#fff';
-    this.container.style.font = '13px/20px Arial, sans-serif';
-
     var shader, uniforms, material;
-    this.w = this.container.offsetWidth || window.innerWidth;
-    this.h = this.container.offsetHeight || window.innerHeight;
+    this.w = this.container.offsetWidth;
+    this.h = this.container.offsetHeight;
 
     this.camera = new THREE.PerspectiveCamera(30, this.w / this.h, 1, 10000);
     this.camera.position.z = this.distance;
