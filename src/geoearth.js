@@ -1,5 +1,3 @@
-
-
 /**
  *
  * Constructor used to create an instance of the geoearth.
@@ -27,21 +25,24 @@ class GeoEarth {
   autoStart;
   earthRadius;
   disableAtmosphere;
-  
+
   textureImage;
 
   Shaders = {
-    'earth' : {
+    'earth': {
       uniforms: {
-        'texture': { type: 't', value: null }
+        'texture': {
+          type: 't',
+          value: null
+        }
       },
       vertexShader: [
         'varying vec3 vNormal;',
         'varying vec2 vUv;',
         'void main() {',
-          'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-          'vNormal = normalize( normalMatrix * normal );',
-          'vUv = uv;',
+        'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+        'vNormal = normalize( normalMatrix * normal );',
+        'vUv = uv;',
         '}'
       ].join('\n'),
       fragmentShader: [
@@ -49,27 +50,27 @@ class GeoEarth {
         'varying vec3 vNormal;',
         'varying vec2 vUv;',
         'void main() {',
-          'vec3 diffuse = texture2D( texture, vUv ).xyz;',
-          'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
-          'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
-          'gl_FragColor = vec4( diffuse + atmosphere, 1.0 );',
+        'vec3 diffuse = texture2D( texture, vUv ).xyz;',
+        'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
+        'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
+        'gl_FragColor = vec4( diffuse + atmosphere, 1.0 );',
         '}'
       ].join('\n')
     },
-    'atmosphere' : {
+    'atmosphere': {
       uniforms: {},
       vertexShader: [
         'varying vec3 vNormal;',
         'void main() {',
-          'vNormal = normalize( normalMatrix * normal );',
-          'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+        'vNormal = normalize( normalMatrix * normal );',
+        'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
         '}'
       ].join('\n'),
       fragmentShader: [
         'varying vec3 vNormal;',
         'void main() {',
-          'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 12.0 );',
-          'gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;',
+        'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 12.0 );',
+        'gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;',
         '}'
       ].join('\n')
     }
@@ -88,11 +89,26 @@ class GeoEarth {
 
   curZoomSpeed = 0;
 
-  mouse = { x: 0, y: 0 };
-  mouseOnDown = { x: 0, y: 0 };
-  rotation = { x: 0, y: 0 };
-  target = { x: Math.PI*3/2, y: Math.PI / 6.0 };
-  targetOnDown = { x: 0, y: 0 };
+  mouse = {
+    x: 0,
+    y: 0
+  };
+  mouseOnDown = {
+    x: 0,
+    y: 0
+  };
+  rotation = {
+    x: 0,
+    y: 0
+  };
+  target = {
+    x: Math.PI * 3 / 2,
+    y: Math.PI / 6.0
+  };
+  targetOnDown = {
+    x: 0,
+    y: 0
+  };
 
   distance = 100000;
   distanceTarget = 100000;
@@ -120,7 +136,7 @@ class GeoEarth {
     this.autoStart = typeof opts.autoStart === "undefined" || opts.autoStart === true;
     this.earthRadius = opts.earthRadius || 200;
     this.disableAtmosphere = opts.disableAtmosphere || false;
-    
+
     this.textureImage = opts.textureImage || '';
 
 
@@ -159,11 +175,11 @@ class GeoEarth {
 
     material = new THREE.ShaderMaterial({
 
-          uniforms: uniforms,
-          vertexShader: shader.vertexShader,
-          fragmentShader: shader.fragmentShader
+      uniforms: uniforms,
+      vertexShader: shader.vertexShader,
+      fragmentShader: shader.fragmentShader
 
-        });
+    });
 
     this.earthMesh = new THREE.Mesh(geometry, material);
     this.earthMesh.rotation.y = Math.PI;
@@ -174,22 +190,24 @@ class GeoEarth {
 
     material = new THREE.ShaderMaterial({
 
-          uniforms: uniforms,
-          vertexShader: shader.vertexShader,
-          fragmentShader: shader.fragmentShader,
-          side: THREE.BackSide,
-          blending: THREE.AdditiveBlending,
-          transparent: true
+      uniforms: uniforms,
+      vertexShader: shader.vertexShader,
+      fragmentShader: shader.fragmentShader,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+      transparent: true
 
-        });
+    });
 
     if (!this.disableAtmosphere) {
       this.atmosphereMesh = new THREE.Mesh(geometry, material);
-      this.atmosphereMesh.scale.set( 1.1, 1.1, 1.1 );
+      this.atmosphereMesh.scale.set(1.1, 1.1, 1.1);
       this.scene.add(this.atmosphereMesh);
     }
 
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
     this.renderer.setSize(this.w, this.h);
 
     this.container.appendChild(this.renderer.domElement);
@@ -218,7 +236,7 @@ class GeoEarth {
     this.container.addEventListener('mouseup', this.onMouseUp, false);
     this.container.addEventListener('mouseout', this.onMouseOut, false);
 
-    this.mouseOnDown.x = - event.clientX;
+    this.mouseOnDown.x = -event.clientX;
     this.mouseOnDown.y = event.clientY;
 
     this.targetOnDown.x = this.target.x;
@@ -228,16 +246,16 @@ class GeoEarth {
   }.bind(this)
 
   onMouseMove = function(event) {
-    this.mouse.x = - event.clientX;
+    this.mouse.x = -event.clientX;
     this.mouse.y = event.clientY;
 
-    var zoomDamp = this.distance/1000;
+    var zoomDamp = this.distance / 1000;
 
     this.target.x = this.targetOnDown.x + (this.mouse.x - this.mouseOnDown.x) * 0.005 * zoomDamp;
     this.target.y = this.targetOnDown.y + (this.mouse.y - this.mouseOnDown.y) * 0.005 * zoomDamp;
 
     this.target.y = this.target.y > (Math.PI / 2) ? (Math.PI / 2) : this.target.y;
-    this.target.y = this.target.y < - (Math.PI / 2) ? - (Math.PI / 2) : this.target.y;
+    this.target.y = this.target.y < -(Math.PI / 2) ? -(Math.PI / 2) : this.target.y;
   }.bind(this)
 
   onMouseUp = function(event) {
@@ -274,10 +292,10 @@ class GeoEarth {
     }
   }
 
-  onWindowResize( event ) {
+  onWindowResize(event) {
     this.camera.aspect = this.container.offsetWidth / this.container.offsetHeight;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize( this.container.offsetWidth, this.container.offsetHeight );
+    this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
   }
 
   zoom(delta) {
@@ -312,12 +330,6 @@ class GeoEarth {
 
 
 
-
-
-
-
-
-
   // ----------------------------------------------------------------------------
   /*
                 _     _ _                            
@@ -330,7 +342,7 @@ class GeoEarth {
   */
 
 
-  
+
   // ----------------------------------------------------------------------------
   /*
 
@@ -387,7 +399,7 @@ class GeoEarth {
    *     getHaversineDistance([-122.4194183, 37.774929], [144.9633179, -37.8139992], 200);
    *
    */
-  static getHaversineDistance(p1, p2, radius=6371e3) {
+  static getHaversineDistance(p1, p2, radius = 6371e3) {
 
     // ref: https://www.movable-type.co.uk/scripts/latlong.html
     // WIP
@@ -397,10 +409,10 @@ class GeoEarth {
     var Δφ = GeoEarth.latToSphericalCoords(p2[1] - p1[1]);
     var Δλ = GeoEarth.lngToSphericalCoords(p2[0] - p1[0]);
 
-    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ/2) * Math.sin(Δλ/2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) *
+      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     var d = radius * c;
 
@@ -409,7 +421,7 @@ class GeoEarth {
 
 
 
-  
+
   // ----------------------------------------------------------------------------
   /*
                    _                 
@@ -420,9 +432,6 @@ class GeoEarth {
   |___/         |__/                 
 
   */
-
-
-
 
 
 
@@ -477,16 +486,18 @@ class GeoEarth {
 
     var sz = opts.size || 2;
     var color = opts.color || 0xffff00;
-    var geometry = new THREE.SphereGeometry( sz, 8, 8 );
-    var material = new THREE.MeshBasicMaterial( {color: color} );
-    var point = new THREE.Mesh( geometry, material );
+    var geometry = new THREE.SphereGeometry(sz, 8, 8);
+    var material = new THREE.MeshBasicMaterial({
+      color: color
+    });
+    var point = new THREE.Mesh(geometry, material);
 
     point.position.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
     point.position.y = this.earthRadius * Math.cos(phi);
     point.position.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
 
     var addedObj = this.addToActiveGeoJsons(point);
-    
+
     return addedObj;
   }
 
@@ -539,7 +550,7 @@ class GeoEarth {
 
     var points = new THREE.Object3D();
 
-    for(var ptIdx = 0; ptIdx < coords.length; ptIdx++) {
+    for (var ptIdx = 0; ptIdx < coords.length; ptIdx++) {
       var lng = coords[ptIdx][0];
       var lat = coords[ptIdx][1];
 
@@ -548,9 +559,11 @@ class GeoEarth {
 
       var sz = opts.size || 2;
       var color = opts.color || 0xffff00;
-      var geometry = new THREE.SphereGeometry( sz, 8, 8 );
-      var material = new THREE.MeshBasicMaterial( {color: color} );
-      var point = new THREE.Mesh( geometry, material );
+      var geometry = new THREE.SphereGeometry(sz, 8, 8);
+      var material = new THREE.MeshBasicMaterial({
+        color: color
+      });
+      var point = new THREE.Mesh(geometry, material);
 
       point.position.x = 203 * Math.sin(phi) * Math.cos(theta);
       point.position.y = 203 * Math.cos(phi);
@@ -560,7 +573,7 @@ class GeoEarth {
     }
 
     var mesh = this.addToActiveGeoJsons(points);
-    
+
     return mesh;
   }
 
@@ -623,10 +636,10 @@ class GeoEarth {
     var corr = 0;
     var mul = 1;
     var isCrossingDL = false;
-    if (Math.sign(inPts[0][0]) !== Math.sign(inPts[1][0])
-    && Math.abs(inPts[0][0]) > 90 && Math.abs(inPts[1][0]) > 90) {
+    if (Math.sign(inPts[0][0]) !== Math.sign(inPts[1][0]) &&
+      Math.abs(inPts[0][0]) > 90 && Math.abs(inPts[1][0]) > 90) {
       isCrossingDL = true;
-      if(inPts[1][0] > inPts[0][0]) {
+      if (inPts[1][0] > inPts[0][0]) {
         var q = inPts[0];
         inPts[0] = inPts[1];
         inPts[1] = q;
@@ -642,22 +655,24 @@ class GeoEarth {
     var pts = [];
 
     var idx = 1;
-    while(idx < inPts.length) {
+    while (idx < inPts.length) {
       var secondPt = inPts[idx];
-      var firstPt = inPts[idx-1];
-    
+      var firstPt = inPts[idx - 1];
+
       var deltaLng = (secondPt[0] - firstPt[0]) / divs;
       var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
-      for(var j = 0; j<divs; j++) {
+      for (var j = 0; j < divs; j++) {
         pts.push([firstPt[0] + (j * deltaLng) + (corr * mul), firstPt[1] + (j * deltaLat)]);
       }
       idx++;
     }
 
     var col = opts.color || 0xffffff
-    var material = new THREE.LineBasicMaterial({ color: col });
-    var c=0;
+    var material = new THREE.LineBasicMaterial({
+      color: col
+    });
+    var c = 0;
     var geometry = new THREE.Geometry();
     do {
       var lng = pts[c][0];
@@ -668,14 +683,14 @@ class GeoEarth {
       vt.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
       vt.y = this.earthRadius * Math.cos(phi);
       vt.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
-      geometry.vertices.push( vt );
+      geometry.vertices.push(vt);
       c++;
-    } while(c < pts.length)
+    } while (c < pts.length)
 
-    var line = new THREE.Line( geometry, material );
+    var line = new THREE.Line(geometry, material);
 
     var addedObj = this.addToActiveGeoJsons(line);
-    
+
     return addedObj;
   }
 
@@ -747,8 +762,7 @@ class GeoEarth {
 
     var lines = new THREE.Object3D();
 
-    for(let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++)
-    {
+    for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
 
       var inPts = inLns[inLnsIdx];
       if (inPts.length < 2) throw ('Need at least 2 points for a line');
@@ -759,22 +773,24 @@ class GeoEarth {
       var pts = [];
 
       var idx = 1;
-      while(idx < inPts.length) {
+      while (idx < inPts.length) {
         var secondPt = inPts[idx];
-        var firstPt = inPts[idx-1];
-      
+        var firstPt = inPts[idx - 1];
+
         var deltaLng = (secondPt[0] - firstPt[0]) / divs;
         var deltaLat = (secondPt[1] - firstPt[1]) / divs;
-  
-        for(var j = 0; j<divs; j++) {
+
+        for (var j = 0; j < divs; j++) {
           pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
         }
         idx++;
       }
 
       var col = opts.color || 0xffffff
-      var material = new THREE.LineBasicMaterial({ color: col });
-      var c=0;
+      var material = new THREE.LineBasicMaterial({
+        color: col
+      });
+      var c = 0;
       var geometry = new THREE.Geometry();
       do {
         var lng = pts[c][0];
@@ -785,16 +801,16 @@ class GeoEarth {
         vt.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
         vt.y = this.earthRadius * Math.cos(phi);
         vt.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
-        geometry.vertices.push( vt );
+        geometry.vertices.push(vt);
         c++;
-      } while(c < pts.length)
+      } while (c < pts.length)
 
-      var line = new THREE.Line( geometry, material );
+      var line = new THREE.Line(geometry, material);
       lines.add(line);
     }
 
     var addedObj = this.addToActiveGeoJsons(lines);
-    
+
     return addedObj;
   }
 
@@ -842,10 +858,12 @@ class GeoEarth {
     var polygon = new THREE.Object3D();
     var shape = new THREE.Shape();
     var col = opts.color || 0xffffff
-    var material = new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide });
+    var material = new THREE.MeshBasicMaterial({
+      color: col,
+      side: THREE.DoubleSide
+    });
 
-    for(let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++)
-    {
+    for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
 
       var inPts = inLns[inLnsIdx];
       if (inPts.length < 3) throw ('Need at least 3 points for a ring in a polyline');
@@ -856,14 +874,14 @@ class GeoEarth {
       var pts = [];
 
       var idx = 1;
-      while(idx < inPts.length) {
+      while (idx < inPts.length) {
         var secondPt = inPts[idx];
-        var firstPt = inPts[idx-1];
-      
+        var firstPt = inPts[idx - 1];
+
         var deltaLng = (secondPt[0] - firstPt[0]) / divs;
         var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
-        for(var j = 0; j<divs; j++) {
+        for (var j = 0; j < divs; j++) {
           pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
         }
         idx++;
@@ -875,16 +893,16 @@ class GeoEarth {
         // move shape cursor to first point
         var lng = pts[0][0];
         var lat = pts[0][1];
-        shape.moveTo( lng, lat );
+        shape.moveTo(lng, lat);
 
         // connect with lines to all successive pts
-        var c=1;
+        var c = 1;
         do {
           var lng = pts[c][0];
           var lat = pts[c][1];
-          shape.lineTo( lng, lat );
+          shape.lineTo(lng, lat);
           c++;
-        } while(c < pts.length)
+        } while (c < pts.length)
 
       }
       // if not first ring add it as a hole
@@ -894,16 +912,16 @@ class GeoEarth {
         // move shape cursor to first point
         var lng = pts[0][0];
         var lat = pts[0][1];
-        path.moveTo( lng, lat );
+        path.moveTo(lng, lat);
 
         // connect with lines to all successive pts
-        var c=1;
+        var c = 1;
         do {
           var lng = pts[c][0];
           var lat = pts[c][1];
-          path.lineTo( lng, lat );
+          path.lineTo(lng, lat);
           c++;
-        } while(c < pts.length)
+        } while (c < pts.length)
 
         shape.holes.push(path);
 
@@ -912,22 +930,22 @@ class GeoEarth {
     }
 
     // convert flat shape to polygon surface mapped to sphere
-    var geometry = new THREE.ShapeBufferGeometry( shape );
-    for(var i=0; i<geometry.attributes.position.array.length; i+=3) {
+    var geometry = new THREE.ShapeBufferGeometry(shape);
+    for (var i = 0; i < geometry.attributes.position.array.length; i += 3) {
       var phi = GeoEarth.latToSphericalCoords(geometry.attributes.position.array[i]);
-      var theta = GeoEarth.lngToSphericalCoords(geometry.attributes.position.array[i+1]);
-      geometry.attributes.position.array[i]    = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-      geometry.attributes.position.array[i+1]  = this.earthRadius * Math.cos(phi);
-      geometry.attributes.position.array[i+2]  = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+      var theta = GeoEarth.lngToSphericalCoords(geometry.attributes.position.array[i + 1]);
+      geometry.attributes.position.array[i] = this.earthRadius * Math.sin(phi) * Math.cos(theta);
+      geometry.attributes.position.array[i + 1] = this.earthRadius * Math.cos(phi);
+      geometry.attributes.position.array[i + 2] = this.earthRadius * Math.sin(phi) * Math.sin(theta);
     }
     geometry.computeVertexNormals();
     geometry.attributes.position.needsUpdate = true;
-    var mesh = new THREE.Mesh( geometry, material );
+    var mesh = new THREE.Mesh(geometry, material);
 
     polygon.add(mesh);
 
     var addedObj = this.addToActiveGeoJsons(polygon);
-    
+
     return addedObj;
   }
 
@@ -981,16 +999,17 @@ class GeoEarth {
 
     var polygons = new THREE.Object3D();
 
-    for(let inPolyIdx = 0; inPolyIdx < inLns.length; inPolyIdx++)
-    {
+    for (let inPolyIdx = 0; inPolyIdx < inLns.length; inPolyIdx++) {
 
       var polygon = new THREE.Object3D();
       var shape = new THREE.Shape();
       var col = opts.color || 0xffffff
-      var material = new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide });
+      var material = new THREE.MeshBasicMaterial({
+        color: col,
+        side: THREE.DoubleSide
+      });
 
-      for(let inLnsIdx = 0; inLnsIdx < inLns[inPolyIdx].length; inLnsIdx++)
-      {
+      for (let inLnsIdx = 0; inLnsIdx < inLns[inPolyIdx].length; inLnsIdx++) {
 
         var inPts = inLns[inPolyIdx][inLnsIdx];
         if (inPts.length < 3) throw ('Need at least 3 points for a ring in a polyline');
@@ -1001,14 +1020,14 @@ class GeoEarth {
         var pts = [];
 
         var idx = 1;
-        while(idx < inPts.length) {
+        while (idx < inPts.length) {
           var secondPt = inPts[idx];
-          var firstPt = inPts[idx-1];
-        
+          var firstPt = inPts[idx - 1];
+
           var deltaLng = (secondPt[0] - firstPt[0]) / divs;
           var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
-          for(var j = 0; j<divs; j++) {
+          for (var j = 0; j < divs; j++) {
             pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
           }
           idx++;
@@ -1020,16 +1039,16 @@ class GeoEarth {
           // move shape cursor to first point
           var lng = pts[0][0];
           var lat = pts[0][1];
-          shape.moveTo( lng, lat );
+          shape.moveTo(lng, lat);
 
           // connect with lines to all successive pts
-          var c=1;
+          var c = 1;
           do {
             var lng = pts[c][0];
             var lat = pts[c][1];
-            shape.lineTo( lng, lat );
+            shape.lineTo(lng, lat);
             c++;
-          } while(c < pts.length)
+          } while (c < pts.length)
 
         }
         // if not first ring add it as a hole
@@ -1039,16 +1058,16 @@ class GeoEarth {
           // move shape cursor to first point
           var lng = pts[0][0];
           var lat = pts[0][1];
-          path.moveTo( lng, lat );
+          path.moveTo(lng, lat);
 
           // connect with lines to all successive pts
-          var c=1;
+          var c = 1;
           do {
             var lng = pts[c][0];
             var lat = pts[c][1];
-            path.lineTo( lng, lat );
+            path.lineTo(lng, lat);
             c++;
-          } while(c < pts.length)
+          } while (c < pts.length)
 
           shape.holes.push(path);
 
@@ -1057,17 +1076,17 @@ class GeoEarth {
       }
 
       // convert flat shape to polygon surface mapped to sphere
-      var geometry = new THREE.ShapeBufferGeometry( shape );
-      for(var i=0; i<geometry.attributes.position.array.length; i+=3) {
+      var geometry = new THREE.ShapeBufferGeometry(shape);
+      for (var i = 0; i < geometry.attributes.position.array.length; i += 3) {
         var phi = GeoEarth.latToSphericalCoords(geometry.attributes.position.array[i]);
-        var theta = GeoEarth.lngToSphericalCoords(geometry.attributes.position.array[i+1]);
-        geometry.attributes.position.array[i]    = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-        geometry.attributes.position.array[i+1]  = this.earthRadius * Math.cos(phi);
-        geometry.attributes.position.array[i+2]  = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+        var theta = GeoEarth.lngToSphericalCoords(geometry.attributes.position.array[i + 1]);
+        geometry.attributes.position.array[i] = this.earthRadius * Math.sin(phi) * Math.cos(theta);
+        geometry.attributes.position.array[i + 1] = this.earthRadius * Math.cos(phi);
+        geometry.attributes.position.array[i + 2] = this.earthRadius * Math.sin(phi) * Math.sin(theta);
       }
       geometry.computeVertexNormals();
       geometry.attributes.position.needsUpdate = true;
-      var mesh = new THREE.Mesh( geometry, material );
+      var mesh = new THREE.Mesh(geometry, material);
 
       polygon.add(mesh);
 
@@ -1076,7 +1095,7 @@ class GeoEarth {
     }
 
     var addedObj = this.addToActiveGeoJsons(polygons);
-    
+
     return addedObj;
   }
 
@@ -1103,7 +1122,7 @@ class GeoEarth {
    */
   addGeoJson(geoJson) {
 
-    switch(geoJson.type) {
+    switch (geoJson.type) {
       case "Feature": {
         var feat = this.addFeature(geoJson);
         this.scene.add(feat);
@@ -1147,27 +1166,39 @@ class GeoEarth {
     var ret = null;
     switch (ftType) {
       case 'Point': {
-        ret = this.addPoint(node, { color: 0xff0000 });
+        ret = this.addPoint(node, {
+          color: 0xff0000
+        });
         break;
       }
       case 'MultiPoint': {
-        ret = this.addMultiPoint(node, { color: 0xababab });
+        ret = this.addMultiPoint(node, {
+          color: 0xababab
+        });
         break;
       }
       case 'LineString': {
-        ret = this.addLineString(node, { color: 0xff00f0 });
+        ret = this.addLineString(node, {
+          color: 0xff00f0
+        });
         break;
       }
       case 'MultiLineString': {
-        ret = this.addMultiLineString(node, { color: 0x0000ff });
+        ret = this.addMultiLineString(node, {
+          color: 0x0000ff
+        });
         break;
       }
       case 'Polygon': {
-        ret = this.addPolygon(node, { color: 0x0f0ff0 });
+        ret = this.addPolygon(node, {
+          color: 0x0f0ff0
+        });
         break;
       }
       case 'MultiPolygon': {
-        ret = this.addMultiPolygon(node, { color: 0x000fff });
+        ret = this.addMultiPolygon(node, {
+          color: 0x000fff
+        });
         break;
       }
       default: {
@@ -1178,7 +1209,7 @@ class GeoEarth {
     }
 
     var addedObj = this.addToActiveGeoJsons(ret);
-    
+
     return addedObj;
   }
 
@@ -1234,19 +1265,19 @@ class GeoEarth {
     }
     var ret = new THREE.Object3D();
     var feats = node.features;
-    for(var i=0; i<feats.length; i++) {
+    for (var i = 0; i < feats.length; i++) {
       var f = this.addFeature(feats[i]);
       if (f) ret.add(f);
     }
 
     var addedObj = this.addToActiveGeoJsons(ret);
-    
+
     return addedObj;
   }
 
 
   addToActiveGeoJsons(threejsObj) {
-    
+
     var id = (threejsObj && threejsObj.uuid) ? threejsObj.uuid : null;
     if (!id) return null;
 
@@ -1258,39 +1289,4 @@ class GeoEarth {
 
 
 
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
