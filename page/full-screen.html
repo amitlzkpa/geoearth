@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth Sample - Full Screen</title>
+  </head>
+  <body>
+    <script src="/js/three.min.js"></script>
+    <script src="/build/geoearth.js"></script>
+
+
+    <script type="text/javascript">
+
+      async function main() {
+
+
+        var opts = {
+          colorFn: 0xff0000,
+          textureImage: './textures/earth-black.jpg',
+          disableAtmosphere: true,
+          // autoStart: false
+        };
+        var geoearth = new GeoEarth(null, opts);
+        
+
+      }
+
+      main();
+
+    </script>
+
+  </body>
+</html>
