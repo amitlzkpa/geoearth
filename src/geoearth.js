@@ -467,6 +467,8 @@ class GeoEarth {
       coords = input.geometry.coordinates;
     }
 
+    coords = JSON.parse(JSON.stringify(coords));
+
     var lng = coords[0];
     var lat = coords[1];
 
@@ -532,6 +534,8 @@ class GeoEarth {
     } else {
       coords = input.geometry.coordinates;
     }
+
+    coords = JSON.parse(JSON.stringify(coords));
 
     var points = new THREE.Object3D();
 
@@ -610,8 +614,9 @@ class GeoEarth {
 
     if (inPts.length < 2) throw ('Need at least 2 points for a line');
 
-    var divs = 100;
-    // var d = Math.sqrt(Math.pow(inPts[1][0] - inPts[0][0], 2) + Math.pow(inPts[1][0] - inPts[0][0], 2));
+    inPts = JSON.parse(JSON.stringify(inPts));
+
+    // var d = GeoEarth.getHaversineDistance(inPts[0], inPts[1]);
     // console.log(d);
 
     var pts = [];
@@ -718,6 +723,8 @@ class GeoEarth {
       inLns = input.geometry.coordinates;
     }
 
+    inLns = JSON.parse(JSON.stringify(inLns));
+
     var lines = new THREE.Object3D();
 
     for(let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++)
@@ -809,6 +816,8 @@ class GeoEarth {
     } else {
       inLns = input.geometry.coordinates;
     }
+
+    inLns = JSON.parse(JSON.stringify(inLns));
 
     var polygon = new THREE.Object3D();
     var shape = new THREE.Shape();
@@ -947,6 +956,8 @@ class GeoEarth {
     } else {
       inLns = input.geometry.coordinates;
     }
+
+    inLns = JSON.parse(JSON.stringify(inLns));
 
     var polygons = new THREE.Object3D();
 
