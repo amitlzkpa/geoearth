@@ -28,16 +28,9 @@
         geoearth.init();
         geoearth.animate();
 
-
-        // var San_Francisco = [-122.4194183, 37.774929];
-        // var Melbourne = [144.9633179, -37.8139992];
-
-        // var Shanghai = [121.45806, 31.22222];
-
-
-        // geoearth.addLineString([Melbourne, San_Francisco], {color: 0xff00ff});
-        // geoearth.addLineString([San_Francisco, Shanghai], {color: 0x00ff00});
-        
+        var sampleData = await fetch('/data/polygon.geojson');
+        var geojson = await sampleData.json();
+        geoearth.addFeatureCollection(geojson);
 
       }
 
