@@ -867,6 +867,89 @@ class GeoEarth {
       side: THREE.DoubleSide
     });
 
+
+
+
+
+
+
+
+
+    function inside(point, vs) {
+        // ray-casting algorithm based on
+        // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+        var x = point[0], y = point[1];
+
+        var inside = false;
+        for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+            var xi = vs[i][0], yi = vs[i][1];
+            var xj = vs[j][0], yj = vs[j][1];
+
+            var intersect = ((yi > y) != (yj > y))
+                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+
+        return inside;
+    };
+
+
+
+    var firstRing = inLns[0];
+    console.log(firstRing);
+    var lngMin = 180;
+    var lngMax = -180;
+    var latMin = 90;
+    var latMax = -90;
+    firstRing.forEach(pt => {
+      if (pt[1] < lngMin) lngMin = pt[1];
+      if (pt[1] > lngMax) lngMax = pt[1];
+      if (pt[0] < latMin) latMin = pt[0];
+      if (pt[0] > latMax) latMax = pt[0];
+    });
+    console.log(latMin, lngMin);
+    console.log(latMax, lngMax);
+    var cords = [[lngMin, latMin], [lngMin, latMax], [lngMax, latMax], [lngMax, latMin], [lngMin, latMin]];
+    this.addLineString(cords);
+    var latGap = latMax - latMin;
+    var lngGap = lngMax - lngMin;
+    console.log(latGap, lngGap);
+    var d = 2;
+    var latCnt = Math.ceil(latGap / d);
+    var lngCnt = Math.ceil(lngGap / d);
+    console.log(lngCnt, latCnt);
+    var latD = latGap / latCnt;
+    var lngD = lngGap / lngCnt;
+    console.log(lngD, latD);
+    var pts = [];
+    for(var i = 0; i <= lngCnt; i++) {
+      for(var j = 0; j <= latCnt; j++) {
+        pts.push([lngMin + (i * lngD), latMin + (j * latD)]);
+      }
+    }
+    console.log(pts);
+    pts.forEach(p => {
+      this.addPoint(p, {size: 1});
+      // if(inside(p, firstRing)) {
+
+      // }
+    });
+
+    this.addPoint(pts[32], {size: 1.2, color: 0xff0000});
+    var q = inside(pts[32], firstRing);
+    console.log(q);
+
+
+
+
+
+
+
+
+
+
+
     for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
 
       var inPts = inLns[inLnsIdx];
