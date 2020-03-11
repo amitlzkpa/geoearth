@@ -873,13 +873,11 @@ class GeoEarth {
 
 
 
-
-
-    function inside(point, vs) {
+    function isInside(point, vs) {
         // ray-casting algorithm based on
         // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 
-        var x = point[0], y = point[1];
+        var x = point[1], y = point[0];
 
         var inside = false;
         for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
@@ -931,14 +929,11 @@ class GeoEarth {
     console.log(pts);
     pts.forEach(p => {
       this.addPoint(p, {size: 1});
-      // if(inside(p, firstRing)) {
-
-      // }
+      if(isInside(p, firstRing)) {
+        this.addPoint(p, {size: 1.2, color: 0xff0000});
+      }
     });
 
-    this.addPoint(pts[32], {size: 1.2, color: 0xff0000});
-    var q = inside(pts[32], firstRing);
-    console.log(q);
 
 
 
