@@ -226,11 +226,11 @@ class GeoEarth {
 
     this.container.addEventListener('mouseover', function() {
       this.overRenderer = true;
-    }, false);
+    }.bind(this), false);
 
     this.container.addEventListener('mouseout', function() {
       this.overRenderer = false;
-    }, false);
+    }.bind(this), false);
   }
 
   onMouseDown = function(event) {
