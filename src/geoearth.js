@@ -20,6 +20,11 @@
  */
 class GeoEarth {
 
+  dependencies = [
+    "/js/three.min.js",
+    "/js/TessellateModifier.js"
+  ];
+
   isReady = false;
   sleepTime = 400;
   instance;
@@ -130,10 +135,6 @@ class GeoEarth {
 
   constructor(container, opts) {
 
-    this.dependencies = [
-      "/js/TessellateModifier.js"
-    ];
-    
 
     if (!container) {
       container = document.createElement("div");

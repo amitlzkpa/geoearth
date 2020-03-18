@@ -5,7 +5,6 @@ You can add GeoJson based features and it is rendered on a 3D globe usin [threej
 
 ## Include  
 ```
-<script src="/three.min.js"></script>
 <script src="/geoearth.js"></script>
 ```
 
