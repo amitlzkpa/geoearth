@@ -20,6 +20,8 @@
  */
 class GeoEarth {
 
+  isReady = false;
+  sleepTime = 400;
   instance;
   opts;
   autoStart;
@@ -238,6 +240,9 @@ class GeoEarth {
     this.container.addEventListener('mouseout', function() {
       this.overRenderer = false;
     }.bind(this), false);
+
+    
+    this.isReady = true;
     
     if(next) next();
 
@@ -341,6 +346,10 @@ class GeoEarth {
     this.frameCount++;
   }
 
+
+  async wait(ms) {
+    return new Promise((resolve, reject) => setTimeout(() => resolve(), ms));
+  }
 
 
 
@@ -452,6 +461,7 @@ class GeoEarth {
 
   /**
    * Adds an array or geojson object representing a single point to a threejs 3D object.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {geojson} input - An array or geojson object representing a point on the map.
    * @param {Object} opts - An object containing configuration parameters.
@@ -479,7 +489,12 @@ class GeoEarth {
    *    var meshB = geoearth.addPoint(posB);
    *
    */
-  addPoint(input, opts) {
+  async addPoint(input, opts) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
 
     var coords = null;
     opts = opts || {};
