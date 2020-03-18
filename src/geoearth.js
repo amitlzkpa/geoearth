@@ -473,7 +473,7 @@ class GeoEarth {
    *      
    *    // As array
    *    var posA = [28.644800, 77.216721];
-   *    var meshA = eeoearth.addPoint(posA);
+   *    var meshA = await eeoearth.addPoint(posA);
    *
    *    // As geojson
    *    var posB =  {
@@ -486,7 +486,7 @@ class GeoEarth {
    *                    "name": "Dinagat Islands"
    *                  }
    *                };
-   *    var meshB = geoearth.addPoint(posB);
+   *    var meshB = await geoearth.addPoint(posB);
    *
    */
   async addPoint(input, opts) {
@@ -532,6 +532,7 @@ class GeoEarth {
 
   /**
    * Adds an array or geojson object representing a multiple points to a threejs 3D object.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {geojson} input - An array or geojson object representing multiple points on the map.
    * @param {Object} opts - An object containing configuration parameters.
@@ -543,7 +544,7 @@ class GeoEarth {
    *      
    *    // As array
    *    var posA = [ [55.751244, 37.618423], [30.266666, -97.733330] ];
-   *    var objA = geoearth.addMultiPoint(posA);
+   *    var objA = await geoearth.addMultiPoint(posA);
    *
    *    // As geojson
    *    var posB =  {
@@ -561,10 +562,15 @@ class GeoEarth {
    *                    "name": "Fallen Cities"
    *                  }
    *                }
-   *    var objB = geoearth.addMultiPoint(posB);
+   *    var objB = await geoearth.addMultiPoint(posB);
    *
    */
-  addMultiPoint(input, opts) {
+  async addMultiPoint(input, opts) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
 
     var coords = null;
     opts = opts || {};
@@ -608,6 +614,7 @@ class GeoEarth {
 
   /**
    * Adds an array or geojson object representing a single line to a threejs 3D line.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {geojson} input - An array or geojson object representing a line on the map.
    * @param {Object} opts - An object containing configuration parameters.
@@ -618,7 +625,7 @@ class GeoEarth {
    *      
    *    // As array
    *    var lnA = [ [14.6042004, 120.9822006], [22.3964272, 114.1094971] ];
-   *    var lineA = geoearth.addLineString(lnA);
+   *    var lineA = await geoearth.addLineString(lnA);
    *
    *    // As geojson
    *    var lnB = {
@@ -640,10 +647,15 @@ class GeoEarth {
    *                  "name": "Magellan Line"
    *                }
    *              }
-   *    var lineB = geoearth.addLineString(lnB);
+   *    var lineB = await geoearth.addLineString(lnB);
    *
    */
-  addLineString(input, opts) {
+  async addLineString(input, opts) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
 
     var inPts = null;
     opts = opts || {};
@@ -725,6 +737,7 @@ class GeoEarth {
 
   /**
    * Adds an array or geojson object representing multiple lines to threejs 3D lines.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {geojson} input - An array or geojson object representing multiple lines on the map.
    * @param {Object} opts - An object containing configuration parameters.
@@ -735,7 +748,7 @@ class GeoEarth {
    *      
    *    // As array
    *    var lnA = [ [ [14.6042004, 120.9822006], [22.3964272, 114.1094971] ], [ [11.5624504, 104.916008], [10.82302, 106.6296463] ] ];
-   *    var lineA = geoearth.addMultiLineString(lnA);
+   *    var lineA = await geoearth.addMultiLineString(lnA);
    *
    *    // As geojson
    *    var lnB = {
@@ -773,10 +786,15 @@ class GeoEarth {
    *                  "name": "Incense License"
    *                }
    *              }
-   *    var lineB = geoearth.addMultiLineString(lnB);
+   *    var lineB = await geoearth.addMultiLineString(lnB);
    *
    */
-  addMultiLineString(input, opts) {
+  async addMultiLineString(input, opts) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
 
     var inLns = null;
     opts = opts || {};
@@ -845,6 +863,7 @@ class GeoEarth {
 
   /**
    * Adds an array or geojson object representing a single polygon to a threejs 3D object.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {geojson} input - An array or geojson object representing a polygon on the map.
    * @param {Object} opts - An object containing configuration parameters.
@@ -855,7 +874,7 @@ class GeoEarth {
    *      
    *    // As array
    *    var plA = [ [[35, 10], [45, 45], [15, 40], [10, 20], [35, 10]], [[20, 30], [35, 35], [30, 20], [20, 30]] ];
-   *    var polyA = geoearth.addPolygon(plA);
+   *    var polyA = await geoearth.addPolygon(plA);
    *
    *    // As geojson
    *    var plB = {
@@ -868,10 +887,15 @@ class GeoEarth {
    *                  ]
    *                }
    *              }
-   *    var polyB = geoearth.addPolygon(plB);
+   *    var polyB = await geoearth.addPolygon(plB);
    *
    */
-  addPolygon(input, opts) {
+  async addPolygon(input, opts) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
 
     var inLns = null;
     opts = opts || {};
@@ -987,6 +1011,7 @@ class GeoEarth {
 
   /**
    * Adds an array or geojson object representing multiple polygons to threejs 3D multiple polygons.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {geojson} input - An array or geojson object representing multiple polygons on the map.
    * @param {Object} opts - An object containing configuration parameters.
@@ -1001,7 +1026,7 @@ class GeoEarth {
    *                    [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
    *                     [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
    *                  ];
-   *    var mpolygonA = geoearth.addMultiPolygon(mpolyA);
+   *    var mpolygonA = await geoearth.addMultiPolygon(mpolyA);
    *
    *    // As geojson
    *    var mpolyB = {
@@ -1017,10 +1042,15 @@ class GeoEarth {
    *                      }
    *                    ]
    *                  }
-   *    var mpolygonB = geoearth.addMultiPolygon(mpolyB);
+   *    var mpolygonB = await geoearth.addMultiPolygon(mpolyB);
    *
    */
-  addMultiPolygon(input, opts) {
+  async addMultiPolygon(input, opts) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
 
     var inLns = null;
     opts = opts || {};
@@ -1138,6 +1168,7 @@ class GeoEarth {
   /**
    * Add the given geojson object to the map.
    * Currently supports only a single feature json containing Point, MultiPoint, Line or MultiLine.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {Geojson} geoJson - Geojson object to be added.
    *
@@ -1153,19 +1184,24 @@ class GeoEarth {
    *                     "name": "Dinagat Islands"
    *                   }
    *                 };
-   *    geoearth.addGeoJson(geoJson);
+   *    await geoearth.addGeoJson(geoJson);
    *
    */
-  addGeoJson(geoJson) {
+  async addGeoJson(geoJson) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
 
     switch (geoJson.type) {
       case "Feature": {
-        var feat = this.addFeature(geoJson);
+        var feat = await this.addFeature(geoJson);
         this.scene.add(feat);
         break;
       }
       case "FeatureCollection": {
-        var feat = this.addFeatureCollection(geoJson);
+        var feat = await this.addFeatureCollection(geoJson);
         this.scene.add(feat);
         break;
       }
@@ -1179,6 +1215,7 @@ class GeoEarth {
   /**
    * Adds a given node in a geojson object and returns corresponding threejs object.
    * Currently supports only a single feature json containing Point, MultiPoint, Line or MultiLine.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {Geojson} geoJsonNode - Geojson node to be parsed.
    *
@@ -1194,45 +1231,51 @@ class GeoEarth {
    *                     "name": "Dinagat Islands"
    *                   }
    *                 };
-   *    var threeJsObj = geoearth.addFeature(node);
+   *    var threeJsObj = await geoearth.addFeature(node);
    *
    */
-  addFeature(node) {
+  async addFeature(node) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
+
     var ftType = node.geometry.type;
     var ret = null;
     switch (ftType) {
       case 'Point': {
-        ret = this.addPoint(node, {
+        ret = await this.addPoint(node, {
           color: 0xff0000
         });
         break;
       }
       case 'MultiPoint': {
-        ret = this.addMultiPoint(node, {
+        ret = await this.addMultiPoint(node, {
           color: 0xababab
         });
         break;
       }
       case 'LineString': {
-        ret = this.addLineString(node, {
+        ret = await this.addLineString(node, {
           color: 0xff00f0
         });
         break;
       }
       case 'MultiLineString': {
-        ret = this.addMultiLineString(node, {
+        ret = await this.addMultiLineString(node, {
           color: 0x0000ff
         });
         break;
       }
       case 'Polygon': {
-        ret = this.addPolygon(node, {
+        ret = await this.addPolygon(node, {
           color: 0x0f0ff0
         });
         break;
       }
       case 'MultiPolygon': {
-        ret = this.addMultiPolygon(node, {
+        ret = await this.addMultiPolygon(node, {
           color: 0x000fff
         });
         break;
@@ -1251,6 +1294,7 @@ class GeoEarth {
 
   /**
    * Adds a given node in a geojson object and returns corresponding threejs object.
+   * Awaits till the instance is ready to be worked with.
    *
    * @param {Geojson} geoJsonNode - Geojson node to be added.
    *
@@ -1291,10 +1335,16 @@ class GeoEarth {
    *                         }
    *                      ]
    *                    };
-   *    var threeJsObj = geoearth.addFeatureCollection(node);
+   *    var threeJsObj = await geoearth.addFeatureCollection(node);
    *
    */
-  addFeatureCollection(node) {
+  async addFeatureCollection(node) {
+
+    while (!this.isReady) {
+      await this.wait(this.sleepTime);
+      if(!this.isReady) return;
+    }
+
     var ftType = node.type;
     if (ftType !== "FeatureCollection") {
       throw (`Unexpected typ: '${ftType}'. Expected FeatureCollection`)
@@ -1302,7 +1352,7 @@ class GeoEarth {
     var ret = new THREE.Object3D();
     var feats = node.features;
     for (var i = 0; i < feats.length; i++) {
-      var f = this.addFeature(feats[i]);
+      var f = await this.addFeature(feats[i]);
       if (f) ret.add(f);
     }
 
