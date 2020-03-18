@@ -103,17 +103,26 @@
 
             console.log('subdivide:');
             
-            var modifier = new THREE.TessellateModifier(2);
-            var geometry = polygon.geometry;
-            geometry.computeBoundingBox();
-            geometry.computeBoundingSphere();
-            geometry.computeFaceNormals();
-            geometry.computeVertexNormals();
-            var smoothGeometry = modifier.modify(geometry);
-            console.log(smoothGeometry);
+            var modifier = new THREE.TessellateModifier(4);
+            var bufferGeometry = polygon.geometry;
+            var geometry = new THREE.Geometry().fromBufferGeometry(bufferGeometry);
+            // geometry.computeBoundingBox();
+            // geometry.computeBoundingSphere();
+            // geometry.computeFaceNormals();
+            // geometry.computeFlatVertexNormals();
+            // geometry.computeMorphNormals();
+            // geometry.computeVertexNormals();
+            // geometry.verticesNeedUpdate = true;
+            // geometry.elementsNeedUpdate = true;
+            // geometry.uvsNeedUpdate = true;
+            // geometry.normalsNeedUpdate = true;
+            // geometry.lineDistancesNeedUpdate = true;
+            for(var i=0; i<3; i++) {
+                modifier.modify(geometry);
+            }
             
             var smoothMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-            var smoothPolygon = new THREE.Mesh(smoothGeometry, smoothMaterial);
+            var smoothPolygon = new THREE.Mesh(geometry, smoothMaterial);
             
             scene.add(smoothPolygon);
             
