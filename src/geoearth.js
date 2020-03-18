@@ -864,86 +864,9 @@ class GeoEarth {
     var col = opts.color || 0xffffff
     var material = new THREE.MeshBasicMaterial({
       color: col,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      // wireframe: true
     });
-
-
-
-
-
-
-
-    function isInside(point, vs) {
-        // ray-casting algorithm based on
-        // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-
-        var x = point[1], y = point[0];
-
-        var inside = false;
-        for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-            var xi = vs[i][0], yi = vs[i][1];
-            var xj = vs[j][0], yj = vs[j][1];
-
-            var intersect = ((yi > y) != (yj > y))
-                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
-
-        return inside;
-    };
-
-
-
-    var firstRing = inLns[0];
-    console.log(firstRing);
-    var lngMin = 180;
-    var lngMax = -180;
-    var latMin = 90;
-    var latMax = -90;
-    firstRing.forEach(pt => {
-      if (pt[1] < lngMin) lngMin = pt[1];
-      if (pt[1] > lngMax) lngMax = pt[1];
-      if (pt[0] < latMin) latMin = pt[0];
-      if (pt[0] > latMax) latMax = pt[0];
-    });
-    console.log(latMin, lngMin);
-    console.log(latMax, lngMax);
-    var cords = [[lngMin, latMin], [lngMin, latMax], [lngMax, latMax], [lngMax, latMin], [lngMin, latMin]];
-    this.addLineString(cords);
-    var latGap = latMax - latMin;
-    var lngGap = lngMax - lngMin;
-    console.log(latGap, lngGap);
-    var d = 2;
-    var latCnt = Math.ceil(latGap / d);
-    var lngCnt = Math.ceil(lngGap / d);
-    console.log(lngCnt, latCnt);
-    var latD = latGap / latCnt;
-    var lngD = lngGap / lngCnt;
-    console.log(lngD, latD);
-    var pts = [];
-    for(var i = 0; i <= lngCnt; i++) {
-      for(var j = 0; j <= latCnt; j++) {
-        pts.push([lngMin + (i * lngD), latMin + (j * latD)]);
-      }
-    }
-    console.log(pts);
-    pts.forEach(p => {
-      this.addPoint(p, {size: 1});
-      if(isInside(p, firstRing)) {
-        this.addPoint(p, {size: 1.2, color: 0xff0000});
-      }
-    });
-
-
-
-
-
-
-
-
-
-
-
 
     for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
 
@@ -1012,17 +935,23 @@ class GeoEarth {
     }
 
     // convert flat shape to polygon surface mapped to sphere
-    var geometry = new THREE.ShapeBufferGeometry(shape);
-    for (var i = 0; i < geometry.attributes.position.array.length; i += 3) {
-      var phi = GeoEarth.latToSphericalCoords(geometry.attributes.position.array[i]);
-      var theta = GeoEarth.lngToSphericalCoords(geometry.attributes.position.array[i + 1]);
-      geometry.attributes.position.array[i] = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-      geometry.attributes.position.array[i + 1] = this.earthRadius * Math.cos(phi);
-      geometry.attributes.position.array[i + 2] = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+    var modifier = new THREE.TessellateModifier(4);
+    var roughGeometry = new THREE.Geometry().fromBufferGeometry(new THREE.ShapeBufferGeometry(shape));
+    for(var i=0; i<8; i++) {
+      modifier.modify(roughGeometry);
     }
-    geometry.computeVertexNormals();
-    geometry.attributes.position.needsUpdate = true;
-    var mesh = new THREE.Mesh(geometry, material);
+    var fineGeometry = new THREE.BufferGeometry().fromGeometry(roughGeometry);
+
+    for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
+      var phi = GeoEarth.latToSphericalCoords(fineGeometry.attributes.position.array[i]);
+      var theta = GeoEarth.lngToSphericalCoords(fineGeometry.attributes.position.array[i + 1]);
+      fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
+      fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.01) * Math.cos(phi);
+      fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+    }
+    fineGeometry.computeVertexNormals();
+    fineGeometry.attributes.position.needsUpdate = true;
+    var mesh = new THREE.Mesh(fineGeometry, material);
 
     polygon.add(mesh);
 
