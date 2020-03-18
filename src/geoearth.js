@@ -128,6 +128,10 @@ class GeoEarth {
 
   constructor(container, opts) {
 
+    this.dependencies = [
+      "/js/TessellateModifier.js"
+    ];
+    
 
     if (!container) {
       container = document.createElement("div");
@@ -149,17 +153,20 @@ class GeoEarth {
 
 
     if (this.autoStart) {
-      this.init();
-      this.animate.bind(this)();
+      this.init(this.animate.bind(this));
     }
 
 
   }
 
 
+  async init(next) {
 
-
-  init() {
+    for(var i=0; i<this.dependencies.length; i++) {
+      var resource = await fetch(this.dependencies[i]);
+      var resourceText = await resource.text();
+      eval.apply(window, [resourceText]);
+    }
 
     var shader, uniforms, material;
     this.w = this.container.offsetWidth;
@@ -231,6 +238,9 @@ class GeoEarth {
     this.container.addEventListener('mouseout', function() {
       this.overRenderer = false;
     }.bind(this), false);
+    
+    if(next) next();
+
   }
 
   onMouseDown = function(event) {
