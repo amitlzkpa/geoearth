@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth - Scratch Pad</title>
+  </head>
+  <body>
+    <script src="/js/three.min.js"></script>
+    <script src="/js/OrbitControls.js"></script>
+
+
+    <script type="text/javascript">
+
+        let renderer, scene, camera, controls;
+
+        init();
+        animate();
+        function init() {
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+            camera.position.set( 40, 360, 300 );
+            controls = new THREE.OrbitControls( camera, renderer.domElement );
+            scene.add( new THREE.AmbientLight( 0x222222 ) );
+            var light = new THREE.DirectionalLight( 0xffffff, 1 );
+            light.position.set( 20, 20, 0 );
+            scene.add( light );
+            scene.add( new THREE.AxesHelper( 20 ) );
+            document.addEventListener('keypress', onKeyPress, true);
+            window.addEventListener( 'resize', onWindowResize, false );
+        }
+
+        function animate() {
+            requestAnimationFrame( animate );
+            renderer.render( scene, camera );
+        }
+
+        function onWindowResize(){
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+        }
+
+
+
+        // --------------------------------------
+
+
+        var polygon;
+
+
+
+        function start() {
+            var pts = [
+                [
+                13.66733825965496,
+                68.115234375
+                ],
+                [
+                16.3833911236084,
+                121.123046875
+                ],
+                [
+                66.352497858154024,
+                149.365234375
+                ],
+                [
+                54.287026865376436,
+                94.8828125
+                ],
+                [
+                69.38217507514529,
+                66.357421875
+                ],
+                [
+                41.69826549685252,
+                40.732421875
+                ],
+                [
+                13.66733825965496,
+                68.115234375
+                ]
+            ];
+            var shape = new THREE.Shape();
+            shape.moveTo(pts[0][0], pts[0][1]);
+            pts.forEach(pt => {
+                shape.lineTo(pt[0], pt[1]);
+            });
+            
+            var geometry = new THREE.ShapeBufferGeometry(shape);
+            var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+            polygon = new THREE.Mesh(geometry, material);
+            
+            scene.add(polygon);
+        }
+
+
+
+        function onKeyPress(e) {
+        
+            var p = new THREE.Vector3(39.36827914916014, 89.12109375, 0);
+            // var p = new THREE.Vector3(39.639537564366684, 152.9296875, 0);
+            
+            var geometry = new THREE.SphereGeometry( 5, 12, 8 );
+            var material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
+            var mesh = new THREE.Mesh( geometry, material );
+            mesh.position.set(p.x, p.y, p.z);
+            scene.add( mesh );
+            
+            
+            console.log(polygon.geometry.attributes.position);
+            var vertices = [];
+            var pos = polygon.geometry.attributes.position.array;
+            for(var i=0; i<pos.length; i += 3) {
+                var vt = new THREE.Vector3(pos[i], pos[i+1], pos[i+2]);
+                vertices.push(vt);
+            }
+            console.log(vertices);
+            
+            
+            
+            
+            // var bg = new THREE.BufferGeometry();
+            // bg.setAttribute( 'position', vertices );
+            // console.log(bg);
+            // var bm = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+            // var bmesh = new THREE.Mesh( bg, bm );
+            // scene.add(bmesh);
+            
+            
+            
+            
+            
+            
+            
+            //   // add the new point
+            //   vertices.push(p);
+            
+            //   var buff = [];
+            //   vertices.forEach(v => {
+            //     buff.push(v.x);
+            //     buff.push(v.y);
+            //     buff.push(v.z);
+            //   });
+            //   var newPos = new THREE.Float32BufferAttribute(buff, 3);
+            //   console.log(newPos);
+            //   // polygon.geometry.setAttribute( 'position', new THREE.BufferAttribute(newPos, 3 ) );
+            //   // polygon.geometry.attributes.position.needsUpdate = true;
+            
+            //   console.log('---------------');
+            
+            //   buff = [];
+            //   var norms = polygon.geometry.attributes.normal.array;
+            //   for(var i=0; i<norms.length; i += 3) {
+            //     buff.push(norms[i], norms[i+1], norms[i+2]);
+            //   }
+            //   buff.push(norms[0], norms[1], norms[2]);
+            //   var newNorms = new THREE.Float32BufferAttribute(buff, 3);
+            //   console.log(polygon.geometry.attributes.normal);
+            //   console.log(newNorms);
+            
+            //   console.log('---------------');
+            
+            //   buff = [];
+            //   var uvs = polygon.geometry.attributes.uv.array;
+            //   for(var i=0; i<uvs.length; i += 2) {
+            //     buff.push(uvs[i], uvs[i+1]);
+            //   }
+            //   buff.push(uvs[0], uvs[1]);
+            //   var newUVs = new THREE.Float32BufferAttribute(buff, 2);
+            //   console.log(polygon.geometry.attributes.uv);
+            //   console.log(newUVs);
+            
+            
+            //   polygon.geometry.attributes.position = newPos;
+            //   polygon.geometry.attributes.normal = newNorms;
+            //   polygon.geometry.attributes.uv = newUVs;
+            
+            //   polygon.geometry.attributes.position.needsUpdate = true;
+            //   polygon.geometry.attributes.normal.needsUpdate = true;
+            //   polygon.geometry.attributes.uv.needsUpdate = true;
+            
+            //   console.log(polygon.geometry.attributes);
+        
+        }
+
+
+
+        start();
+        onKeyPress();
+
+
+
+    </script>
+
+  </body>
+</html>
