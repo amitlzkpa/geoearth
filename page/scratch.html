@@ -7,7 +7,7 @@
   <body>
     <script src="/js/three.min.js"></script>
     <script src="/js/OrbitControls.js"></script>
-    <script src="/js/SubdivisionModifier.js"></script>
+    <script src="/js/TessellateModifier.js"></script>
 
 
     <script type="text/javascript">
@@ -103,9 +103,14 @@
 
             console.log('subdivide:');
             
-            var modifier = new THREE.SubdivisionModifier(1);
+            var modifier = new THREE.TessellateModifier(2);
             var geometry = polygon.geometry;
+            geometry.computeBoundingBox();
+            geometry.computeBoundingSphere();
+            geometry.computeFaceNormals();
+            geometry.computeVertexNormals();
             var smoothGeometry = modifier.modify(geometry);
+            console.log(smoothGeometry);
             
             var smoothMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
             var smoothPolygon = new THREE.Mesh(smoothGeometry, smoothMaterial);
