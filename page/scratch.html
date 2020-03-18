@@ -7,6 +7,7 @@
   <body>
     <script src="/js/three.min.js"></script>
     <script src="/js/OrbitControls.js"></script>
+    <script src="/js/SubdivisionModifier.js"></script>
 
 
     <script type="text/javascript">
@@ -89,9 +90,9 @@
                 shape.lineTo(pt[0], pt[1]);
             });
             
-            var geometry = new THREE.ShapeBufferGeometry(shape);
-            var material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
-            polygon = new THREE.Mesh(geometry, material);
+            var polygonGeometry = new THREE.ShapeBufferGeometry(shape);
+            var polygonMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+            polygon = new THREE.Mesh(polygonGeometry, polygonMaterial);
             
             scene.add(polygon);
         }
@@ -99,91 +100,18 @@
 
 
         function onKeyPress(e) {
-        
-            var p = new THREE.Vector3(39.36827914916014, 89.12109375, 0);
-            // var p = new THREE.Vector3(39.639537564366684, 152.9296875, 0);
+
+            console.log('subdivide:');
             
-            var geometry = new THREE.SphereGeometry( 5, 12, 8 );
-            var material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
-            var mesh = new THREE.Mesh( geometry, material );
-            mesh.position.set(p.x, p.y, p.z);
-            scene.add( mesh );
+            var modifier = new THREE.SubdivisionModifier(1);
+            var geometry = polygon.geometry;
+            var smoothGeometry = modifier.modify(geometry);
             
+            var smoothMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+            var smoothPolygon = new THREE.Mesh(smoothGeometry, smoothMaterial);
             
-            console.log(polygon.geometry.attributes.position);
-            var vertices = [];
-            var pos = polygon.geometry.attributes.position.array;
-            for(var i=0; i<pos.length; i += 3) {
-                var vt = new THREE.Vector3(pos[i], pos[i+1], pos[i+2]);
-                vertices.push(vt);
-            }
-            console.log(vertices);
+            scene.add(smoothPolygon);
             
-            
-            
-            
-            // var bg = new THREE.BufferGeometry();
-            // bg.setAttribute( 'position', vertices );
-            // console.log(bg);
-            // var bm = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-            // var bmesh = new THREE.Mesh( bg, bm );
-            // scene.add(bmesh);
-            
-            
-            
-            
-            
-            
-            
-            //   // add the new point
-            //   vertices.push(p);
-            
-            //   var buff = [];
-            //   vertices.forEach(v => {
-            //     buff.push(v.x);
-            //     buff.push(v.y);
-            //     buff.push(v.z);
-            //   });
-            //   var newPos = new THREE.Float32BufferAttribute(buff, 3);
-            //   console.log(newPos);
-            //   // polygon.geometry.setAttribute( 'position', new THREE.BufferAttribute(newPos, 3 ) );
-            //   // polygon.geometry.attributes.position.needsUpdate = true;
-            
-            //   console.log('---------------');
-            
-            //   buff = [];
-            //   var norms = polygon.geometry.attributes.normal.array;
-            //   for(var i=0; i<norms.length; i += 3) {
-            //     buff.push(norms[i], norms[i+1], norms[i+2]);
-            //   }
-            //   buff.push(norms[0], norms[1], norms[2]);
-            //   var newNorms = new THREE.Float32BufferAttribute(buff, 3);
-            //   console.log(polygon.geometry.attributes.normal);
-            //   console.log(newNorms);
-            
-            //   console.log('---------------');
-            
-            //   buff = [];
-            //   var uvs = polygon.geometry.attributes.uv.array;
-            //   for(var i=0; i<uvs.length; i += 2) {
-            //     buff.push(uvs[i], uvs[i+1]);
-            //   }
-            //   buff.push(uvs[0], uvs[1]);
-            //   var newUVs = new THREE.Float32BufferAttribute(buff, 2);
-            //   console.log(polygon.geometry.attributes.uv);
-            //   console.log(newUVs);
-            
-            
-            //   polygon.geometry.attributes.position = newPos;
-            //   polygon.geometry.attributes.normal = newNorms;
-            //   polygon.geometry.attributes.uv = newUVs;
-            
-            //   polygon.geometry.attributes.position.needsUpdate = true;
-            //   polygon.geometry.attributes.normal.needsUpdate = true;
-            //   polygon.geometry.attributes.uv.needsUpdate = true;
-            
-            //   console.log(polygon.geometry.attributes);
-        
         }
 
 
