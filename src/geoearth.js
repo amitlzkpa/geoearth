@@ -1142,17 +1142,23 @@ class GeoEarth {
       }
 
       // convert flat shape to polygon surface mapped to sphere
-      var geometry = new THREE.ShapeBufferGeometry(shape);
-      for (var i = 0; i < geometry.attributes.position.array.length; i += 3) {
-        var phi = GeoEarth.latToSphericalCoords(geometry.attributes.position.array[i]);
-        var theta = GeoEarth.lngToSphericalCoords(geometry.attributes.position.array[i + 1]);
-        geometry.attributes.position.array[i] = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-        geometry.attributes.position.array[i + 1] = this.earthRadius * Math.cos(phi);
-        geometry.attributes.position.array[i + 2] = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+      var modifier = new THREE.TessellateModifier(4);
+      var roughGeometry = new THREE.Geometry().fromBufferGeometry(new THREE.ShapeBufferGeometry(shape));
+      for(var i=0; i<8; i++) {
+        modifier.modify(roughGeometry);
       }
-      geometry.computeVertexNormals();
-      geometry.attributes.position.needsUpdate = true;
-      var mesh = new THREE.Mesh(geometry, material);
+      var fineGeometry = new THREE.BufferGeometry().fromGeometry(roughGeometry);
+
+      for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
+        var phi = GeoEarth.latToSphericalCoords(fineGeometry.attributes.position.array[i]);
+        var theta = GeoEarth.lngToSphericalCoords(fineGeometry.attributes.position.array[i + 1]);
+        fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
+        fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.01) * Math.cos(phi);
+        fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+      }
+      fineGeometry.computeVertexNormals();
+      fineGeometry.attributes.position.needsUpdate = true;
+      var mesh = new THREE.Mesh(fineGeometry, material);
 
       polygon.add(mesh);
 
