@@ -623,31 +623,47 @@ class GeoEarth {
    * @return {THREE.Line} A threejs 3D line.
    *
    * @example
-   *      
-   *    // As array
-   *    var lnA = [ [14.6042004, 120.9822006], [22.3964272, 114.1094971] ];
+   * 
+   *    // Add line as array
+   *    var lnA = [ [37.618423, 55.751244], [131.8735352, 43.1056213] ];
    *    var lineA = await geoearth.addLineString(lnA);
    *
-   *    // As geojson
+   *    // Add line as geojson
    *    var lnB = {
    *                "type": "Feature",
    *                "geometry": {
    *                  "type": "LineString",
    *                  "coordinates": [
    *                    [
-   *                      29.301449060440063,
-   *                      -31.952162238024957
+   *                        115.75195312499999,
+   *                        36.24427318493909
    *                    ],
    *                    [
-   *                      69.24430757761002,
-   *                      34.63320791137959
+   *                        113.64257812499999,
+   *                        34.95799531086792
+   *                    ],
+   *                    [
+   *                        82.265625,
+   *                        40.78054143186033
+   *                    ],
+   *                    [
+   *                        65.478515625,
+   *                        34.74161249883172
+   *                    ],
+   *                    [
+   *                        46.494140625,
+   *                        33.43144133557529
+   *                    ],
+   *                    [
+   *                        43.33007812499999,
+   *                        36.73888412439431
    *                    ]
    *                  ]
    *                },
    *                "properties": {
-   *                  "name": "Magellan Line"
+   *                  "name": "Silk Road"
    *                }
-   *              }
+   *              };
    *    var lineB = await geoearth.addLineString(lnB);
    *
    */
@@ -747,47 +763,63 @@ class GeoEarth {
    *
    * @example
    *      
-   *    // As array
-   *    var lnA = [ [ [14.6042004, 120.9822006], [22.3964272, 114.1094971] ], [ [11.5624504, 104.916008], [10.82302, 106.6296463] ] ];
-   *    var lineA = await geoearth.addMultiLineString(lnA);
+   *    // Add multiline as array
+   *    var lnsA = [ [ [ 72.59, 21.20 ], [ 52.16, 15.74 ] ], [ [ 76.22, 10.03 ], [ 52.16, 15.74 ], [ 45.52, 13.26 ] ] ];
+   *    var linesA = await geoearth.addMultiLineString(lnsA);
    *
-   *    // As geojson
-   *    var lnB = {
+   *    // Add multiline as geojson
+   *    var lnsB = {
    *                "type": "Feature",
    *                "geometry": {
    *                  "type": "MultiLineString",
    *                  "coordinates": [
-   *                    [ 
-   *                      [
-   *                        32.506026327610016,
-   *                        15.580710739162123
-   *                      ],
-   *                      [
-   *                        77.44035622384729,
-   *                        12.983147716796577
-   *                      ]
+   *                    [
+   *                        [
+   *                            -6.229248046875,
+   *                            36.53612263184686
+   *                        ],
+   *                        [
+   *                            -29.53125,
+   *                            27.994401411046148
+   *                        ],
+   *                        [
+   *                            -72.421875,
+   *                            27.371767300523047
+   *                        ],
+   *                        [
+   *                            -78.3984375,
+   *                            22.917922936146045
+   *                        ]
    *                    ],
-   *                    [ 
-   *                      [
-   *                        88.29484841134729,
-   *                        22.553147478403194
-   *                      ],
-   *                      [
-   *                        74.4233498564023,
-   *                        42.924251753870685
-   *                      ],
-   *                      [
-   *                        94.4233498564023,
-   *                        49.924251753870685
-   *                      ]
+   *                    [
+   *                        [
+   *                            -6.278686523437499,
+   *                            36.558187766360675
+   *                        ],
+   *                        [
+   *                            -40.341796875,
+   *                            19.062117883514652
+   *                        ],
+   *                        [
+   *                            -82.705078125,
+   *                            15.368949896534705
+   *                        ],
+   *                        [
+   *                            -81.38671875,
+   *                            10.487811882056695
+   *                        ],
+   *                        [
+   *                            -77.607421875,
+   *                            10.401377554543553
+   *                        ]
    *                    ]
    *                  ]
    *                },
    *                "properties": {
-   *                  "name": "Incense License"
+   *                  "name": "Amerigo Vespucci's Travels"
    *                }
-   *              }
-   *    var lineB = await geoearth.addMultiLineString(lnB);
+   *              };
+   *    var linesB = await geoearth.addMultiLineString(lnsB);
    *
    */
   async addMultiLineString(input, opts) {
