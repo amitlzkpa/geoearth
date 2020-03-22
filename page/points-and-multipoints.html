@@ -41,6 +41,29 @@
                     };
         var meshB = await geoearth.addPoint(posB);
 
+        
+        // Add multipoint as array
+        var posC = [ [37.618423, 55.751244], [121.45806, 31.22222] ];
+        var objC = await geoearth.addMultiPoint(posC);
+        
+        // Add multipoint as geojson
+        var posD =  {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "MultiPoint",
+                        "coordinates": [
+                          [-74.081749, 4.6097102],
+                          [72.877426, 19.076090],
+                          [139.6917114, 35.6894989],
+                          [2.3487999, 48.8534088]
+                        ]
+                      },
+                      "properties": {
+                        "name": "Cities"
+                      }
+                    };
+        var objD = await geoearth.addMultiPoint(posD);
+
 
       }
 

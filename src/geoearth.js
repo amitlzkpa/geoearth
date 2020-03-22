@@ -543,27 +543,27 @@ class GeoEarth {
    *
    * @example
    *      
-   *    // As array
-   *    var posA = [ [55.751244, 37.618423], [30.266666, -97.733330] ];
-   *    var objA = await geoearth.addMultiPoint(posA);
+   *    // Add multipoint as array
+   *    var posC = [ [37.618423, 55.751244], [121.45806, 31.22222] ];
+   *    var objC = await geoearth.addMultiPoint(posC);
    *
-   *    // As geojson
-   *    var posB =  {
+   *    // Add multipoint as geojson
+   *    var posD =  {
    *                  "type": "Feature",
    *                  "geometry": {
    *                    "type": "MultiPoint",
    *                    "coordinates": [
-   *                      [-73.935242, 40.730610],
-   *                      [-0.12574, 51.5085297],
+   *                      [-74.081749, 4.6097102],
+   *                      [72.877426, 19.076090],
    *                      [139.6917114, 35.6894989],
    *                      [2.3487999, 48.8534088]
    *                    ]
    *                  },
    *                  "properties": {
-   *                    "name": "Fallen Cities"
+   *                    "name": "Cities"
    *                  }
    *                }
-   *    var objB = await geoearth.addMultiPoint(posB);
+   *    var objD = await geoearth.addMultiPoint(posB);
    *
    */
   async addMultiPoint(input, opts) {
@@ -601,16 +601,16 @@ class GeoEarth {
       });
       var point = new THREE.Mesh(geometry, material);
 
-      point.position.x = 203 * Math.sin(phi) * Math.cos(theta);
-      point.position.y = 203 * Math.cos(phi);
-      point.position.z = 203 * Math.sin(phi) * Math.sin(theta);
+      point.position.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
+      point.position.y = this.earthRadius * Math.cos(phi);
+      point.position.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
 
       points.add(point);
     }
 
-    var mesh = this.addToActiveGeoJsons(points);
+    var addedObj = this.addToActiveGeoJsons(points);
 
-    return mesh;
+    return addedObj;
   }
 
   /**
