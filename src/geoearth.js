@@ -472,19 +472,19 @@ class GeoEarth {
    *
    * @example
    *      
-   *    // As array
-   *    var posA = [28.644800, 77.216721];
-   *    var meshA = await eeoearth.addPoint(posA);
+   *    // Add point as array
+   *    var posA = [-74.006, 40.714];
+   *    var meshA = await geoearth.addPoint(posA);
    *
-   *    // As geojson
+   *    // Add point as geojson
    *    var posB =  {
    *                  "type": "Feature",
    *                  "geometry": {
    *                    "type": "Point",
-   *                    "coordinates": [125.6, 10.1]
+   *                    "coordinates": [-0.12574, 51.50853]
    *                  },
    *                  "properties": {
-   *                    "name": "Dinagat Islands"
+   *                    "name": "London"
    *                  }
    *                };
    *    var meshB = await geoearth.addPoint(posB);
