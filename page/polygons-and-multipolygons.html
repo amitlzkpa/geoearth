@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth Sample - Points and MultiPoints</title>
+  </head>
+  <body>
+    <div id="geo-container" style="height:100vh"></div>
+    <script src="/build/geoearth.js"></script>
+
+
+    <script type="text/javascript">
+
+      async function main() {
+
+        var opts = {
+          colorFn: 0xff0000,
+          textureImage: './textures/earth-black.jpg',
+          earthRadius: 160,
+          // disableAtmosphere: true
+          // autoStart: false
+        };
+        var container = document.getElementById("geo-container");
+        var geoearth = new GeoEarth(container, opts);
+        
+          
+        // Add polygon as array
+        var plA = [[[142.20,-10.48],[144.96,-13.92],[147.12,-18.77],[152.66,-24.68],[155.47,-24.68],[149.62,-18.29],[145.98,-10.57]]];
+        var polyA = await geoearth.addPolygon(plA);
+    
+        // Add polygon as geojson
+        var plB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Polygon", 
+                      "coordinates": [
+                        [
+                          [-16.17,18.72],[-16.96,13.92],[-7.64,8.92],[-1.40,14.60],[2.98,15.79],
+                          [6.32,14.00],[7.73,19.64],[0.26,19.72],[-6.76,17.14],[-16.17,18.72]
+                        ]
+                      ]
+                    }
+                  };
+        var polyB = await geoearth.addPolygon(plB);
+
+
+      }
+
+      main();
+
+    </script>
+
+  </body>
+</html>
