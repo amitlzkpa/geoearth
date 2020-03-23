@@ -980,14 +980,16 @@ class GeoEarth {
         // move shape cursor to first point
         var lng = pts[0][0];
         var lat = pts[0][1];
-        shape.moveTo(lng, lat);
+        // we flip lng, lat here to match with X, Y
+        shape.moveTo(lat, lng);
 
         // connect with lines to all successive pts
         var c = 1;
         do {
           var lng = pts[c][0];
           var lat = pts[c][1];
-          shape.lineTo(lng, lat);
+          // we flip lng, lat here to match with X, Y
+          shape.lineTo(lat, lng);
           c++;
         } while (c < pts.length)
 
@@ -999,14 +1001,16 @@ class GeoEarth {
         // move shape cursor to first point
         var lng = pts[0][0];
         var lat = pts[0][1];
-        path.moveTo(lng, lat);
+        // we flip lng, lat here to match with X, Y
+        path.moveTo(lat, lng);
 
         // connect with lines to all successive pts
         var c = 1;
         do {
           var lng = pts[c][0];
           var lat = pts[c][1];
-          path.lineTo(lng, lat);
+          // we flip lng, lat here to match with X, Y
+          path.lineTo(lat, lng);
           c++;
         } while (c < pts.length)
 
@@ -1138,14 +1142,16 @@ class GeoEarth {
           // move shape cursor to first point
           var lng = pts[0][0];
           var lat = pts[0][1];
-          shape.moveTo(lng, lat);
+          // we flip lng, lat here to match with X, Y
+          shape.moveTo(lat, lng);
 
           // connect with lines to all successive pts
           var c = 1;
           do {
             var lng = pts[c][0];
             var lat = pts[c][1];
-            shape.lineTo(lng, lat);
+            // we flip lng, lat here to match with X, Y
+            shape.lineTo(lat, lng);
             c++;
           } while (c < pts.length)
 
@@ -1157,14 +1163,16 @@ class GeoEarth {
           // move shape cursor to first point
           var lng = pts[0][0];
           var lat = pts[0][1];
-          path.moveTo(lng, lat);
+          // we flip lng, lat here to match with X, Y
+          path.moveTo(lat, lng);
 
           // connect with lines to all successive pts
           var c = 1;
           do {
             var lng = pts[c][0];
             var lat = pts[c][1];
-            path.lineTo(lng, lat);
+            // we flip lng, lat here to match with X, Y
+            path.lineTo(lat, lng);
             c++;
           } while (c < pts.length)
 
