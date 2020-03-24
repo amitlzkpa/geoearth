@@ -25,44 +25,40 @@
 
 
         // Add point as array
-        var posA = [-74.006, 40.714];
-        var meshA = await geoearth.addPoint(posA);
+        var ptA = [-50.00, 40.00];
+        var pointA = await geoearth.addPoint(ptA);
     
         // Add point as geojson
-        var posB =  {
+        var ptB =  {
                       "type": "Feature",
                       "geometry": {
                         "type": "Point",
-                        "coordinates": [-0.12574, 51.50853]
-                      },
-                      "properties": {
-                        "name": "London"
+                        "coordinates": [-40.00, 40.00]
                       }
                     };
-        var meshB = await geoearth.addPoint(posB);
+        var pointB = await geoearth.addPoint(ptB);
 
         
         // Add multipoint as array
-        var posC = [ [37.618423, 55.751244], [121.45806, 31.22222] ];
-        var objC = await geoearth.addMultiPoint(posC);
+        var mptA = [ [-60.00, 30.00], [-50.00, 30.00], [-40.00, 30.00], [-30.00, 30.00] ];
+        var mpointA = await geoearth.addMultiPoint(mptA);
         
         // Add multipoint as geojson
-        var posD =  {
+        var mptB =  {
                       "type": "Feature",
                       "geometry": {
                         "type": "MultiPoint",
                         "coordinates": [
-                          [-74.081749, 4.6097102],
-                          [72.877426, 19.076090],
-                          [139.6917114, 35.6894989],
-                          [2.3487999, 48.8534088]
+                          [-70.00, 20.00],
+                          [-60.00, 20.00],
+                          [-50.00, 20.00],
+                          [-40.00, 20.00],
+                          [-30.00, 20.00],
+                          [-20.00, 20.00]
                         ]
-                      },
-                      "properties": {
-                        "name": "Cities"
                       }
                     };
-        var objD = await geoearth.addMultiPoint(posD);
+        var mpointB = await geoearth.addMultiPoint(mptB);
 
 
       }
