@@ -82,6 +82,28 @@
                         };
         var featureCollection = await geoearth.addFeatureCollection(ftColl);
 
+        
+        var gj =    {
+                        "type": "FeatureCollection",
+                        "features": [
+                            { 
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [0.00, 90.00]
+                                }
+                            },
+                            { 
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [0.00, -90.00]
+                                }
+                            },
+                        ]
+                    };
+        var geoJson = await geoearth.addGeoJson(gj);
+
 
       }
 
