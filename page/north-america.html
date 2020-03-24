@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Geoearth Sample - Continents</title>
+    <title>Geoearth Sample - North America</title>
   </head>
   <body>
     <div id="geo-container" style="height:100vh"></div>
@@ -24,7 +24,7 @@
         var geoearth = new GeoEarth(container, opts);
 
 
-        var json = await fetch('./data/continents_2.geojson');
+        var json = await fetch('./data/north-america.geojson');
         geoearth.addGeoJson(await json.json());
 
 
