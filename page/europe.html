@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth Sample - Europe</title>
+  </head>
+  <body>
+    <div id="geo-container" style="height:100vh"></div>
+    <script src="/build/geoearth.js"></script>
+
+
+    <script type="text/javascript">
+
+      async function main() {
+
+        var opts = {
+          colorFn: 0xff0000,
+          textureImage: './textures/earth-black.jpg',
+          earthRadius: 160,
+          // disableAtmosphere: true
+          // autoStart: false
+        };
+        var container = document.getElementById("geo-container");
+        var geoearth = new GeoEarth(container, opts);
+
+
+        var json = await fetch('./data/europe.geojson');
+        geoearth.addGeoJson(await json.json());
+
+
+      }
+
+      main();
+
+    </script>
+
+  </body>
+</html>
