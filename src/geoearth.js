@@ -961,7 +961,7 @@ class GeoEarth {
     var mesh = new THREE.Mesh(fineGeometry, material);
 
     polygon.add(mesh);
-
+    
     var addedObj = this.addToActiveGeoJsons(polygon);
 
     return addedObj;
@@ -1138,6 +1138,9 @@ class GeoEarth {
     return addedObj;
   }
 
+
+
+
   /**
    * Add the given geojson object to the map.
    * Currently supports only a single feature json containing Point, MultiPoint, Line or MultiLine.
@@ -1147,17 +1150,17 @@ class GeoEarth {
    *
    * @example
    *
-   *    var geoJson = {
-   *                   "type": "Feature",
-   *                   "geometry": {
-   *                     "type": "Point",
-   *                     "coordinates": [125.6, 10.1]
-   *                   },
-   *                   "properties": {
-   *                     "name": "Dinagat Islands"
-   *                   }
-   *                 };
-   *    await geoearth.addGeoJson(geoJson);
+   *    var gJS = {
+   *                "type": "Feature",
+   *                "geometry": {
+   *                  "type": "Point",
+   *                  "coordinates": [125.6, 10.1]
+   *                },
+   *                "properties": {
+   *                  "name": "Dinagat Islands"
+   *                }
+   *              };
+   *    var geoJson = await geoearth.addGeoJson(geoJson);
    *
    */
   async addGeoJson(geoJson) {
@@ -1167,15 +1170,15 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
+    var ret;
+    
     switch (geoJson.type) {
       case "Feature": {
-        var feat = await this.addFeature(geoJson);
-        this.scene.add(feat);
+        ret = await this.addFeature(geoJson);
         break;
       }
       case "FeatureCollection": {
-        var feat = await this.addFeatureCollection(geoJson);
-        this.scene.add(feat);
+        ret = await this.addFeatureCollection(geoJson);
         break;
       }
       default: {
@@ -1183,28 +1186,29 @@ class GeoEarth {
         break;
       }
     }
+
+    return ret;
   }
 
   /**
    * Adds a given node in a geojson object and returns corresponding threejs object.
-   * Currently supports only a single feature json containing Point, MultiPoint, Line or MultiLine.
    * Awaits till the instance is ready to be worked with.
    *
    * @param {Geojson} geoJsonNode - Geojson node to be parsed.
    *
    * @example
    *
-   *    var node =   {
-   *                   "type": "Feature",
-   *                   "geometry": {
-   *                     "type": "Point",
-   *                     "coordinates": [125.6, 10.1]
-   *                   },
-   *                   "properties": {
-   *                     "name": "Dinagat Islands"
-   *                   }
-   *                 };
-   *    var threeJsObj = await geoearth.addFeature(node);
+   *    var ft = {
+   *               "type": "Feature",
+   *               "geometry": {
+   *                 "type": "Point",
+   *                 "coordinates": [125.6, 10.1]
+   *               },
+   *               "properties": {
+   *                 "name": "Dinagat Islands"
+   *               }
+   *             };
+   *    var feature = await geoearth.addFeature(ft);
    *
    */
   async addFeature(node) {
@@ -1218,39 +1222,27 @@ class GeoEarth {
     var ret = null;
     switch (ftType) {
       case 'Point': {
-        ret = await this.addPoint(node, {
-          color: 0xff0000
-        });
+        ret = await this.addPoint(node);
         break;
       }
       case 'MultiPoint': {
-        ret = await this.addMultiPoint(node, {
-          color: 0xababab
-        });
+        ret = await this.addMultiPoint(node);
         break;
       }
       case 'LineString': {
-        ret = await this.addLineString(node, {
-          color: 0xff00f0
-        });
+        ret = await this.addLineString(node);
         break;
       }
       case 'MultiLineString': {
-        ret = await this.addMultiLineString(node, {
-          color: 0x0000ff
-        });
+        ret = await this.addMultiLineString(node);
         break;
       }
       case 'Polygon': {
-        ret = await this.addPolygon(node, {
-          color: 0x0f0ff0
-        });
+        ret = await this.addPolygon(node);
         break;
       }
       case 'MultiPolygon': {
-        ret = await this.addMultiPolygon(node, {
-          color: 0x000fff
-        });
+        ret = await this.addMultiPolygon(node);
         break;
       }
       default: {
@@ -1260,55 +1252,61 @@ class GeoEarth {
       }
     }
 
-    var addedObj = this.addToActiveGeoJsons(ret);
-
-    return addedObj;
+    return ret;
   }
 
   /**
-   * Adds a given node in a geojson object and returns corresponding threejs object.
+   * Adds a given node in a geojson object and returns a list of corresponding threejs object.
    * Awaits till the instance is ready to be worked with.
    *
    * @param {Geojson} geoJsonNode - Geojson node to be added.
    *
    * @example
    *
-   *    var node =    {
-   *                    "type": "FeatureCollection",
-   *                    "features": [
-   *                      { "type": "Feature",
-   *                        "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
-   *                        "properties": {"prop0": "value0"}
-   *                        },
-   *                      { "type": "Feature",
-   *                        "geometry": {
-   *                          "type": "LineString",
-   *                          "coordinates": [
-   *                            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
-   *                            ]
-   *                          },
-   *                        "properties": {
-   *                          "prop0": "value0",
-   *                          "prop1": 0.0
-   *                          }
-   *                        },
-   *                      { "type": "Feature",
-   *                         "geometry": {
-   *                           "type": "Polygon",
-   *                           "coordinates": [
-   *                             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
-   *                               [100.0, 1.0], [100.0, 0.0] ]
-   *                             ]
-   *                  
-   *                         },
-   *                         "properties": {
-   *                           "prop0": "value0",
-   *                           "prop1": {"this": "that"}
-   *                           }
-   *                         }
-   *                      ]
+   *    var ftColl =    {
+   *                        "type": "FeatureCollection",
+   *                        "features": [
+   *                            { 
+   *                                "type": "Feature",
+   *                                "geometry": {
+   *                                    "type": "Point",
+   *                                    "coordinates": [120.00, 0.00]
+   *                                },
+   *                                "properties": {
+   *                                    "prop0": "value0"
+   *                                }
+   *                            },
+   *                            { 
+   *                                "type": "Feature",
+   *                                "geometry": {
+   *                                    "type": "LineString",
+   *                                    "coordinates": [
+   *                                        [-40.00, 20.00], [-40.00, -20.00]
+   *                                    ]
+   *                                },
+   *                                "properties": {
+   *                                    "prop0": "value0",
+   *                                    "prop1": 0.0
+   *                                }
+   *                            },
+   *                            { 
+   *                                "type": "Feature",
+   *                                "geometry": {
+   *                                    "type": "Polygon",
+   *                                    "coordinates": [
+   *                                        [
+   *                                            [20.00, -10.00], [40.00, -10.00], [40.00, 10.00], [20.00, 10.00]
+   *                                        ]
+   *                                    ]
+   *                                },
+   *                                "properties": {
+   *                                    "prop0": "value0",
+   *                                    "prop1": { "this": "that" }
+   *                                }
+   *                            }
+   *                        ]
    *                    };
-   *    var threeJsObj = await geoearth.addFeatureCollection(node);
+   *    var featureCollection = await geoearth.addFeatureCollection(ftColl);
    *
    */
   async addFeatureCollection(node) {
@@ -1322,21 +1320,20 @@ class GeoEarth {
     if (ftType !== "FeatureCollection") {
       throw (`Unexpected typ: '${ftType}'. Expected FeatureCollection`)
     }
-    var ret = new THREE.Object3D();
+    var ret = [];
     var feats = node.features;
     for (var i = 0; i < feats.length; i++) {
       var f = await this.addFeature(feats[i]);
-      if (f) ret.add(f);
+      if (f) ret.push(f);
     }
 
-    var addedObj = this.addToActiveGeoJsons(ret);
-
-    return addedObj;
+    return ret;
   }
 
 
-  addToActiveGeoJsons(threejsObj) {
 
+  
+  addToActiveGeoJsons(threejsObj) {
     var id = (threejsObj && threejsObj.uuid) ? threejsObj.uuid : null;
     if (!id) return null;
 

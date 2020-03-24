@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth Sample - Points and MultiPoints</title>
+  </head>
+  <body>
+    <div id="geo-container" style="height:100vh"></div>
+    <script src="/build/geoearth.js"></script>
+
+
+    <script type="text/javascript">
+
+      async function main() {
+
+        var opts = {
+          colorFn: 0xff0000,
+          textureImage: './textures/earth-black.jpg',
+          earthRadius: 160,
+          // disableAtmosphere: true
+          // autoStart: false
+        };
+        var container = document.getElementById("geo-container");
+        var geoearth = new GeoEarth(container, opts);
+
+        
+        var ft = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [180.00, 0.00]
+                    },
+                    "properties": {
+                        "name": "Dinagat Islands"
+                    }
+                 };
+        var feature = await geoearth.addFeature(ft);
+
+        
+        var ftColl =    {
+                            "type": "FeatureCollection",
+                            "features": [
+                                { 
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [0.00, 0.00]
+                                    },
+                                    "properties": {
+                                        "prop0": "value0"
+                                    }
+                                },
+                                { 
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": [
+                                            [-20.00, 20.00], [-20.00, -20.00]
+                                        ]
+                                    },
+                                    "properties": {
+                                        "prop0": "value0",
+                                        "prop1": 0.0
+                                    }
+                                },
+                                { 
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "Polygon",
+                                        "coordinates": [
+                                            [
+                                                [20.00, -10.00], [40.00, -10.00], [40.00, 10.00], [20.00, 10.00]
+                                            ]
+                                        ]
+                                    },
+                                    "properties": {
+                                        "prop0": "value0",
+                                        "prop1": { "this": "that" }
+                                    }
+                                }
+                            ]
+                        };
+        var featureCollection = await geoearth.addFeatureCollection(ftColl);
+
+
+      }
+
+      main();
+
+    </script>
+
+  </body>
+</html>
