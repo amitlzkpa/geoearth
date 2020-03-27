@@ -25,7 +25,10 @@
 
 
         var json = await fetch('./data/oceania.geojson');
-        geoearth.addGeoJson(await json.json());
+        var geoOpts = {
+          color: 0x00aaff
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
 
 
       }

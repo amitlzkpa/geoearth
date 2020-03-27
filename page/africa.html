@@ -25,7 +25,10 @@
 
 
         var json = await fetch('./data/africa.geojson');
-        geoearth.addGeoJson(await json.json());
+        var geoOpts = {
+          color: '#41C9A2'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
 
 
       }

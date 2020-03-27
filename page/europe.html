@@ -25,7 +25,10 @@
 
 
         var json = await fetch('./data/europe.geojson');
-        geoearth.addGeoJson(await json.json());
+        var geoOpts = {
+          color: '#DF3483'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
 
 
       }

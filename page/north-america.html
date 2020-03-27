@@ -25,7 +25,10 @@
 
 
         var json = await fetch('./data/north-america.geojson');
-        geoearth.addGeoJson(await json.json());
+        var geoOpts = {
+          color: '#59C3C3'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
 
 
       }
