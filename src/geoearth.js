@@ -370,6 +370,51 @@ class GeoEarth {
   // ----------------------------------------------------------------------------
   /*
 
+   _       _                        _ 
+  (_)     | |                      | |
+   _ _ __ | |_ ___ _ __ _ __   __ _| |
+  | | '_ \| __/ _ \ '__| '_ \ / _` | |
+  | | | | | ||  __/ |  | | | | (_| | |
+  |_|_| |_|\__\___|_|  |_| |_|\__,_|_|
+
+  */
+  
+  // ref: https://bocoup.com/blog/learning-three-js-with-real-world-challenges-that-have-already-been-solved
+  makeTextSprite(message, opts) {
+    let parameters = opts || {};
+    let fontface = parameters.fontface || 'Helvetica';
+    let fontsize = parameters.fontsize || 40;
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+    context.font = fontsize + "px " + fontface;
+
+    // get size data (height depends only on font size)
+    let metrics = context.measureText(message);
+    let textWidth = metrics.width;
+
+    // text color
+    context.fillStyle = parameters.color || '#FFFFFF';
+    context.fillText(message, 0, fontsize);
+
+    // canvas contents will be used for a texture
+    let texture = new THREE.Texture(canvas)
+    texture.minFilter = THREE.LinearFilter;
+    texture.needsUpdate = true;
+
+    let spriteMaterial = new THREE.SpriteMaterial({
+        map: texture,
+        useScreenCoordinates: false
+    });
+    let sprite = new THREE.Sprite(spriteMaterial);
+    sprite.scale.set(100, 50, 1.0);
+    return sprite;
+  }
+
+
+
+  // ----------------------------------------------------------------------------
+  /*
+
         _   _ _ _ _         
   _   _| |_(_) (_) |_ _   _ 
  | | | | __| | | | __| | | |
@@ -494,13 +539,16 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
+    var label;
     var coords = null;
     opts = opts || {};
 
     if (input.constructor === Array) {
       coords = input;
+      label = opts.label || null;
     } else {
       coords = input.geometry.coordinates;
+      label = opts.label || input.properties.label || null;
     }
 
     coords = JSON.parse(JSON.stringify(coords));
@@ -517,13 +565,23 @@ class GeoEarth {
     var material = new THREE.MeshBasicMaterial({
       color: color
     });
-    var point = new THREE.Mesh(geometry, material);
+    var geomContainer = new THREE.Object3D();
 
+    var point = new THREE.Mesh(geometry, material);
     point.position.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
     point.position.y = this.earthRadius * Math.cos(phi);
     point.position.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+    geomContainer.add(point);
 
-    var addedObj = this.addToActiveGeoJsons(point);
+    var center = point.position.clone();
+
+    if (label) {
+      var labelGeom = this.makeTextSprite(label);
+      labelGeom.position.set(center.x, center.y, center.z);
+      geomContainer.add(labelGeom);
+    }
+    
+    var addedObj = this.addToActiveGeoJsons(geomContainer);
 
     return addedObj;
   }
