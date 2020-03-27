@@ -1163,7 +1163,7 @@ class GeoEarth {
    *    var geoJson = await geoearth.addGeoJson(geoJson);
    *
    */
-  async addGeoJson(geoJson) {
+  async addGeoJson(geoJson, options) {
 
     while (!this.isReady) {
       await this.wait(this.sleepTime);
@@ -1174,11 +1174,11 @@ class GeoEarth {
     
     switch (geoJson.type) {
       case "Feature": {
-        ret = await this.addFeature(geoJson);
+        ret = await this.addFeature(geoJson, options);
         break;
       }
       case "FeatureCollection": {
-        ret = await this.addFeatureCollection(geoJson);
+        ret = await this.addFeatureCollection(geoJson, options);
         break;
       }
       default: {
@@ -1211,7 +1211,7 @@ class GeoEarth {
    *    var feature = await geoearth.addFeature(ft);
    *
    */
-  async addFeature(node) {
+  async addFeature(node, options) {
 
     while (!this.isReady) {
       await this.wait(this.sleepTime);
@@ -1222,27 +1222,27 @@ class GeoEarth {
     var ret = null;
     switch (ftType) {
       case 'Point': {
-        ret = await this.addPoint(node);
+        ret = await this.addPoint(node, options);
         break;
       }
       case 'MultiPoint': {
-        ret = await this.addMultiPoint(node);
+        ret = await this.addMultiPoint(node, options);
         break;
       }
       case 'LineString': {
-        ret = await this.addLineString(node);
+        ret = await this.addLineString(node, options);
         break;
       }
       case 'MultiLineString': {
-        ret = await this.addMultiLineString(node);
+        ret = await this.addMultiLineString(node, options);
         break;
       }
       case 'Polygon': {
-        ret = await this.addPolygon(node);
+        ret = await this.addPolygon(node, options);
         break;
       }
       case 'MultiPolygon': {
-        ret = await this.addMultiPolygon(node);
+        ret = await this.addMultiPolygon(node, options);
         break;
       }
       default: {
@@ -1309,7 +1309,7 @@ class GeoEarth {
    *    var featureCollection = await geoearth.addFeatureCollection(ftColl);
    *
    */
-  async addFeatureCollection(node) {
+  async addFeatureCollection(node, options) {
 
     while (!this.isReady) {
       await this.wait(this.sleepTime);
@@ -1323,7 +1323,7 @@ class GeoEarth {
     var ret = [];
     var feats = node.features;
     for (var i = 0; i < feats.length; i++) {
-      var f = await this.addFeature(feats[i]);
+      var f = await this.addFeature(feats[i], options);
       if (f) ret.push(f);
     }
 
