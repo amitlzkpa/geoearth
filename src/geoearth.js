@@ -548,7 +548,7 @@ class GeoEarth {
       label = opts.label || null;
     } else {
       coords = input.geometry.coordinates;
-      label = opts.label || input.properties.label || null;
+      label = opts.label || (input.properties ? input.properties.label : null) || null;
     }
 
     coords = JSON.parse(JSON.stringify(coords));
@@ -636,7 +636,7 @@ class GeoEarth {
       label = opts.label || null;
     } else {
       coords = input.geometry.coordinates;
-      label = opts.label || input.properties.label || null;
+      label = opts.label || (input.properties ? input.properties.label : null) || null;
     }
 
     coords = JSON.parse(JSON.stringify(coords));
@@ -648,6 +648,7 @@ class GeoEarth {
     for (var ptIdx = 0; ptIdx < coords.length; ptIdx++) {
       var lng = coords[ptIdx][0];
       var lat = coords[ptIdx][1];
+      // compute total to get average for the center later
       totLng += lng;
       totLat += lat;
 
@@ -934,13 +935,16 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
+    var label;
     var inLns = null;
     opts = opts || {};
 
     if (input.constructor === Array) {
       inLns = input;
+      label = opts.label || null;
     } else {
       inLns = input.geometry.coordinates;
+      label = opts.label || (input.properties ? input.properties.label : null) || null;
     }
 
     inLns = JSON.parse(JSON.stringify(inLns));
@@ -953,6 +957,10 @@ class GeoEarth {
       side: THREE.DoubleSide,
       // wireframe: true
     });
+
+    var totLng = 0;
+    var totLat = 0;
+    var totPts = 0;
 
     for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
 
@@ -994,6 +1002,10 @@ class GeoEarth {
           var lat = pts[c][1];
           // we flip lng, lat here to match with X, Y
           shape.lineTo(lat, lng);
+          // compute total to get average for the center later
+          totLng += lng;
+          totLat += lat;
+          totPts++;
           c++;
         } while (c < pts.length)
 
@@ -1044,8 +1056,27 @@ class GeoEarth {
     var mesh = new THREE.Mesh(fineGeometry, material);
 
     polygon.add(mesh);
+
+    var geomContainer = new THREE.Object3D();
+    geomContainer.add(polygon);
+
+    var cntLng = totLng / totPts;
+    var cntLat = totLat / totPts;
+    var phi = GeoEarth.latToSphericalCoords(cntLat);
+    var theta = GeoEarth.lngToSphericalCoords(cntLng);
+
+    var center = new THREE.Vector3();
+    center.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
+    center.y = this.earthRadius * Math.cos(phi);
+    center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
     
-    var addedObj = this.addToActiveGeoJsons(polygon);
+    if (label) {
+      var labelGeom = this.makeTextSprite(label);
+      labelGeom.position.set(center.x, center.y, center.z);
+      geomContainer.add(labelGeom);
+    }
+    
+    var addedObj = this.addToActiveGeoJsons(geomContainer);
 
     return addedObj;
   }
@@ -1098,18 +1129,25 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
+    var label;
     var inLns = null;
     opts = opts || {};
 
     if (input.constructor === Array) {
       inLns = input;
+      label = opts.label || null;
     } else {
       inLns = input.geometry.coordinates;
+      label = opts.label || (input.properties ? input.properties.label : null) || null;
     }
 
     inLns = JSON.parse(JSON.stringify(inLns));
 
     var polygons = new THREE.Object3D();
+
+    var totLng = 0;
+    var totLat = 0;
+    var totPts = 0;
 
     for (let inPolyIdx = 0; inPolyIdx < inLns.length; inPolyIdx++) {
 
@@ -1161,6 +1199,10 @@ class GeoEarth {
             var lat = pts[c][1];
             // we flip lng, lat here to match with X, Y
             shape.lineTo(lat, lng);
+            // compute total to get average for the center later
+            totLng += lng;
+            totLat += lat;
+            totPts++;
             c++;
           } while (c < pts.length)
 
@@ -1216,7 +1258,26 @@ class GeoEarth {
 
     }
 
-    var addedObj = this.addToActiveGeoJsons(polygons);
+    var geomContainer = new THREE.Object3D();
+    geomContainer.add(polygons);
+
+    var cntLng = totLng / totPts;
+    var cntLat = totLat / totPts;
+    var phi = GeoEarth.latToSphericalCoords(cntLat);
+    var theta = GeoEarth.lngToSphericalCoords(cntLng);
+
+    var center = new THREE.Vector3();
+    center.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
+    center.y = this.earthRadius * Math.cos(phi);
+    center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+    
+    if (label) {
+      var labelGeom = this.makeTextSprite(label);
+      labelGeom.position.set(center.x, center.y, center.z);
+      geomContainer.add(labelGeom);
+    }
+
+    var addedObj = this.addToActiveGeoJsons(geomContainer);
 
     return addedObj;
   }
