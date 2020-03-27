@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth Sample - Antarctica</title>
+  </head>
+  <body>
+    <div id="geo-container" style="height:100vh"></div>
+    <script src="/build/geoearth.js"></script>
+
+
+    <script type="text/javascript">
+
+      async function main() {
+
+        var opts = {
+          colorFn: 0xff0000,
+          textureImage: './textures/earth-black.jpg',
+          earthRadius: 160,
+          // disableAtmosphere: true
+          // autoStart: false
+        };
+        var container = document.getElementById("geo-container");
+        var geoearth = new GeoEarth(container, opts);
+
+
+        var json, geoOpts;
+        
+        json = await fetch('./data/north-america.geojson');
+        geoOpts = {
+            color: '#59C3C3'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
+
+
+        json = await fetch('./data/south-america.geojson');
+        geoOpts = {
+            color: '#EB5A34'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
+
+
+        json = await fetch('./data/europe.geojson');
+        geoOpts = {
+            color: '#DF3483'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
+
+
+        json = await fetch('./data/africa.geojson');
+        geoOpts = {
+            color: '#5DAF57'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
+
+
+        json = await fetch('./data/asia.geojson');
+        geoOpts = {
+            color: '#EDAE49'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
+
+
+        json = await fetch('./data/oceania.geojson');
+        geoOpts = {
+            color: '#168CC8'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
+
+
+        json = await fetch('./data/antarctica.geojson');
+        geoOpts = {
+            color: '#FFFFFF'
+        };
+        geoearth.addGeoJson(await json.json(), geoOpts);
+
+
+      }
+
+      main();
+
+    </script>
+
+  </body>
+</html>
