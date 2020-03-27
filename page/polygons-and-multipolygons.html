@@ -22,7 +22,7 @@
           
         // Add polygon as array
         var plA = [[[0.00,-20.00],[10.00,-20.00],[10.00,20.00],[0.00,20.00]]];
-        var polyA = await geoearth.addPolygon(plA);
+        var polyA = await geoearth.addPolygon(plA, {label: "pqr"});
     
         // Add polygon as geojson
         var plB = {
@@ -30,6 +30,9 @@
                     "geometry": {
                       "type": "Polygon", 
                       "coordinates": [[[20.00,-10.00],[40.00,-10.00],[40.00,10.00],[20.00,10.00]]]
+                    },
+                    "properties": {
+                      "label": "jkl"
                     }
                   };
         var polyB = await geoearth.addPolygon(plB);
@@ -45,12 +48,11 @@
                           [ [90.00,-20.00],[120.00,-20.00],[120.00,20.00],[90.00,20.00] ]
                         ]
                       ];
-        var mpolygonA = await geoearth.addMultiPolygon(mpolyA);
+        var mpolygonA = await geoearth.addMultiPolygon(mpolyA, {label: "uvq"});
 
         // Add multipolygon as geojson
         var mpolyB = {
                         "type": "Feature",
-                        "properties": {},
                         "geometry": {
                           "type": "MultiPolygon", 
                           "coordinates":  [
@@ -62,6 +64,9 @@
                                               [ [130.00,10.00],[130.00,-20.00],[160.00,-20.00] ]
                                             ]
                                           ]
+                        },
+                        "properties": {
+                          "label": "xyz"
                         }
                       };
         var mpolygonB = await geoearth.addMultiPolygon(mpolyB);
