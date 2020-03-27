@@ -17,7 +17,7 @@
           colorFn: 0xff0000,
           textureImage: './textures/earth-black.jpg',
           earthRadius: 160,
-          // disableAtmosphere: true
+          disableAtmosphere: true
           // autoStart: false
         };
         var container = document.getElementById("geo-container");
@@ -38,18 +38,18 @@
         var Buenos_Aires = [-58.37723, -34.61315];
 
 
-        geoearth.addPoint( San_Francisco , {size: 4} );
-        geoearth.addPoint( Shanghai , {size: 4} );
-        geoearth.addPoint( Singapore , {size: 4} );
-        geoearth.addPoint( Mumbai , {size: 4} );
-        geoearth.addPoint( Bogota , {size: 4} );
-        geoearth.addPoint( Lagos , {size: 4} );
-        geoearth.addPoint( New_York, {size: 4} );
-        geoearth.addPoint( London, {size: 4} );
-        geoearth.addPoint( Cairo, {size: 4} );
-        geoearth.addPoint( Moscow, {size: 4} );
-        geoearth.addPoint( Melbourne, {size: 4} );
-        geoearth.addPoint( Buenos_Aires, {size: 4} );
+        geoearth.addPoint( San_Francisco , {size: 4, label: 'San Francisco'} );
+        geoearth.addPoint( Shanghai , {size: 4, label: 'Shanghai'} );
+        geoearth.addPoint( Singapore , {size: 4, label: 'Singapore'} );
+        geoearth.addPoint( Mumbai , {size: 4, label: 'Mumbai'} );
+        geoearth.addPoint( Bogota , {size: 4, label: 'Bogota'} );
+        geoearth.addPoint( Lagos , {size: 4, label: 'Lagos'} );
+        geoearth.addPoint( New_York, {size: 4, label: 'New York'} );
+        geoearth.addPoint( London, {size: 4, label: 'London'} );
+        geoearth.addPoint( Cairo, {size: 4, label: 'Cairo'} );
+        geoearth.addPoint( Moscow, {size: 4, label: 'Moscow'} );
+        geoearth.addPoint( Melbourne, {size: 4, label: 'Melbourne'} );
+        geoearth.addPoint( Buenos_Aires, {size: 4, label: 'Buenos Aires'} );
 
 
       }
