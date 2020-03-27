@@ -22,7 +22,7 @@
 
         // Add point as array
         var ptA = [-50.00, 40.00];
-        var pointA = await geoearth.addPoint(ptA);
+        var pointA = await geoearth.addPoint(ptA, {label: 'abc'});
     
         // Add point as geojson
         var ptB =  {
@@ -30,6 +30,9 @@
                       "geometry": {
                         "type": "Point",
                         "coordinates": [-40.00, 40.00]
+                      },
+                      properties: {
+                        label: "def"
                       }
                     };
         var pointB = await geoearth.addPoint(ptB);
@@ -37,7 +40,7 @@
         
         // Add multipoint as array
         var mptA = [ [-60.00, 30.00], [-50.00, 30.00], [-40.00, 30.00], [-30.00, 30.00] ];
-        var mpointA = await geoearth.addMultiPoint(mptA);
+        var mpointA = await geoearth.addMultiPoint(mptA, {label: "ghi"});
         
         // Add multipoint as geojson
         var mptB =  {
@@ -52,6 +55,9 @@
                           [-30.00, 20.00],
                           [-20.00, 20.00]
                         ]
+                      },
+                      properties: {
+                        label: "jkl"
                       }
                     };
         var mpointB = await geoearth.addMultiPoint(mptB);
