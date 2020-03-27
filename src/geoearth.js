@@ -180,7 +180,7 @@ class GeoEarth {
 
     this.scene = new THREE.Scene();
 
-    var geometry = new THREE.SphereGeometry(this.earthRadius, 40, 30);
+    var geometry = new THREE.SphereGeometry(this.earthRadius, 128, 128);
 
     shader = this.Shaders['earth'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
@@ -627,22 +627,29 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
+    var label;
     var coords = null;
     opts = opts || {};
 
     if (input.constructor === Array) {
       coords = input;
+      label = opts.label || null;
     } else {
       coords = input.geometry.coordinates;
+      label = opts.label || input.properties.label || null;
     }
 
     coords = JSON.parse(JSON.stringify(coords));
 
     var points = new THREE.Object3D();
+    var totLng = 0;
+    var totLat = 0;
 
     for (var ptIdx = 0; ptIdx < coords.length; ptIdx++) {
       var lng = coords[ptIdx][0];
       var lat = coords[ptIdx][1];
+      totLng += lng;
+      totLat += lat;
 
       var phi = GeoEarth.latToSphericalCoords(lat);
       var theta = GeoEarth.lngToSphericalCoords(lng);
@@ -661,8 +668,26 @@ class GeoEarth {
 
       points.add(point);
     }
+    var geomContainer = new THREE.Object3D();
+    geomContainer.add(points);
 
-    var addedObj = this.addToActiveGeoJsons(points);
+    var cntLng = totLng / coords.length;
+    var cntLat = totLat / coords.length;
+    var phi = GeoEarth.latToSphericalCoords(cntLat);
+    var theta = GeoEarth.lngToSphericalCoords(cntLng);
+
+    var center = new THREE.Vector3();
+    center.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
+    center.y = this.earthRadius * Math.cos(phi);
+    center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+    
+    if (label) {
+      var labelGeom = this.makeTextSprite(label);
+      labelGeom.position.set(center.x, center.y, center.z);
+      geomContainer.add(labelGeom);
+    }
+
+    var addedObj = this.addToActiveGeoJsons(geomContainer);
 
     return addedObj;
   }
