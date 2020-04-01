@@ -1115,19 +1115,9 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
-    var label;
-    var inLns = null;
-    opts = opts || {};
+    var parsedData = this.parseInputs(input, opts);
 
-    if (input.constructor === Array) {
-      inLns = input;
-      label = opts.label || null;
-    } else {
-      inLns = input.geometry.coordinates;
-      label = opts.label || (input.properties ? input.properties.label : null) || null;
-    }
-
-    inLns = JSON.parse(JSON.stringify(inLns));
+    var inLns = JSON.parse(JSON.stringify(parsedData.geometry));
 
     var polygons = new THREE.Object3D();
 
@@ -1139,9 +1129,8 @@ class GeoEarth {
 
       var polygon = new THREE.Object3D();
       var shape = new THREE.Shape();
-      var col = opts.color || 0xffffff
       var material = new THREE.MeshBasicMaterial({
-        color: col,
+        color: parsedData.color,
         side: THREE.DoubleSide
       });
 
@@ -1257,8 +1246,8 @@ class GeoEarth {
     center.y = this.earthRadius * Math.cos(phi);
     center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
     
-    if (label) {
-      var labelGeom = this.makeTextSprite(label);
+    if (parsedData.label) {
+      var labelGeom = this.makeTextSprite(parsedData.label);
       labelGeom.position.set(center.x, center.y, center.z);
       geomContainer.add(labelGeom);
     }
