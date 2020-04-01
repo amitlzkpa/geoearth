@@ -506,31 +506,34 @@ class GeoEarth {
 
 
   /**
-   * Adds an array or geojson object representing a single point to a threejs 3D object.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {geojson} input - An array or geojson object representing a point on the map.
-   * @param {Object} opts - An object containing configuration parameters.
-   *                        'color': Color for the mesh (default: 0xffff00).
-   *                        'size': Size for the mesh (default: 2).
-   * @return {THREE.Mesh} A threejs 3D object (as a sphere).
-   *
-   * @example
-   *      
-   *    // Add point as array
-   *    var ptA = [-50.00, 40.00];
-   *    var pointA = await geoearth.addPoint(ptA);
-   *
-   *    // Add point as geojson
-   *    var ptB =  {
-   *                  "type": "Feature",
-   *                  "geometry": {
-   *                    "type": "Point",
-   *                    "coordinates": [-40.00, 40.00]
-   *                  }
-   *                };
-   *    var pointB = await geoearth.addPoint(ptB);
-   *
+     Adds an array or geojson object representing a single point to a threejs 3D object.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {geojson} input - An array or geojson object representing a point on the map.
+     @param {Object} opts - An object containing configuration parameters.
+                            'color': Color for the mesh (default: 0xffff00).
+                            'size': Size for the mesh (default: 2).
+     @return {THREE.Mesh} A threejs 3D object (as a sphere).
+    
+     @example
+          
+        // Add point as array
+        var ptA = [-50.00, 40.00];
+        var pointA = await geoearth.addPoint(ptA, {label: 'abc'});
+    
+        // Add point as geojson
+        var ptB =  {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "Point",
+                        "coordinates": [-40.00, 40.00]
+                      },
+                      "properties": {
+                        "label": "def"
+                      }
+                    };
+        var pointB = await geoearth.addPoint(ptB);
+    
    */
   async addPoint(input, opts) {
 
@@ -587,38 +590,41 @@ class GeoEarth {
   }
 
   /**
-   * Adds an array or geojson object representing a multiple points to a threejs 3D object.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {geojson} input - An array or geojson object representing multiple points on the map.
-   * @param {Object} opts - An object containing configuration parameters.
-   *                        'color': Color for the mesh (default: 0xffff00).
-   *                        'size': Size for the mesh (default: 2).
-   * @return {THREE.Object3D} A threejs 3D object (as a collection of spheres inside an THREE.Object3D).
-   *
-   * @example
-   *      
-   *    // Add multipoint as array
-   *    var mptA = [ [-60.00, 30.00], [-50.00, 30.00], [-40.00, 30.00], [-30.00, 30.00] ];
-   *    var mpointA = await geoearth.addMultiPoint(mptA);
-   *    
-   *    // Add multipoint as geojson
-   *    var mptB =  {
-   *                  "type": "Feature",
-   *                  "geometry": {
-   *                    "type": "MultiPoint",
-   *                    "coordinates": [
-   *                      [-70.00, 20.00],
-   *                      [-60.00, 20.00],
-   *                      [-50.00, 20.00],
-   *                      [-40.00, 20.00],
-   *                      [-30.00, 20.00],
-   *                      [-20.00, 20.00]
-   *                    ]
-   *                  }
-   *                };
-   *    var mpointB = await geoearth.addMultiPoint(mptB);
-   *
+     Adds an array or geojson object representing a multiple points to a threejs 3D object.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {geojson} input - An array or geojson object representing multiple points on the map.
+     @param {Object} opts - An object containing configuration parameters.
+                            'color': Color for the mesh (default: 0xffff00).
+                            'size': Size for the mesh (default: 2).
+     @return {THREE.Object3D} A threejs 3D object (as a collection of spheres inside an THREE.Object3D).
+    
+     @example
+          
+        // Add multipoint as array
+        var mptA = [ [-60.00, 30.00], [-50.00, 30.00], [-40.00, 30.00], [-30.00, 30.00] ];
+        var mpointA = await geoearth.addMultiPoint(mptA, {label: "ghi"});
+        
+        // Add multipoint as geojson
+        var mptB =  {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "MultiPoint",
+                        "coordinates": [
+                          [-70.00, 20.00],
+                          [-60.00, 20.00],
+                          [-50.00, 20.00],
+                          [-40.00, 20.00],
+                          [-30.00, 20.00],
+                          [-20.00, 20.00]
+                        ]
+                      },
+                      "properties": {
+                        "label": "jkl"
+                      }
+                    };
+        var mpointB = await geoearth.addMultiPoint(mptB);
+    
    */
   async addMultiPoint(input, opts) {
 
@@ -694,30 +700,30 @@ class GeoEarth {
   }
 
   /**
-   * Adds an array or geojson object representing a single line to a threejs 3D line.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {geojson} input - An array or geojson object representing a line on the map.
-   * @param {Object} opts - An object containing configuration parameters.
-   *                        'color': Color for the line (default: 0xffffff).
-   * @return {THREE.Line} A threejs 3D line.
-   *
-   * @example
-   * 
-   *    // Add line as array
-   *    var lnA = [ [-60.00, 0.00], [-20.00, 0.00] ];
-   *    var lineA = await geoearth.addLineString(lnA);
-   *
-   *    // Add line as geojson
-   *    var lnB = {
-   *                "type": "Feature",
-   *                "geometry": {
-   *                  "type": "LineString",
-   *                  "coordinates": [ [-40.00, 20.00], [-40.00, -20.00] ]
-   *                }
-   *              };
-   *    var lineB = await geoearth.addLineString(lnB);
-   *
+     Adds an array or geojson object representing a single line to a threejs 3D line.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {geojson} input - An array or geojson object representing a line on the map.
+     @param {Object} opts - An object containing configuration parameters.
+                            'color': Color for the line (default: 0xffffff).
+     @return {THREE.Line} A threejs 3D line.
+    
+     @example
+     
+        // Add line as array
+        var lnA = [ [-60.00, 0.00], [-20.00, 0.00] ];
+        var lineA = await geoearth.addLineString(lnA);
+    
+        // Add line as geojson
+        var lnB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "LineString",
+                      "coordinates": [ [-40.00, 20.00], [-40.00, -20.00] ]
+                    }
+                  };
+        var lineB = await geoearth.addLineString(lnB);
+    
    */
   async addLineString(input, opts) {
 
@@ -805,30 +811,30 @@ class GeoEarth {
   }
 
   /**
-   * Adds an array or geojson object representing multiple lines to threejs 3D lines.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {geojson} input - An array or geojson object representing multiple lines on the map.
-   * @param {Object} opts - An object containing configuration parameters.
-   *                        'color': Color for the line (default: 0xffffff).
-   * @return {THREE.Object3D} A threejs 3D object (as a collection of lines inside an THREE.Object3D).
-   *
-   * @example
-   *      
-   *    // Add multiline as array
-   *    var lnsA = [ [ [10.00, 30.00], [30.00, 10.00] ], [ [30.00, 10.00], [10.00, -10.00], [30.00, -30.00] ] ];
-   *    var linesA = await geoearth.addMultiLineString(lnsA);
-   *    
-   *    // Add multiline as geojson
-   *    var lnsB = {
-   *                "type": "Feature",
-   *                "geometry": {
-   *                  "type": "MultiLineString",
-   *                  "coordinates": [ [ [60.00, 30.00], [40.00, 10.00] ], [ [40.00, 10.00], [60.00, -10.00], [40.00, -30.00] ] ]
-   *                }
-   *              };
-   *    var linesB = await geoearth.addMultiLineString(lnsB);
-   *
+     Adds an array or geojson object representing multiple lines to threejs 3D lines.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {geojson} input - An array or geojson object representing multiple lines on the map.
+     @param {Object} opts - An object containing configuration parameters.
+                            'color': Color for the line (default: 0xffffff).
+     @return {THREE.Object3D} A threejs 3D object (as a collection of lines inside an THREE.Object3D).
+    
+     @example
+          
+        // Add multiline as array
+        var lnsA = [ [ [10.00, 30.00], [30.00, 10.00] ], [ [30.00, 10.00], [10.00, -10.00], [30.00, -30.00] ] ];
+        var linesA = await geoearth.addMultiLineString(lnsA);
+        
+        // Add multiline as geojson
+        var lnsB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "MultiLineString",
+                      "coordinates": [ [ [60.00, 30.00], [40.00, 10.00] ], [ [40.00, 10.00], [60.00, -10.00], [40.00, -30.00] ] ]
+                    }
+                  };
+        var linesB = await geoearth.addMultiLineString(lnsB);
+    
    */
   async addMultiLineString(input, opts) {
 
@@ -903,30 +909,33 @@ class GeoEarth {
   }
 
   /**
-   * Adds an array or geojson object representing a single polygon to a threejs 3D object.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {geojson} input - An array or geojson object representing a polygon on the map.
-   * @param {Object} opts - An object containing configuration parameters.
-   *                        'color': Color for the line (default: 0xffffff).
-   * @return {THREE.Object3D} A threejs 3D object.
-   *
-   * @example
-   *    
-   *    // Add polygon as array
-   *    var plA = [[[0.00,-20.00],[10.00,-20.00],[10.00,20.00],[0.00,20.00]]];
-   *    var polyA = await geoearth.addPolygon(plA);
-   *
-   *    // Add polygon as geojson
-   *    var plB = {
-   *                "type": "Feature",
-   *                "geometry": {
-   *                  "type": "Polygon", 
-   *                  "coordinates": [[[20.00,-10.00],[40.00,-10.00],[40.00,10.00],[20.00,10.00]]]
-   *                }
-   *              };
-   *    var polyB = await geoearth.addPolygon(plB);
-   *
+     Adds an array or geojson object representing a single polygon to a threejs 3D object.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {geojson} input - An array or geojson object representing a polygon on the map.
+     @param {Object} opts - An object containing configuration parameters.
+                            'color': Color for the line (default: 0xffffff).
+     @return {THREE.Object3D} A threejs 3D object.
+    
+     @example
+        
+        // Add polygon as array
+        var plA = [[[0.00,-20.00],[10.00,-20.00],[10.00,20.00],[0.00,20.00]]];
+        var polyA = await geoearth.addPolygon(plA, {label: "pqr"});
+    
+        // Add polygon as geojson
+        var plB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Polygon", 
+                      "coordinates": [[[20.00,-10.00],[40.00,-10.00],[40.00,10.00],[20.00,10.00]]]
+                    },
+                    "properties": {
+                      "label": "jkl"
+                    }
+                  };
+        var polyB = await geoearth.addPolygon(plB);
+    
    */
   async addPolygon(input, opts) {
 
@@ -1082,45 +1091,49 @@ class GeoEarth {
   }
 
   /**
-   * Adds an array or geojson object representing multiple polygons to threejs 3D multiple polygons.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {geojson} input - An array or geojson object representing multiple polygons on the map.
-   * @param {Object} opts - An object containing configuration parameters.
-   *                        'color': Color for the polygon (default: 0xffffff).
-   * @return {THREE.Object3D} A threejs 3D object (as a collection of polygons inside an THREE.Object3D).
-   *
-   * @example
-   *      
-   *    // Add multipolygon as array
-   *    var mpolyA =  [
-   *                    [
-   *                      [ [50.00,-30.00],[80.00,-30.00],[80.00,30.00],[50.00,30.00] ],
-   *                      [ [55.00,25.00],[75.00,25.00],[75.00,-25.00],[55.00,-25.00] ]
-   *                    ],
-   *                    [
-   *                      [ [90.00,-20.00],[120.00,-20.00],[120.00,20.00],[90.00,20.00] ]
-   *                    ]
-   *                  ];
-   *    var mpolygonA = await geoearth.addMultiPolygon(mpolyA);*
-   *    // Add multipolygon as geojson
-   *    var mpolyB = {
-   *                    "type": "Feature",
-   *                    "properties": {},
-   *                    "geometry": {
-   *                      "type": "MultiPolygon", 
-   *                      "coordinates":  [
-   *                                        [
-   *                                          [ [130.00,20.00],[160.00,20.00],[160.00,-10.00] ],
-   *                                          [ [155.00,1.00],[155.00,16.00],[140.00,16.00] ]
-   *                                        ],
-   *                                        [
-   *                                          [ [130.00,10.00],[130.00,-20.00],[160.00,-20.00] ]
-   *                                        ]
-   *                                      ]
-   *                    }
-   *                  };
-   *
+     Adds an array or geojson object representing multiple polygons to threejs 3D multiple polygons.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {geojson} input - An array or geojson object representing multiple polygons on the map.
+     @param {Object} opts - An object containing configuration parameters.
+                            'color': Color for the polygon (default: 0xffffff).
+     @return {THREE.Object3D} A threejs 3D object (as a collection of polygons inside an THREE.Object3D).
+    
+     @example
+          
+        // Add multipolygon as array
+        var mpolyA =  [
+                        [
+                          [ [50.00,-30.00],[80.00,-30.00],[80.00,30.00],[50.00,30.00] ],
+                          [ [55.00,25.00],[75.00,25.00],[75.00,-25.00],[55.00,-25.00] ]
+                        ],
+                        [
+                          [ [90.00,-20.00],[120.00,-20.00],[120.00,20.00],[90.00,20.00] ]
+                        ]
+                      ];
+        var mpolygonA = await geoearth.addMultiPolygon(mpolyA, {label: "uvq"});
+
+        // Add multipolygon as geojson
+        var mpolyB = {
+                        "type": "Feature",
+                        "geometry": {
+                          "type": "MultiPolygon", 
+                          "coordinates":  [
+                                            [
+                                              [ [130.00,20.00],[160.00,20.00],[160.00,-10.00] ],
+                                              [ [155.00,1.00],[155.00,16.00],[140.00,16.00] ]
+                                            ],
+                                            [
+                                              [ [130.00,10.00],[130.00,-20.00],[160.00,-20.00] ]
+                                            ]
+                                          ]
+                        },
+                        "properties": {
+                          "label": "xyz"
+                        }
+                      };
+        var mpolygonB = await geoearth.addMultiPolygon(mpolyB);
+    
    */
   async addMultiPolygon(input, opts) {
 
@@ -1286,26 +1299,35 @@ class GeoEarth {
 
 
   /**
-   * Add the given geojson object to the map.
-   * Currently supports only a single feature json containing Point, MultiPoint, Line or MultiLine.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {Geojson} geoJson - Geojson object to be added.
-   *
-   * @example
-   *
-   *    var gJS = {
-   *                "type": "Feature",
-   *                "geometry": {
-   *                  "type": "Point",
-   *                  "coordinates": [125.6, 10.1]
-   *                },
-   *                "properties": {
-   *                  "name": "Dinagat Islands"
-   *                }
-   *              };
-   *    var geoJson = await geoearth.addGeoJson(geoJson);
-   *
+     Add the given geojson object to the map.
+     Currently supports only a single feature json containing Point, MultiPoint, Line or MultiLine.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {Geojson} geoJson - Geojson object to be added.
+    
+     @example
+    
+        var gj =    {
+                        "type": "FeatureCollection",
+                        "features": [
+                            { 
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [0.00, 90.00]
+                                }
+                            },
+                            { 
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [0.00, -90.00]
+                                }
+                            },
+                        ]
+                    };
+        var geoJson = await geoearth.addGeoJson(gj);
+    
    */
   async addGeoJson(geoJson, options) {
 
@@ -1335,25 +1357,25 @@ class GeoEarth {
   }
 
   /**
-   * Adds a given node in a geojson object and returns corresponding threejs object.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {Geojson} geoJsonNode - Geojson node to be parsed.
-   *
-   * @example
-   *
-   *    var ft = {
-   *               "type": "Feature",
-   *               "geometry": {
-   *                 "type": "Point",
-   *                 "coordinates": [125.6, 10.1]
-   *               },
-   *               "properties": {
-   *                 "name": "Dinagat Islands"
-   *               }
-   *             };
-   *    var feature = await geoearth.addFeature(ft);
-   *
+     Adds a given node in a geojson object and returns corresponding threejs object.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {Geojson} geoJsonNode - Geojson node to be parsed.
+    
+     @example
+    
+        var ft = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [180.00, 0.00]
+                    },
+                    "properties": {
+                        "name": "Dinagat Islands"
+                    }
+                 };
+        var feature = await geoearth.addFeature(ft);
+    
    */
   async addFeature(node, options) {
 
@@ -1400,58 +1422,57 @@ class GeoEarth {
   }
 
   /**
-   * Adds a given node in a geojson object and returns a list of corresponding threejs object.
-   * Awaits till the instance is ready to be worked with.
-   *
-   * @param {Geojson} geoJsonNode - Geojson node to be added.
-   *
-   * @example
-   *
-   *    var ftColl =    {
-   *                        "type": "FeatureCollection",
-   *                        "features": [
-   *                            { 
-   *                                "type": "Feature",
-   *                                "geometry": {
-   *                                    "type": "Point",
-   *                                    "coordinates": [120.00, 0.00]
-   *                                },
-   *                                "properties": {
-   *                                    "prop0": "value0"
-   *                                }
-   *                            },
-   *                            { 
-   *                                "type": "Feature",
-   *                                "geometry": {
-   *                                    "type": "LineString",
-   *                                    "coordinates": [
-   *                                        [-40.00, 20.00], [-40.00, -20.00]
-   *                                    ]
-   *                                },
-   *                                "properties": {
-   *                                    "prop0": "value0",
-   *                                    "prop1": 0.0
-   *                                }
-   *                            },
-   *                            { 
-   *                                "type": "Feature",
-   *                                "geometry": {
-   *                                    "type": "Polygon",
-   *                                    "coordinates": [
-   *                                        [
-   *                                            [20.00, -10.00], [40.00, -10.00], [40.00, 10.00], [20.00, 10.00]
-   *                                        ]
-   *                                    ]
-   *                                },
-   *                                "properties": {
-   *                                    "prop0": "value0",
-   *                                    "prop1": { "this": "that" }
-   *                                }
-   *                            }
-   *                        ]
-   *                    };
-   *    var featureCollection = await geoearth.addFeatureCollection(ftColl);
-   *
+     Adds a given node in a geojson object and returns a list of corresponding threejs object.
+     Awaits till the instance is ready to be worked with.
+    
+     @param {Geojson} geoJsonNode - Geojson node to be added.
+    
+     @example
+    
+        var ftColl =    {
+                            "type": "FeatureCollection",
+                            "features": [
+                                { 
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [0.00, 0.00]
+                                    },
+                                    "properties": {
+                                        "prop0": "value0"
+                                    }
+                                },
+                                { 
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": [
+                                            [-20.00, 20.00], [-20.00, -20.00]
+                                        ]
+                                    },
+                                    "properties": {
+                                        "prop0": "value0",
+                                        "prop1": 0.0
+                                    }
+                                },
+                                { 
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "Polygon",
+                                        "coordinates": [
+                                            [
+                                                [20.00, -10.00], [40.00, -10.00], [40.00, 10.00], [20.00, 10.00]
+                                            ]
+                                        ]
+                                    },
+                                    "properties": {
+                                        "prop0": "value0",
+                                        "prop1": { "this": "that" }
+                                    }
+                                }
+                            ]
+                        };
+    
    */
   async addFeatureCollection(node, options) {
 
