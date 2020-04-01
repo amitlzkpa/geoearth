@@ -411,6 +411,30 @@ class GeoEarth {
   }
 
 
+  parseInputs(input, opts) {
+
+    var opts = opts || input.properties || {};
+
+    var color = 0xffffff;
+    var size = 1;
+
+    if (input.constructor === Array) {
+      opts.geometry = input;
+      opts.label = opts.label;
+      opts.color = opts.color || color;
+      opts.size = opts.size || size;
+    } else {
+      opts.geometry = input.geometry.coordinates;
+      opts.label = opts.label;
+      opts.color = opts.color || color;
+      opts.size = opts.size || size;
+    }
+
+    return opts;
+
+  }
+
+
 
   // ----------------------------------------------------------------------------
   /*
@@ -542,19 +566,9 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
-    var label;
-    var coords = null;
-    opts = opts || {};
+    var parsedData = this.parseInputs(input, opts);
 
-    if (input.constructor === Array) {
-      coords = input;
-      label = opts.label || null;
-    } else {
-      coords = input.geometry.coordinates;
-      label = opts.label || (input.properties ? input.properties.label : null) || null;
-    }
-
-    coords = JSON.parse(JSON.stringify(coords));
+    var coords = JSON.parse(JSON.stringify(parsedData.geometry));
 
     var lng = coords[0];
     var lat = coords[1];
@@ -562,11 +576,9 @@ class GeoEarth {
     var phi = GeoEarth.latToSphericalCoords(lat);
     var theta = GeoEarth.lngToSphericalCoords(lng);
 
-    var sz = opts.size || 2;
-    var color = opts.color || 0xffff00;
-    var geometry = new THREE.SphereGeometry(sz, 8, 8);
+    var geometry = new THREE.SphereGeometry(parsedData.size, 8, 8);
     var material = new THREE.MeshBasicMaterial({
-      color: color
+      color: parsedData.color
     });
     var geomContainer = new THREE.Object3D();
 
@@ -578,8 +590,8 @@ class GeoEarth {
 
     var center = point.position.clone();
 
-    if (label) {
-      var labelGeom = this.makeTextSprite(label);
+    if (parsedData.label) {
+      var labelGeom = this.makeTextSprite(parsedData.label);
       labelGeom.position.set(center.x, center.y, center.z);
       geomContainer.add(labelGeom);
     }
@@ -661,9 +673,9 @@ class GeoEarth {
       var phi = GeoEarth.latToSphericalCoords(lat);
       var theta = GeoEarth.lngToSphericalCoords(lng);
 
-      var sz = opts.size || 2;
+      var size = opts.size || 2;
       var color = opts.color || 0xffff00;
-      var geometry = new THREE.SphereGeometry(sz, 8, 8);
+      var geometry = new THREE.SphereGeometry(size, 8, 8);
       var material = new THREE.MeshBasicMaterial({
         color: color
       });
@@ -944,25 +956,14 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
-    var label;
-    var inLns = null;
-    opts = opts || {};
+    var parsedData = this.parseInputs(input, opts);
 
-    if (input.constructor === Array) {
-      inLns = input;
-      label = opts.label || null;
-    } else {
-      inLns = input.geometry.coordinates;
-      label = opts.label || (input.properties ? input.properties.label : null) || null;
-    }
-
-    inLns = JSON.parse(JSON.stringify(inLns));
+    var inLns = JSON.parse(JSON.stringify(parsedData.geometry));
 
     var polygon = new THREE.Object3D();
     var shape = new THREE.Shape();
-    var col = opts.color || 0xffffff
     var material = new THREE.MeshBasicMaterial({
-      color: col,
+      color: parsedData.color,
       side: THREE.DoubleSide,
       // wireframe: true
     });
@@ -1079,8 +1080,8 @@ class GeoEarth {
     center.y = this.earthRadius * Math.cos(phi);
     center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
     
-    if (label) {
-      var labelGeom = this.makeTextSprite(label);
+    if (parsedData.label) {
+      var labelGeom = this.makeTextSprite(parsedData.label);
       labelGeom.position.set(center.x, center.y, center.z);
       geomContainer.add(labelGeom);
     }
