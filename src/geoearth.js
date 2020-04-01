@@ -1056,9 +1056,9 @@ class GeoEarth {
     for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
       var phi = GeoEarth.latToSphericalCoords(fineGeometry.attributes.position.array[i]);
       var theta = GeoEarth.lngToSphericalCoords(fineGeometry.attributes.position.array[i + 1]);
-      fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
-      fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.01) * Math.cos(phi);
-      fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+      fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
+      fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.001) * Math.cos(phi);
+      fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
     }
     fineGeometry.computeVertexNormals();
     fineGeometry.attributes.position.needsUpdate = true;
@@ -1257,9 +1257,9 @@ class GeoEarth {
       for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
         var phi = GeoEarth.latToSphericalCoords(fineGeometry.attributes.position.array[i]);
         var theta = GeoEarth.lngToSphericalCoords(fineGeometry.attributes.position.array[i + 1]);
-        fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
-        fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.01) * Math.cos(phi);
-        fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+        fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
+        fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.001) * Math.cos(phi);
+        fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
       }
       fineGeometry.computeVertexNormals();
       fineGeometry.attributes.position.needsUpdate = true;
