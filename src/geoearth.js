@@ -645,19 +645,9 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
-    var label;
-    var coords = null;
-    opts = opts || {};
+    var parsedData = this.parseInputs(input, opts);
 
-    if (input.constructor === Array) {
-      coords = input;
-      label = opts.label || null;
-    } else {
-      coords = input.geometry.coordinates;
-      label = opts.label || (input.properties ? input.properties.label : null) || null;
-    }
-
-    coords = JSON.parse(JSON.stringify(coords));
+    var coords = JSON.parse(JSON.stringify(parsedData.geometry));
 
     var points = new THREE.Object3D();
     var totLng = 0;
@@ -673,11 +663,9 @@ class GeoEarth {
       var phi = GeoEarth.latToSphericalCoords(lat);
       var theta = GeoEarth.lngToSphericalCoords(lng);
 
-      var size = opts.size || 2;
-      var color = opts.color || 0xffff00;
-      var geometry = new THREE.SphereGeometry(size, 8, 8);
+      var geometry = new THREE.SphereGeometry(parsedData.size, 8, 8);
       var material = new THREE.MeshBasicMaterial({
-        color: color
+        color: parsedData.color
       });
       var point = new THREE.Mesh(geometry, material);
 
@@ -700,8 +688,8 @@ class GeoEarth {
     center.y = this.earthRadius * Math.cos(phi);
     center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
     
-    if (label) {
-      var labelGeom = this.makeTextSprite(label);
+    if (parsedData.label) {
+      var labelGeom = this.makeTextSprite(parsedData.label);
       labelGeom.position.set(center.x, center.y, center.z);
       geomContainer.add(labelGeom);
     }
@@ -744,18 +732,11 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
-    var inPts = null;
-    opts = opts || {};
-
-    if (input.constructor === Array) {
-      inPts = input;
-    } else {
-      inPts = input.geometry.coordinates;
-    }
+    var parsedData = this.parseInputs(input, opts);
+    
+    var inPts = JSON.parse(JSON.stringify(parsedData.geometry));
 
     if (inPts.length < 2) throw ('Need at least 2 points for a line');
-
-    inPts = JSON.parse(JSON.stringify(inPts));
 
     // var d = GeoEarth.getHaversineDistance(inPts[0], inPts[1]);
     // console.log(d);
@@ -796,9 +777,8 @@ class GeoEarth {
       idx++;
     }
 
-    var col = opts.color || 0xffffff
     var material = new THREE.LineBasicMaterial({
-      color: col
+      color: parsedData.color
     });
     var c = 0;
     var geometry = new THREE.Geometry();
@@ -855,16 +835,9 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
-    var inLns = null;
-    opts = opts || {};
+    var parsedData = this.parseInputs(input, opts);
 
-    if (input.constructor === Array) {
-      inLns = input;
-    } else {
-      inLns = input.geometry.coordinates;
-    }
-
-    inLns = JSON.parse(JSON.stringify(inLns));
+    var inLns = JSON.parse(JSON.stringify(parsedData.geometry));
 
     var lines = new THREE.Object3D();
 
@@ -892,9 +865,8 @@ class GeoEarth {
         idx++;
       }
 
-      var col = opts.color || 0xffffff
       var material = new THREE.LineBasicMaterial({
-        color: col
+        color: parsedData.color
       });
       var c = 0;
       var geometry = new THREE.Geometry();
