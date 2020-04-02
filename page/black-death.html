@@ -24,7 +24,12 @@
         var geoearth = new GeoEarth(container, opts);
 
 
-        var json = await fetch('./data/black-death/ch-hotspot.geojson');
+        var json;
+        json = await fetch('./data/black-death/ch-hotspot.geojson');
+        geoearth.addGeoJson(await json.json());
+
+
+        json = await fetch('./data/black-death/eu-af-hotspot.geojson');
         geoearth.addGeoJson(await json.json());
 
 
