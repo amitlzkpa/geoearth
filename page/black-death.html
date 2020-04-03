@@ -27,11 +27,18 @@
         var json;
         json = await fetch('./data/black-death/ch-hotspot.geojson');
         geoearth.addGeoJson(await json.json());
-
+        
+        json = await fetch('./data/black-death/ch-area.geojson');
+        geoearth.addGeoJson(await json.json());
 
         json = await fetch('./data/black-death/eu-af-hotspot.geojson');
         geoearth.addGeoJson(await json.json());
-
+        
+        json = await fetch('./data/black-death/eu-area.geojson');
+        geoearth.addGeoJson(await json.json());
+        
+        json = await fetch('./data/black-death/af-area.geojson');
+        geoearth.addGeoJson(await json.json());
 
         json = await fetch('./data/black-death/path-spread.geojson');
         geoearth.addGeoJson(await json.json());
