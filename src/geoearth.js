@@ -435,6 +435,110 @@ class GeoEarth {
   }
 
 
+  makeLineGeometry(pts, input, parsedData) {
+
+    var ret = new THREE.Object3D();
+
+    switch(input.properties.linetype) {
+      case ("forward-arrows"): {
+
+        let gap = 40;
+        let p1, p2;
+        let lng, lat, phi, theta, vt;
+        let linewidth = input.properties.linewidth || 3;
+        for(let i=0; i<pts.length-gap; i+=gap) {
+  
+          p1 = pts[i];
+          lng = p1[0];
+          lat = p1[1];
+          phi = GeoEarth.latToSphericalCoords(lat);
+          theta = GeoEarth.lngToSphericalCoords(lng);
+          vt = new THREE.Vector3();
+          vt.x = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
+          vt.y = (this.earthRadius * 1.001) * Math.cos(phi);
+          vt.z = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
+          let v1 = vt.clone();
+  
+          p2 = pts[i+gap];
+          lng = p2[0];
+          lat = p2[1];
+          phi = GeoEarth.latToSphericalCoords(lat);
+          theta = GeoEarth.lngToSphericalCoords(lng);
+          vt = new THREE.Vector3();
+          vt.x = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
+          vt.y = (this.earthRadius * 1.001) * Math.cos(phi);
+          vt.z = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
+          let v2 = vt.clone();
+  
+          let dir = v2.clone();
+          dir.sub(v1);
+  
+          let o = new THREE.Vector3();
+          let tri = new THREE.Triangle(v1, v2, o);
+          let widthVec = new THREE.Vector3();
+          tri.getNormal(widthVec);
+          widthVec.normalize();
+          widthVec.multiplyScalar(linewidth/2);
+  
+          let a = v1.clone();
+          a.add(widthVec);
+          let b = v2.clone();
+          let c = v1.clone();
+          c.add(widthVec.negate());
+  
+          let triGeom = new THREE.Geometry();
+          triGeom.vertices.push(a);
+          triGeom.vertices.push(b);
+          triGeom.vertices.push(c);
+          triGeom.faces.push(new THREE.Face3(0, 1, 2, vt));
+          
+          var triMat = new THREE.MeshBasicMaterial({
+            color: parsedData.color,
+            side: THREE.DoubleSide,
+          });
+          let triangle = new THREE.Mesh(triGeom, triMat);
+  
+          triangle.up = dir;
+          
+          ret.add(triangle);
+  
+        }
+
+        break;
+      }
+      default: {
+    
+        var material = new THREE.LineBasicMaterial({
+          color: parsedData.color
+        });
+        var c = 0;
+        var geometry = new THREE.Geometry();
+        do {
+          var lng = pts[c][0];
+          var lat = pts[c][1];
+          var phi = GeoEarth.latToSphericalCoords(lat);
+          var theta = GeoEarth.lngToSphericalCoords(lng);
+          var vt = new THREE.Vector3();
+          vt.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
+          vt.y = this.earthRadius * Math.cos(phi);
+          vt.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+          geometry.vertices.push(vt);
+          c++;
+        } while (c < pts.length)
+    
+        var line = new THREE.Line(geometry, material);
+        
+        ret.add(line);
+
+        break;
+      }
+    }
+
+    return ret;
+
+  }
+
+
 
   // ----------------------------------------------------------------------------
   /*
@@ -777,26 +881,7 @@ class GeoEarth {
       idx++;
     }
 
-    var material = new THREE.LineBasicMaterial({
-      color: parsedData.color
-    });
-    var c = 0;
-    var geometry = new THREE.Geometry();
-    do {
-      var lng = pts[c][0];
-      var lat = pts[c][1];
-      var phi = GeoEarth.latToSphericalCoords(lat);
-      var theta = GeoEarth.lngToSphericalCoords(lng);
-      var vt = new THREE.Vector3();
-      vt.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-      vt.y = this.earthRadius * Math.cos(phi);
-      vt.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
-      geometry.vertices.push(vt);
-      c++;
-    } while (c < pts.length)
-
-    var line = new THREE.Line(geometry, material);
-
+    var line = this.makeLineGeometry(pts, input, parsedData);
     var addedObj = this.addToActiveGeoJsons(line);
 
     return addedObj;
