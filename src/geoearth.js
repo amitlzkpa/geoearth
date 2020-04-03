@@ -439,10 +439,12 @@ class GeoEarth {
 
     var ret = new THREE.Object3D();
 
-    switch(input.properties.linetype) {
+    var linetype = (input.properties) ? input.properties.linetype : "line";
+
+    switch(linetype) {
       case ("forward-arrows"): {
 
-        let gap = 40;
+        let gap = 4;
         let p1, p2;
         let lng, lat, phi, theta, vt;
         let linewidth = input.properties.linewidth || 3;
@@ -950,25 +952,7 @@ class GeoEarth {
         idx++;
       }
 
-      var material = new THREE.LineBasicMaterial({
-        color: parsedData.color
-      });
-      var c = 0;
-      var geometry = new THREE.Geometry();
-      do {
-        var lng = pts[c][0];
-        var lat = pts[c][1];
-        var phi = GeoEarth.latToSphericalCoords(lat);
-        var theta = GeoEarth.lngToSphericalCoords(lng);
-        var vt = new THREE.Vector3();
-        vt.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-        vt.y = this.earthRadius * Math.cos(phi);
-        vt.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
-        geometry.vertices.push(vt);
-        c++;
-      } while (c < pts.length)
-
-      var line = new THREE.Line(geometry, material);
+      var line = this.makeLineGeometry(pts, input, parsedData);
       lines.add(line);
     }
 
