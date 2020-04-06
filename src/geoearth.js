@@ -439,6 +439,9 @@ class GeoEarth {
     var corr = 0;
     var mul = 1;
     var isCrossingDL = false;
+    // check if both points are on same east-west hemisphere
+    // if not check if they are crossing over from the dateline side
+    // TODO: right now only works for lines with 2 points
     if (Math.sign(inPts[0][0]) !== Math.sign(inPts[1][0]) &&
       Math.abs(inPts[0][0]) > 90 && Math.abs(inPts[1][0]) > 90) {
       isCrossingDL = true;
@@ -455,13 +458,17 @@ class GeoEarth {
       inPts[1][0] += corr;
     }
 
-    var divs = 100;
-    
     var pts = [];
     var idx = 1;
     while (idx < inPts.length) {
       var secondPt = inPts[idx];
       var firstPt = inPts[idx - 1];
+      
+      // TODO: use haversine distance for the length
+      // var d = GeoEarth.getHaversineDistance(firstPt, secondPt);
+      var d = Math.sqrt(Math.pow(secondPt[0] - firstPt[0], 2)
+                      - Math.pow(secondPt[1] - firstPt[1], 2));
+      var divs = Math.ceil(d * 8);
 
       var deltaLng = (secondPt[0] - firstPt[0]) / divs;
       var deltaLat = (secondPt[1] - firstPt[1]) / divs;
@@ -639,7 +646,7 @@ class GeoEarth {
    *     getHaversineDistance([-122.4194183, 37.774929], [144.9633179, -37.8139992], 200);
    *
    */
-  static getHaversineDistance(p1, p2, radius = 6371e3) {
+  static getHaversineDistance(p1, p2, radius = 6371) {
 
     // ref: https://www.movable-type.co.uk/scripts/latlong.html
     // WIP
@@ -884,9 +891,6 @@ class GeoEarth {
     var inPts = JSON.parse(JSON.stringify(parsedData.geometry));
 
     if (inPts.length < 2) throw ('Need at least 2 points for a line');
-
-    // var d = GeoEarth.getHaversineDistance(inPts[0], inPts[1]);
-    // console.log(d);
 
     var pts = this.getSpacedPoints(inPts)
 
