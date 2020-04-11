@@ -467,7 +467,7 @@ class GeoEarth {
       // TODO: use haversine distance for the length
       // var d = GeoEarth.getHaversineDistance(firstPt, secondPt);
       var d = Math.sqrt(Math.pow(secondPt[0] - firstPt[0], 2)
-                      - Math.pow(secondPt[1] - firstPt[1], 2));
+                      + Math.pow(secondPt[1] - firstPt[1], 2));
       var divs = Math.ceil(d * 8);
 
       var deltaLng = (secondPt[0] - firstPt[0]) / divs;
