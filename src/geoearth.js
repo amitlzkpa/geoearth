@@ -411,6 +411,28 @@ class GeoEarth {
   }
 
 
+  make3DShape(type, options) {
+    let opts = options || {};
+    let ret;
+    switch(type) {
+      case "cylinder": {
+        let col = opts.color || 0xffffff;
+        let rad = opts.radius || 3;
+        let dep = opts.depth || 1;
+        let geometry = new THREE.CylinderGeometry( rad, rad, dep, 8 );
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let cylinder = new THREE.Mesh( geometry, material );
+        ret = cylinder;
+        break;
+      }
+      default: {
+        ret = null;
+      }
+    }
+    return ret;
+  }
+
+
   parseInputs(input, opts) {
 
     var opts = opts || input.properties || {};
@@ -552,6 +574,52 @@ class GeoEarth {
           
           ret.add(triangle);
   
+        }
+
+        break;
+      }
+      case ("dotted"): {
+
+        let gap = 15;
+        let p1, p2, v1, v2, vt, dir, o, tri;
+        let lng, lat, phi, theta, pt;
+        let g;
+        for(let i=0; i<pts.length-gap; i+=gap) {
+  
+          p1 = pts[i];
+          lng = p1[0];
+          lat = p1[1];
+          phi = GeoEarth.latToSphericalCoords(lat);
+          theta = GeoEarth.lngToSphericalCoords(lng);
+          vt = new THREE.Vector3();
+          vt.x = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
+          vt.y = (this.earthRadius * 1.01) * Math.cos(phi);
+          vt.z = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+          v1 = vt.clone();
+          pt = vt.clone();
+  
+          p2 = pts[i+gap];
+          lng = p2[0];
+          lat = p2[1];
+          phi = GeoEarth.latToSphericalCoords(lat);
+          theta = GeoEarth.lngToSphericalCoords(lng);
+          vt = new THREE.Vector3();
+          vt.x = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
+          vt.y = (this.earthRadius * 1.001) * Math.cos(phi);
+          vt.z = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
+          v2 = vt.clone();
+  
+          dir = v2.clone();
+          dir.sub(v1);
+  
+          // o = new THREE.Vector3();
+          // tri = new THREE.Triangle(v1, v2, o);
+          
+          g = this.make3DShape("cylinder");
+          g.position.set(pt.x, pt.y, pt.z);
+          g.up = new THREE.Vector3(1,0,0);
+          g.lookAt(new THREE.Vector3());
+          ret.add(g);
         }
 
         break;
