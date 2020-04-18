@@ -426,6 +426,22 @@ class GeoEarth {
         ret = cylinder;
         break;
       }
+      case "arrow-head": {
+        let col = opts.color || 0xffffff;
+        let size = opts.size || 3;
+        let dep = opts.depth || 1;
+        let arrowShape = new THREE.Shape();
+        arrowShape.moveTo(size, size);
+        arrowShape.lineTo(0, -size*3);
+        arrowShape.lineTo(-size, size);
+        arrowShape.lineTo(size, size);
+        let extrudeSettings = {amount: dep, bevelEnabled: false};
+        let geometry = new THREE.ExtrudeBufferGeometry(arrowShape, extrudeSettings);
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let mesh = new THREE.Mesh( geometry, material );
+        ret = mesh
+        break;
+      }
       default: {
         ret = null;
       }
@@ -514,69 +530,26 @@ class GeoEarth {
 
     switch(linetype) {
       case ("forward-arrows"): {
-
-        let gap = 4;
-        let p1, p2;
-        let lng, lat, phi, theta, vt;
-        let linewidth = input.properties.linewidth || 3;
+        let gap = 30;
+        let p;
+        let lng, lat, phi, theta, pt;
+        let g;
         for(let i=0; i<pts.length-gap; i+=gap) {
-  
-          p1 = pts[i];
-          lng = p1[0];
-          lat = p1[1];
+          p = pts[i];
+          lng = p[0];
+          lat = p[1];
           phi = GeoEarth.latToSphericalCoords(lat);
           theta = GeoEarth.lngToSphericalCoords(lng);
-          vt = new THREE.Vector3();
-          vt.x = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
-          vt.y = (this.earthRadius * 1.001) * Math.cos(phi);
-          vt.z = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
-          let v1 = vt.clone();
-  
-          p2 = pts[i+gap];
-          lng = p2[0];
-          lat = p2[1];
-          phi = GeoEarth.latToSphericalCoords(lat);
-          theta = GeoEarth.lngToSphericalCoords(lng);
-          vt = new THREE.Vector3();
-          vt.x = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
-          vt.y = (this.earthRadius * 1.001) * Math.cos(phi);
-          vt.z = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
-          let v2 = vt.clone();
-  
-          let dir = v2.clone();
-          dir.sub(v1);
-  
-          let o = new THREE.Vector3();
-          let tri = new THREE.Triangle(v1, v2, o);
-          let widthVec = new THREE.Vector3();
-          tri.getNormal(widthVec);
-          widthVec.normalize();
-          widthVec.multiplyScalar(linewidth/2);
-  
-          let a = v1.clone();
-          a.add(widthVec);
-          let b = v2.clone();
-          let c = v1.clone();
-          c.add(widthVec.negate());
-  
-          let triGeom = new THREE.Geometry();
-          triGeom.vertices.push(a);
-          triGeom.vertices.push(b);
-          triGeom.vertices.push(c);
-          triGeom.faces.push(new THREE.Face3(0, 1, 2, vt));
-          
-          var triMat = new THREE.MeshBasicMaterial({
-            color: parsedData.color,
-            side: THREE.DoubleSide,
-          });
-          let triangle = new THREE.Mesh(triGeom, triMat);
-  
-          triangle.up = dir;
-          
-          ret.add(triangle);
-  
+          pt = new THREE.Vector3();
+          pt.x = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
+          pt.y = (this.earthRadius * 1.01) * Math.cos(phi);
+          pt.z = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+          g = this.make3DShape("arrow-head");
+          g.position.set(pt.x, pt.y, pt.z);
+          g.up = new THREE.Vector3(1,0,0);
+          g.lookAt(new THREE.Vector3());
+          ret.add(g);
         }
-
         break;
       }
       case ("dotted"): {
