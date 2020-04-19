@@ -5,7 +5,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -37,7 +39,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -117,7 +121,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -149,7 +155,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -177,7 +185,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -213,7 +223,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -245,7 +257,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -281,7 +295,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -309,7 +325,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -397,7 +415,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -437,7 +457,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -505,7 +527,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -533,7 +557,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -585,7 +611,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",
@@ -617,7 +645,9 @@
       "type": "Feature",
       "properties": {
         "linetype": "forward-arrows",
-        "color": "#CCAA77"
+        "color": "#CCAA77",
+        "size": 0.8,
+        "depth": 0.1
       },
       "geometry": {
         "type": "LineString",

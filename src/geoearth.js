@@ -952,7 +952,7 @@ class GeoEarth {
 
     if (inPts.length < 2) throw ('Need at least 2 points for a line');
 
-    var pts = this.getSpacedPoints(inPts)
+    var pts = this.getSpacedPoints(inPts);
 
     var line = this.makeLineGeometry(pts, input, parsedData);
     var addedObj = this.addToActiveGeoJsons(line);

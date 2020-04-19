@@ -42,13 +42,43 @@
         // Add multiline as geojson
         var lnsB = {
                     "type": "Feature",
-                    "properties": {
-                      "linetype": "dotted",
-                      "color": "#FF0000"
-                    },
                     "geometry": {
                       "type": "MultiLineString",
                       "coordinates": [ [ [60.00, 30.00], [40.00, 10.00] ], [ [40.00, 10.00], [60.00, -10.00], [40.00, -30.00] ] ]
+                    }
+                  };
+        var linesB = await geoearth.addMultiLineString(lnsB);
+
+        
+
+        // Add line with visual styles
+        var lnsC = {
+                    "type": "Feature",
+                    "properties": {
+                      "linetype": "dotted",
+                      "color": "#00FF00",
+                      "size": 2,
+                      "depth": 20
+                    },
+                    "geometry": {
+                      "type": "LineString",
+                      "coordinates": [ [80.00, 20.00], [80.00, -20.00] ]
+                    }
+                  };
+        var linesC = await geoearth.addLineString(lnsC);
+        
+        // Add multiline with visual styles
+        var lnsB = {
+                    "type": "Feature",
+                    "properties": {
+                      "linetype": "forward-arrows",
+                      "color": "#FF0000",
+                      "size": 3,
+                      "depth": 0.3
+                    },
+                    "geometry": {
+                      "type": "MultiLineString",
+                      "coordinates": [ [ [120.00, 30.00], [100.00, 10.00] ], [ [100.00, 10.00], [120.00, -10.00], [100.00, -30.00] ] ]
                     }
                   };
         var linesB = await geoearth.addMultiLineString(lnsB);
