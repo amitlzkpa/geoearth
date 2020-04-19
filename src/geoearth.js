@@ -431,15 +431,17 @@ class GeoEarth {
         let size = opts.size || 3;
         let dep = opts.depth || 1;
         let arrowShape = new THREE.Shape();
-        arrowShape.moveTo(size, size);
-        arrowShape.lineTo(0, -size*3);
-        arrowShape.lineTo(-size, size);
-        arrowShape.lineTo(size, size);
+        arrowShape.moveTo(-size, -size);
+        arrowShape.lineTo(0, size * 2);
+        arrowShape.lineTo(size, -size);
+        arrowShape.lineTo(-size, -size);
         let extrudeSettings = {amount: dep, bevelEnabled: false};
         let geometry = new THREE.ExtrudeBufferGeometry(arrowShape, extrudeSettings);
+        // reorient so Z-axis(blue) faces forward direction
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
         let material = new THREE.MeshBasicMaterial( {color: col} );
-        let mesh = new THREE.Mesh( geometry, material );
-        ret = mesh
+        let arrowHeadMesh = new THREE.Mesh( geometry, material );
+        ret = arrowHeadMesh;
         break;
       }
       default: {
@@ -531,23 +533,63 @@ class GeoEarth {
     switch(linetype) {
       case ("forward-arrows"): {
         let gap = 30;
-        let p;
-        let lng, lat, phi, theta, pt;
+        let p1, lng1, lat1, phi1, theta1, pt1;
+        let p2, lng2, lat2, phi2, theta2, pt2;
+        let dir, nor, pl, coplPt2;
+        let fwd = new THREE.Vector3();
+        let qt = new THREE.Quaternion();
         let g;
         for(let i=0; i<pts.length-gap; i+=gap) {
-          p = pts[i];
-          lng = p[0];
-          lat = p[1];
-          phi = GeoEarth.latToSphericalCoords(lat);
-          theta = GeoEarth.lngToSphericalCoords(lng);
-          pt = new THREE.Vector3();
-          pt.x = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
-          pt.y = (this.earthRadius * 1.01) * Math.cos(phi);
-          pt.z = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+          // read first point
+          p1 = pts[i];
+          lng1 = p1[0];
+          lat1 = p1[1];
+          phi1 = GeoEarth.latToSphericalCoords(lat1);
+          theta1 = GeoEarth.lngToSphericalCoords(lng1);
+          pt1 = new THREE.Vector3();
+          pt1.x = (this.earthRadius * 1.01) * Math.sin(phi1) * Math.cos(theta1);
+          pt1.y = (this.earthRadius * 1.01) * Math.cos(phi1);
+          pt1.z = (this.earthRadius * 1.01) * Math.sin(phi1) * Math.sin(theta1);
+          
+          // read next point on curve
+          p2 = pts[i + gap];
+          lng2 = p2[0];
+          lat2 = p2[1];
+          phi2 = GeoEarth.latToSphericalCoords(lat2);
+          theta2 = GeoEarth.lngToSphericalCoords(lng2);
+          pt2 = new THREE.Vector3();
+          pt2.x = (this.earthRadius * 1.01) * Math.sin(phi2) * Math.cos(theta2);
+          pt2.y = (this.earthRadius * 1.01) * Math.cos(phi2);
+          pt2.z = (this.earthRadius * 1.01) * Math.sin(phi2) * Math.sin(theta2);
+
+          // normal at first point
+          nor = pt1.clone();
+          nor.normalize();
+
+          // build a plane at first point and get the seocnd point on this plane
+          pl = new THREE.Plane().setFromNormalAndCoplanarPoint(nor, pt1);
+          coplPt2 = new THREE.Vector3();
+          pl.projectPoint(pt2, coplPt2);
+          
+          // build vector between the 2; this will be the vector to orient in
+          dir = new THREE.Vector3().subVectors(pt1, coplPt2);
+          dir.normalize();
+
+          // build the gemetry and make it face tangential to the earth's sphere
           g = this.make3DShape("arrow-head");
-          g.position.set(pt.x, pt.y, pt.z);
-          g.up = new THREE.Vector3(1,0,0);
-          g.lookAt(new THREE.Vector3());
+          g.position.set(pt1.x, pt1.y, pt1.z);
+          g.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
+          g.lookAt(new THREE.Vector3().addVectors(pt1, nor));
+          
+          // extract forward vector from the geometry
+          g.getWorldQuaternion(qt);
+          fwd.copy(g.up.clone().negate()).applyQuaternion(qt);
+          fwd.normalize();
+
+          // reoirent the shape to face the vector between the first second pts
+          qt.setFromUnitVectors(fwd, dir);
+          g.applyQuaternion(qt);
+
           ret.add(g);
         }
         break;
