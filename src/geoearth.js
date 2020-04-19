@@ -422,8 +422,8 @@ class GeoEarth {
         let geometry = new THREE.CylinderGeometry(rad, rad, dep, 16);
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
         let material = new THREE.MeshBasicMaterial( {color: col} );
-        let cylinder = new THREE.Mesh(geometry, material);
-        ret = cylinder;
+        let cylinderMesh = new THREE.Mesh(geometry, material);
+        ret = cylinderMesh;
         break;
       }
       case "arrow-head": {
@@ -437,8 +437,6 @@ class GeoEarth {
         arrowShape.lineTo(-size, -size);
         let extrudeSettings = {amount: dep, bevelEnabled: false};
         let geometry = new THREE.ExtrudeBufferGeometry(arrowShape, extrudeSettings);
-        // reorient so Z-axis(blue) faces forward direction
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
         let material = new THREE.MeshBasicMaterial( {color: col} );
         let arrowHeadMesh = new THREE.Mesh( geometry, material );
         ret = arrowHeadMesh;
@@ -578,7 +576,6 @@ class GeoEarth {
           // build the gemetry and make it face tangential to the earth's sphere
           g = this.make3DShape("arrow-head");
           g.position.set(pt1.x, pt1.y, pt1.z);
-          g.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
           g.lookAt(new THREE.Vector3().addVectors(pt1, nor));
           
           // extract forward vector from the geometry
