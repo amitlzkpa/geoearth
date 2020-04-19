@@ -417,7 +417,7 @@ class GeoEarth {
     switch(type) {
       case "cylinder": {
         let col = opts.color || 0xffffff;
-        let rad = opts.radius || 3;
+        let rad = opts.size || 1;
         let dep = opts.depth || 1;
         let geometry = new THREE.CylinderGeometry(rad, rad, dep, 16);
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
@@ -428,7 +428,7 @@ class GeoEarth {
       }
       case "arrow-head": {
         let col = opts.color || 0xffffff;
-        let size = opts.size || 3;
+        let size = opts.size || 1;
         let dep = opts.depth || 1;
         let arrowShape = new THREE.Shape();
         arrowShape.moveTo(-size, -size);
@@ -530,7 +530,8 @@ class GeoEarth {
 
     switch(linetype) {
       case ("forward-arrows"): {
-        let gap = 30;
+        let sz = parsedData.size || 1;
+        let gap = sz * 10;
         let p1, lng1, lat1, phi1, theta1, pt1;
         let p2, lng2, lat2, phi2, theta2, pt2;
         let dir, nor, pl, coplPt2;
@@ -574,7 +575,7 @@ class GeoEarth {
           dir.normalize();
 
           // build the gemetry and make it face tangential to the earth's sphere
-          g = this.make3DShape("arrow-head");
+          g = this.make3DShape("arrow-head", parsedData);
           g.position.set(pt1.x, pt1.y, pt1.z);
           g.lookAt(new THREE.Vector3().addVectors(pt1, nor));
           
@@ -592,7 +593,8 @@ class GeoEarth {
         break;
       }
       case ("dotted"): {
-        let gap = 15;
+        let sz = parsedData.size || 1;
+        let gap = sz * 10;
         let p;
         let lng, lat, phi, theta, pt;
         let g;
@@ -606,7 +608,7 @@ class GeoEarth {
           pt.x = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
           pt.y = (this.earthRadius * 1.01) * Math.cos(phi);
           pt.z = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
-          g = this.make3DShape("cylinder");
+          g = this.make3DShape("cylinder", parsedData);
           g.position.set(pt.x, pt.y, pt.z);
           g.up = new THREE.Vector3(1,0,0);
           g.lookAt(new THREE.Vector3());
