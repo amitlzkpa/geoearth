@@ -831,7 +831,10 @@ class GeoEarth {
                         "coordinates": [-40.00, 40.00]
                       },
                       "properties": {
-                        "label": "def"
+                        "label": "def",
+                        "color": "#FF0000",
+                        "size": 1,
+                        "surfaceOffset": 1
                       }
                     };
         var pointB = await geoearth.addPoint(ptB);
@@ -908,7 +911,10 @@ class GeoEarth {
                         ]
                       },
                       "properties": {
-                        "label": "jkl"
+                        "label": "jkl",
+                        "color": "#FF0000",
+                        "size": 1,
+                        "surfaceOffset": 1
                       }
                     };
         var mpointB = await geoearth.addMultiPoint(mptB);
@@ -997,7 +1003,8 @@ class GeoEarth {
                       "linetype": "forward-arrows",
                       "color": "#FF0000",
                       "size": 3,
-                      "depth": 0.3
+                      "depth": 0.3,
+                      "surfaceOffset": 1
                     },
                     "geometry": {
                       "type": "LineString",
@@ -1051,7 +1058,8 @@ class GeoEarth {
                       "linetype": "forward-arrows",
                       "color": "#FF0000",
                       "size": 3,
-                      "depth": 0.3
+                      "depth": 0.3,
+                      "surfaceOffset": 1
                     },
                     "geometry": {
                       "type": "MultiLineString",
@@ -1116,7 +1124,9 @@ class GeoEarth {
                       "coordinates": [[[20.00,-10.00],[40.00,-10.00],[40.00,10.00],[20.00,10.00]]]
                     },
                     "properties": {
-                      "label": "jkl"
+                      "label": "jkl",
+                      "color": "#FF0000",
+                      "surfaceOffset": 1
                     }
                   };
         var polyB = await geoearth.addPolygon(plB);
@@ -1301,7 +1311,9 @@ class GeoEarth {
                                           ]
                         },
                         "properties": {
-                          "label": "xyz"
+                          "label": "xyz",
+                          "color": "#FF0000",
+                          "surfaceOffset": 1
                         }
                       };
         var mpolygonB = await geoearth.addMultiPolygon(mpolyB);
