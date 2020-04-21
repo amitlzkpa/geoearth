@@ -988,8 +988,15 @@ class GeoEarth {
         var lineA = await geoearth.addLineString(lnA);
     
         // Add line as geojson
+        // Add styles by specifying linetype property (dotted/dashed/forward-arrows)
         var lnB = {
                     "type": "Feature",
+                    "properties": {
+                      "linetype": "forward-arrows",
+                      "color": "#FF0000",
+                      "size": 3,
+                      "depth": 0.3
+                    },
                     "geometry": {
                       "type": "LineString",
                       "coordinates": [ [-40.00, 20.00], [-40.00, -20.00] ]
@@ -1035,8 +1042,15 @@ class GeoEarth {
         var linesA = await geoearth.addMultiLineString(lnsA);
         
         // Add multiline as geojson
+        // Add styles by specifying linetype property (dotted/dashed/forward-arrows)
         var lnsB = {
                     "type": "Feature",
+                    "properties": {
+                      "linetype": "forward-arrows",
+                      "color": "#FF0000",
+                      "size": 3,
+                      "depth": 0.3
+                    },
                     "geometry": {
                       "type": "MultiLineString",
                       "coordinates": [ [ [60.00, 30.00], [40.00, 10.00] ], [ [40.00, 10.00], [60.00, -10.00], [40.00, -30.00] ] ]
