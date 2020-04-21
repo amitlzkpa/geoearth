@@ -443,6 +443,23 @@ class GeoEarth {
         ret = arrowHeadMesh;
         break;
       }
+      case "rectangle": {
+        let col = opts.color || 0xffffff;
+        let size = opts.size || 1;
+        let dep = opts.depth || 1;
+        let rectShape = new THREE.Shape();
+        rectShape.moveTo(-size, -size);
+        rectShape.lineTo(-size, size);
+        rectShape.lineTo(size, size);
+        rectShape.lineTo(size, -size);
+        rectShape.lineTo(-size, -size);
+        let extrudeSettings = {amount: dep, bevelEnabled: false};
+        let geometry = new THREE.ExtrudeBufferGeometry(rectShape, extrudeSettings);
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let rectMesh = new THREE.Mesh( geometry, material );
+        ret = rectMesh;
+        break;
+      }
       default: {
         ret = null;
       }
@@ -563,6 +580,55 @@ class GeoEarth {
 
           // build the gemetry and make it face tangential to the earth's sphere
           g = this.make3DShape("arrow-head", parsedData);
+          g.position.set(pt1.x, pt1.y, pt1.z);
+          g.lookAt(new THREE.Vector3().addVectors(pt1, nor));
+          
+          // extract forward vector from the geometry
+          g.getWorldQuaternion(qt);
+          fwd.copy(g.up.clone().negate()).applyQuaternion(qt);
+          fwd.normalize();
+
+          // reoirent the shape to face the vector between the first second pts
+          qt.setFromUnitVectors(fwd, dir);
+          g.applyQuaternion(qt);
+
+          ret.add(g);
+        }
+        break;
+      }
+      case ("dashed"): {
+        let sz = parsedData.size || 1;
+        let gap = sz * 10;
+        let p1, pt1;
+        let p2, pt2;
+        let dir, nor, pl, coplPt2;
+        let fwd = new THREE.Vector3();
+        let qt = new THREE.Quaternion();
+        let g;
+        for(let i=0; i<pts.length-gap; i+=gap) {
+          // read first point
+          p1 = pts[i];
+          pt1 = GeoEarth.get3DPoint(p1[0], p1[1], this.earthRadius * this.srfOffset);
+          
+          // read next point on curve
+          p2 = pts[i + gap];
+          pt2 = GeoEarth.get3DPoint(p2[0], p2[1], this.earthRadius * this.srfOffset);
+
+          // normal at first point
+          nor = pt1.clone();
+          nor.normalize();
+
+          // build a plane at first point and get the seocnd point on this plane
+          pl = new THREE.Plane().setFromNormalAndCoplanarPoint(nor, pt1);
+          coplPt2 = new THREE.Vector3();
+          pl.projectPoint(pt2, coplPt2);
+          
+          // build vector between the 2; this will be the vector to orient in
+          dir = new THREE.Vector3().subVectors(pt1, coplPt2);
+          dir.normalize();
+
+          // build the gemetry and make it face tangential to the earth's sphere
+          g = this.make3DShape("rectangle", parsedData);
           g.position.set(pt1.x, pt1.y, pt1.z);
           g.lookAt(new THREE.Vector3().addVectors(pt1, nor));
           
