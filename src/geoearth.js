@@ -683,9 +683,9 @@ class GeoEarth {
     let phi = GeoEarth.latToSphericalCoords(lat);
     let theta = GeoEarth.lngToSphericalCoords(lng);
     let pt = new THREE.Vector3();
-    pt.x = (radius * 1.01) * Math.sin(phi) * Math.cos(theta);
-    pt.y = (radius * 1.01) * Math.cos(phi);
-    pt.z = (radius * 1.01) * Math.sin(phi) * Math.sin(theta);
+    pt.x = radius * Math.sin(phi) * Math.cos(theta);
+    pt.y = radius * Math.cos(phi);
+    pt.z = radius * Math.sin(phi) * Math.sin(theta);
     return pt;
   } 
   
