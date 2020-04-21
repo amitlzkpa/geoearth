@@ -298,7 +298,8 @@
     {
       "type": "Feature",
       "properties": {
-        "color": "#999999"
+        "color": "#999999",
+        "surfaceOffset": 1
       },
       "geometry": {
         "type": "Polygon",
@@ -1015,7 +1016,8 @@
     {
       "type": "Feature",
       "properties": {
-        "color": "#999999"
+        "color": "#999999",
+        "surfaceOffset": 1
       },
       "geometry": {
         "type": "Polygon",
