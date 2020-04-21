@@ -480,11 +480,13 @@ class GeoEarth {
       opts.label = opts.label;
       opts.color = opts.color || color;
       opts.size = opts.size || size;
+      opts.surfaceOffset = opts.surfaceOffset || 0;
     } else {
       opts.geometry = input.geometry.coordinates;
       opts.label = opts.label;
       opts.color = opts.color || color;
       opts.size = opts.size || size;
+      opts.surfaceOffset = opts.surfaceOffset || 0;
     }
 
     return opts;
@@ -856,7 +858,7 @@ class GeoEarth {
     var lat = coords[1];
 
     var point = new THREE.Mesh(geometry, material);
-    var pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+    var pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     point.position.x = pt.x;
     point.position.y = pt.y;
     point.position.z = pt.z;
@@ -941,7 +943,7 @@ class GeoEarth {
       });
       var point = new THREE.Mesh(geometry, material);
 
-      var pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+      var pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
       point.position.x = pt.x;
       point.position.y = pt.y;
       point.position.z = pt.z;
@@ -1230,7 +1232,7 @@ class GeoEarth {
     for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
       lng = fineGeometry.attributes.position.array[i + 1];
       lat = fineGeometry.attributes.position.array[i];
-      pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+      pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
       fineGeometry.attributes.position.array[i] = pt.x;
       fineGeometry.attributes.position.array[i + 1] = pt.y;
       fineGeometry.attributes.position.array[i + 2] = pt.z;
@@ -1247,7 +1249,7 @@ class GeoEarth {
     var cntLng = totLng / totPts;
     var cntLat = totLat / totPts;
 
-    var center = GeoEarth.get3DPoint(cntLng, cntLat, this.earthRadius * this.srfOffset);
+    var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     
     if (parsedData.label) {
       var labelGeom = this.makeTextSprite(parsedData.label);
@@ -1417,7 +1419,7 @@ class GeoEarth {
       for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
         lng = fineGeometry.attributes.position.array[i + 1];
         lat = fineGeometry.attributes.position.array[i];
-        pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+        pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
         fineGeometry.attributes.position.array[i] = pt.x;
         fineGeometry.attributes.position.array[i + 1] = pt.y;
         fineGeometry.attributes.position.array[i + 2] = pt.z;
@@ -1437,7 +1439,7 @@ class GeoEarth {
 
     var cntLng = totLng / totPts;
     var cntLat = totLat / totPts;
-    var center = GeoEarth.get3DPoint(cntLng, cntLat, this.earthRadius * this.srfOffset);
+    var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
 
     if (parsedData.label) {
       var labelGeom = this.makeTextSprite(parsedData.label);
