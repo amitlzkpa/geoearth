@@ -31,6 +31,7 @@ class GeoEarth {
   opts;
   autoStart;
   earthRadius;
+  srfOffset = 1.001;
   disableAtmosphere;
 
   textureImage;
@@ -532,8 +533,8 @@ class GeoEarth {
       case ("forward-arrows"): {
         let sz = parsedData.size || 1;
         let gap = sz * 10;
-        let p1, lng1, lat1, phi1, theta1, pt1;
-        let p2, lng2, lat2, phi2, theta2, pt2;
+        let p1, pt1;
+        let p2, pt2;
         let dir, nor, pl, coplPt2;
         let fwd = new THREE.Vector3();
         let qt = new THREE.Quaternion();
@@ -541,25 +542,11 @@ class GeoEarth {
         for(let i=0; i<pts.length-gap; i+=gap) {
           // read first point
           p1 = pts[i];
-          lng1 = p1[0];
-          lat1 = p1[1];
-          phi1 = GeoEarth.latToSphericalCoords(lat1);
-          theta1 = GeoEarth.lngToSphericalCoords(lng1);
-          pt1 = new THREE.Vector3();
-          pt1.x = (this.earthRadius * 1.01) * Math.sin(phi1) * Math.cos(theta1);
-          pt1.y = (this.earthRadius * 1.01) * Math.cos(phi1);
-          pt1.z = (this.earthRadius * 1.01) * Math.sin(phi1) * Math.sin(theta1);
+          pt1 = GeoEarth.get3DPoint(p1[0], p1[1], this.earthRadius * this.srfOffset);
           
           // read next point on curve
           p2 = pts[i + gap];
-          lng2 = p2[0];
-          lat2 = p2[1];
-          phi2 = GeoEarth.latToSphericalCoords(lat2);
-          theta2 = GeoEarth.lngToSphericalCoords(lng2);
-          pt2 = new THREE.Vector3();
-          pt2.x = (this.earthRadius * 1.01) * Math.sin(phi2) * Math.cos(theta2);
-          pt2.y = (this.earthRadius * 1.01) * Math.cos(phi2);
-          pt2.z = (this.earthRadius * 1.01) * Math.sin(phi2) * Math.sin(theta2);
+          pt2 = GeoEarth.get3DPoint(p2[0], p2[1], this.earthRadius * this.srfOffset);
 
           // normal at first point
           nor = pt1.clone();
@@ -595,19 +582,11 @@ class GeoEarth {
       case ("dotted"): {
         let sz = parsedData.size || 1;
         let gap = sz * 10;
-        let p;
-        let lng, lat, phi, theta, pt;
+        let p, pt;
         let g;
         for(let i=0; i<pts.length-gap; i+=gap) {
           p = pts[i];
-          lng = p[0];
-          lat = p[1];
-          phi = GeoEarth.latToSphericalCoords(lat);
-          theta = GeoEarth.lngToSphericalCoords(lng);
-          pt = new THREE.Vector3();
-          pt.x = (this.earthRadius * 1.01) * Math.sin(phi) * Math.cos(theta);
-          pt.y = (this.earthRadius * 1.01) * Math.cos(phi);
-          pt.z = (this.earthRadius * 1.01) * Math.sin(phi) * Math.sin(theta);
+          pt = GeoEarth.get3DPoint(p[0], p[1], this.earthRadius * this.srfOffset);
           g = this.make3DShape("cylinder", parsedData);
           g.position.set(pt.x, pt.y, pt.z);
           g.up = new THREE.Vector3(1,0,0);
@@ -623,16 +602,10 @@ class GeoEarth {
         });
         var c = 0;
         var geometry = new THREE.Geometry();
+        var pt;
         do {
-          var lng = pts[c][0];
-          var lat = pts[c][1];
-          var phi = GeoEarth.latToSphericalCoords(lat);
-          var theta = GeoEarth.lngToSphericalCoords(lng);
-          var vt = new THREE.Vector3();
-          vt.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-          vt.y = this.earthRadius * Math.cos(phi);
-          vt.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
-          geometry.vertices.push(vt);
+          pt = GeoEarth.get3DPoint(pts[c][0], pts[c][1], this.earthRadius * this.srfOffset);
+          geometry.vertices.push(pt);
           c++;
         } while (c < pts.length)
     
@@ -693,6 +666,29 @@ class GeoEarth {
     return (180 - lng) * Math.PI / 180;
   }
 
+
+  /**
+   * Method to convert longitude, latitude to 3D coordinates for given radius.
+   *
+   * @param {float} lng - Longitude in decimal coordinates.
+   * @param {float} lat - Latitude in decimal coordinates.
+   * @param {float} radius - Radius to use for conversion (default=6371).
+   *
+   * @example
+   *
+   *     get3DPoint(20, 30);
+   *
+   */
+  static get3DPoint(lng, lat, radius = 6371) {
+    let phi = GeoEarth.latToSphericalCoords(lat);
+    let theta = GeoEarth.lngToSphericalCoords(lng);
+    let pt = new THREE.Vector3();
+    pt.x = (radius * 1.01) * Math.sin(phi) * Math.cos(theta);
+    pt.y = (radius * 1.01) * Math.cos(phi);
+    pt.z = (radius * 1.01) * Math.sin(phi) * Math.sin(theta);
+    return pt;
+  } 
+  
   /**
    * Method to calculate haversine distance with the given radius.
    *
@@ -784,22 +780,20 @@ class GeoEarth {
 
     var coords = JSON.parse(JSON.stringify(parsedData.geometry));
 
-    var lng = coords[0];
-    var lat = coords[1];
-
-    var phi = GeoEarth.latToSphericalCoords(lat);
-    var theta = GeoEarth.lngToSphericalCoords(lng);
-
     var geometry = new THREE.SphereGeometry(parsedData.size, 8, 8);
     var material = new THREE.MeshBasicMaterial({
       color: parsedData.color
     });
     var geomContainer = new THREE.Object3D();
 
+    var lng = coords[0];
+    var lat = coords[1];
+
     var point = new THREE.Mesh(geometry, material);
-    point.position.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-    point.position.y = this.earthRadius * Math.cos(phi);
-    point.position.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+    var pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+    point.position.x = pt.x;
+    point.position.y = pt.y;
+    point.position.z = pt.z;
     geomContainer.add(point);
 
     var center = point.position.clone();
@@ -866,16 +860,14 @@ class GeoEarth {
     var points = new THREE.Object3D();
     var totLng = 0;
     var totLat = 0;
+    var lng, lat;
 
     for (var ptIdx = 0; ptIdx < coords.length; ptIdx++) {
-      var lng = coords[ptIdx][0];
-      var lat = coords[ptIdx][1];
+      lng = coords[ptIdx][0];
+      lat = coords[ptIdx][1];
       // compute total to get average for the center later
       totLng += lng;
       totLat += lat;
-
-      var phi = GeoEarth.latToSphericalCoords(lat);
-      var theta = GeoEarth.lngToSphericalCoords(lng);
 
       var geometry = new THREE.SphereGeometry(parsedData.size, 8, 8);
       var material = new THREE.MeshBasicMaterial({
@@ -883,9 +875,10 @@ class GeoEarth {
       });
       var point = new THREE.Mesh(geometry, material);
 
-      point.position.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-      point.position.y = this.earthRadius * Math.cos(phi);
-      point.position.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+      var pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+      point.position.x = pt.x;
+      point.position.y = pt.y;
+      point.position.z = pt.z;
 
       points.add(point);
     }
@@ -1152,12 +1145,15 @@ class GeoEarth {
     }
     var fineGeometry = new THREE.BufferGeometry().fromGeometry(roughGeometry);
 
+    var pt;
+    var lng, lat;
     for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
-      var phi = GeoEarth.latToSphericalCoords(fineGeometry.attributes.position.array[i]);
-      var theta = GeoEarth.lngToSphericalCoords(fineGeometry.attributes.position.array[i + 1]);
-      fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
-      fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.001) * Math.cos(phi);
-      fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
+      lng = fineGeometry.attributes.position.array[i + 1];
+      lat = fineGeometry.attributes.position.array[i];
+      pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+      fineGeometry.attributes.position.array[i] = pt.x;
+      fineGeometry.attributes.position.array[i + 1] = pt.y;
+      fineGeometry.attributes.position.array[i + 2] = pt.z;
     }
     fineGeometry.computeVertexNormals();
     fineGeometry.attributes.position.needsUpdate = true;
@@ -1170,13 +1166,8 @@ class GeoEarth {
 
     var cntLng = totLng / totPts;
     var cntLat = totLat / totPts;
-    var phi = GeoEarth.latToSphericalCoords(cntLat);
-    var theta = GeoEarth.lngToSphericalCoords(cntLng);
 
-    var center = new THREE.Vector3();
-    center.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-    center.y = this.earthRadius * Math.cos(phi);
-    center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+    var center = GeoEarth.get3DPoint(cntLng, cntLat, this.earthRadius * this.srfOffset);
     
     if (parsedData.label) {
       var labelGeom = this.makeTextSprite(parsedData.label);
@@ -1342,12 +1333,14 @@ class GeoEarth {
       }
       var fineGeometry = new THREE.BufferGeometry().fromGeometry(roughGeometry);
 
+      var lng, lat, pt;
       for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
-        var phi = GeoEarth.latToSphericalCoords(fineGeometry.attributes.position.array[i]);
-        var theta = GeoEarth.lngToSphericalCoords(fineGeometry.attributes.position.array[i + 1]);
-        fineGeometry.attributes.position.array[i] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.cos(theta);
-        fineGeometry.attributes.position.array[i + 1] = (this.earthRadius * 1.001) * Math.cos(phi);
-        fineGeometry.attributes.position.array[i + 2] = (this.earthRadius * 1.001) * Math.sin(phi) * Math.sin(theta);
+        lng = fineGeometry.attributes.position.array[i + 1];
+        lat = fineGeometry.attributes.position.array[i];
+        pt = GeoEarth.get3DPoint(lng, lat, this.earthRadius * this.srfOffset);
+        fineGeometry.attributes.position.array[i] = pt.x;
+        fineGeometry.attributes.position.array[i + 1] = pt.y;
+        fineGeometry.attributes.position.array[i + 2] = pt.z;
       }
       fineGeometry.computeVertexNormals();
       fineGeometry.attributes.position.needsUpdate = true;
@@ -1364,14 +1357,8 @@ class GeoEarth {
 
     var cntLng = totLng / totPts;
     var cntLat = totLat / totPts;
-    var phi = GeoEarth.latToSphericalCoords(cntLat);
-    var theta = GeoEarth.lngToSphericalCoords(cntLng);
+    var center = GeoEarth.get3DPoint(cntLng, cntLat, this.earthRadius * this.srfOffset);
 
-    var center = new THREE.Vector3();
-    center.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-    center.y = this.earthRadius * Math.cos(phi);
-    center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
-    
     if (parsedData.label) {
       var labelGeom = this.makeTextSprite(parsedData.label);
       labelGeom.position.set(center.x, center.y, center.z);
