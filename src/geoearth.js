@@ -736,7 +736,7 @@ class GeoEarth {
 
 
   /**
-   * Method to convert X coordinate on the globe's surface to latitude.
+   * Method to convert spherical X coordinate on the globe's surface to longitude.
    *
    * @param {float} val - X coordinate in radians on the globe's surface.
    * @return {float} Longitude in decimal geographic coordinates.
@@ -751,7 +751,7 @@ class GeoEarth {
   }
 
   /**
-   * Method to convert Y coordinate on the globe's surface to longitude.
+   * Method to convert Y spherical coordinate on the globe's surface to latitude.
    *
    * @param {float} val - Y coordinate in radians on the globe's surface.
    * @return {float} Latitude in decimal geographic coordinates.
