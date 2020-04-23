@@ -735,7 +735,7 @@ class GeoEarth {
    *
    */
   static latToSphericalCoords(lat) {
-    return (90 - lat) * Math.PI / 180;
+    return ((90 - lat) / 180) * Math.PI;
   }
 
   /**
@@ -750,7 +750,7 @@ class GeoEarth {
    *
    */
   static lngToSphericalCoords(lng) {
-    return (180 - lng) * Math.PI / 180;
+    return ((180 - lng) / 180) * Math.PI;
   }
 
 
