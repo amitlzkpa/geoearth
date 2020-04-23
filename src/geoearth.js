@@ -522,19 +522,38 @@ class GeoEarth {
     while (idx < inPts.length) {
       var secondPt = inPts[idx];
       var firstPt = inPts[idx - 1];
-      
+
       // TODO: use haversine distance for the length
-      // var d = GeoEarth.getHaversineDistance(firstPt, secondPt);
       var d = Math.sqrt(Math.pow(secondPt[0] - firstPt[0], 2)
                       + Math.pow(secondPt[1] - firstPt[1], 2));
       var divs = Math.ceil(d * 8);
 
-      var deltaLng = (secondPt[0] - firstPt[0]) / divs;
-      var deltaLat = (secondPt[1] - firstPt[1]) / divs;
+      var pt1, pt2, q1, q2, v, t, s;
+      var tgtQt = new THREE.Quaternion();
+      var refVec = new THREE.Vector3(0, 1, 0);
 
       for (var j = 0; j < divs; j++) {
-        pts.push([firstPt[0] + (j * deltaLng) + (corr * mul), firstPt[1] + (j * deltaLat)]);
+        t = j/divs;
+
+        pt1 = GeoEarth.get3DPoint(firstPt[0], firstPt[1], 1);
+        pt2 = GeoEarth.get3DPoint(secondPt[0], secondPt[1], 1);
+
+        q1 = new THREE.Quaternion().setFromUnitVectors(refVec, pt1);
+        q2 = new THREE.Quaternion().setFromUnitVectors(refVec, pt2);
+
+        THREE.Quaternion.slerp(q1, q2, tgtQt, t);
+
+        v = refVec.clone();
+        v.applyQuaternion(tgtQt);
+
+        s = new THREE.Spherical().setFromVector3(v);
+
+        var lng = GeoEarth.xCoordToLng(s.theta);
+        var lat = GeoEarth.yCoordToLat(s.phi);
+        pts.push([lng, lat])
+
       }
+
       idx++;
     }
 
