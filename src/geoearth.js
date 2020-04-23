@@ -736,6 +736,37 @@ class GeoEarth {
 
 
   /**
+   * Method to convert X coordinate on the globe's surface to latitude.
+   *
+   * @param {float} val - X coordinate in radians on the globe's surface.
+   * @return {float} Longitude in decimal geographic coordinates.
+   *
+   * @example
+   *
+   *     xCoordToLng(0.2809);
+   *
+   */
+  static xCoordToLng(val) {
+    return ((val / Math.PI) * 180) - 90;
+  }
+
+  /**
+   * Method to convert Y coordinate on the globe's surface to longitude.
+   *
+   * @param {float} val - Y coordinate in radians on the globe's surface.
+   * @return {float} Latitude in decimal geographic coordinates.
+   *
+   * @example
+   *
+   *     yCoordToLat(0.6552);
+   *
+   */
+  static yCoordToLat(val) {
+    return ((val / Math.PI) * 180) + 90;
+  }
+
+
+  /**
    * Method to convert longitude, latitude to 3D coordinates for given radius.
    *
    * @param {float} lng - Longitude in decimal coordinates.
