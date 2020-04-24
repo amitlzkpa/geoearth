@@ -529,17 +529,19 @@ class GeoEarth {
       var divs = Math.ceil(d * 8);
 
       var pt1, pt2, q1, q2, v, t, s;
+
+      pt1 = GeoEarth.get3DPoint(firstPt[0], firstPt[1], 1);
+      pt2 = GeoEarth.get3DPoint(secondPt[0], secondPt[1], 1);
+
+      var refVec = pt1.clone();
+
+      q1 = new THREE.Quaternion().setFromUnitVectors(refVec, pt1);
+      q2 = new THREE.Quaternion().setFromUnitVectors(refVec, pt2);
+
       var tgtQt = new THREE.Quaternion();
-      var refVec = new THREE.Vector3(0, 1, 0);
 
       for (var j = 0; j < divs; j++) {
         t = j/divs;
-
-        pt1 = GeoEarth.get3DPoint(firstPt[0], firstPt[1], 1);
-        pt2 = GeoEarth.get3DPoint(secondPt[0], secondPt[1], 1);
-
-        q1 = new THREE.Quaternion().setFromUnitVectors(refVec, pt1);
-        q2 = new THREE.Quaternion().setFromUnitVectors(refVec, pt2);
 
         THREE.Quaternion.slerp(q1, q2, tgtQt, t);
 
