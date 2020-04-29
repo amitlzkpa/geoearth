@@ -859,6 +859,21 @@ class GeoEarth {
   }
 
 
+  static parseDown(threejsObj, collected) {
+    
+    if (threejsObj.type === "Mesh") {
+      collected.push(threejsObj);
+      return
+    }
+    if (!threejsObj || threejsObj.children.length < 1) {
+      return
+    }
+    for(var i=0; i<threejsObj.children.length; i++) {
+      GeoEarth.parseDown(threejsObj.children[i], collected);
+    }
+  }
+
+
 
 
   // ----------------------------------------------------------------------------
@@ -935,6 +950,8 @@ class GeoEarth {
     point.position.z = pt.z;
     geomContainer.add(point);
 
+    geomContainer.userData = parsedData;
+
     var center = point.position.clone();
 
     if (parsedData.label) {
@@ -943,7 +960,7 @@ class GeoEarth {
       geomContainer.add(labelGeom);
     }
     
-    var addedObj = this.addToActiveGeoJsons(geomContainer);
+    var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
   }
@@ -1027,6 +1044,8 @@ class GeoEarth {
     var geomContainer = new THREE.Object3D();
     geomContainer.add(points);
 
+    geomContainer.userData = parsedData;
+
     var cntLng = totLng / coords.length;
     var cntLat = totLat / coords.length;
     var phi = GeoEarth.latToSphericalCoords(cntLat);
@@ -1043,7 +1062,7 @@ class GeoEarth {
       geomContainer.add(labelGeom);
     }
 
-    var addedObj = this.addToActiveGeoJsons(geomContainer);
+    var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
   }
@@ -1098,7 +1117,13 @@ class GeoEarth {
     var pts = this.getSpacedPoints(inPts);
 
     var line = this.makeLineGeometry(pts, input, parsedData);
-    var addedObj = this.addToActiveGeoJsons(line);
+
+    var geomContainer = new THREE.Object3D();
+    geomContainer.add(line);
+    
+    geomContainer.userData = parsedData;
+
+    var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
   }
@@ -1164,7 +1189,12 @@ class GeoEarth {
       lines.add(line);
     }
 
-    var addedObj = this.addToActiveGeoJsons(lines);
+    var geomContainer = new THREE.Object3D();
+    geomContainer.add(lines);
+    
+    geomContainer.userData = parsedData;
+    
+    var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
   }
@@ -1319,12 +1349,12 @@ class GeoEarth {
     fineGeometry.attributes.position.needsUpdate = true;
     var mesh = new THREE.Mesh(fineGeometry, material);
 
-    mesh.userData = parsedData;
-
     polygon.add(mesh);
 
     var geomContainer = new THREE.Object3D();
     geomContainer.add(polygon);
+
+    geomContainer.userData = parsedData;
 
     var cntLng = totLng / totPts;
     var cntLat = totLat / totPts;
@@ -1336,7 +1366,7 @@ class GeoEarth {
       labelGeom.position.set(center.x, center.y, center.z);
       geomContainer.add(labelGeom);
     }
-    var addedObj = this.addToActiveGeoJsons(geomContainer);    
+    var addedObj = this.registerAndAddToScene(geomContainer);    
 
     return addedObj;
   }
@@ -1518,6 +1548,8 @@ class GeoEarth {
     var geomContainer = new THREE.Object3D();
     geomContainer.add(polygons);
 
+    geomContainer.userData = parsedData;
+
     var cntLng = totLng / totPts;
     var cntLat = totLat / totPts;
     var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
@@ -1528,7 +1560,7 @@ class GeoEarth {
       geomContainer.add(labelGeom);
     }
 
-    var addedObj = this.addToActiveGeoJsons(geomContainer);
+    var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
   }
@@ -1736,21 +1768,21 @@ class GeoEarth {
 
 
   
-  addToActiveGeoJsons(threejsObj) {
+  registerAndAddToScene(threejsObj) {
     var id = (threejsObj && threejsObj.uuid) ? threejsObj.uuid : null;
-    if (!id) return null;
+    if (!id) {
+      throw `Invalid object UUID: ${id}`
+    }
+
+    var meshes = [];
+    GeoEarth.parseDown(threejsObj, meshes);
+    this.intersectionItems = this.intersectionItems.concat(...meshes);
 
     this.activeGeoJsons[id] = threejsObj;
     this.scene.add(threejsObj);
 
-    // currently only adds the first mesh to check for intersections
-    var intMeshes = threejsObj.children.filter(c => c.children[0] && c.children[0].type === "Mesh").map(i => i.children);
-    this.intersectionItems = this.intersectionItems.concat(...intMeshes);
-
     return threejsObj;
   }
-
-
 
 
 }
