@@ -271,11 +271,16 @@ class GeoEarth {
     mousePosition.y = 1 - 2 * (event.clientY / this.h);
     mousePosition.unproject(this.camera);
 
+    function userDataCheck (obj) {
+      return obj.userData && JSON.stringify(obj.userData) !== JSON.stringify({});
+    }
+
     var raycaster = new THREE.Raycaster(this.camera.position, mousePosition.sub(this.camera.position).normalize());
     var intersects = raycaster.intersectObjects(this.intersectionItems);
     for ( var i = 0; i < intersects.length; i++ ) {
       var o = intersects[i].object;
-      console.log(o);
+      var p = GeoEarth.parseUp(o, userDataCheck, "parent")
+      console.log(p);
     }
 
   }.bind(this)
@@ -859,9 +864,15 @@ class GeoEarth {
   }
 
 
-  static parseDown(threejsObj, collected) {
-    
-    if (threejsObj.type === "Mesh") {
+  static parseUp(threejsObj, checkFn, recurProp) {
+    if (checkFn(threejsObj)) return threejsObj;
+    if (!threejsObj[recurProp]) return null;
+    return GeoEarth.parseUp(threejsObj[recurProp], checkFn, recurProp);
+  }
+
+
+  static parseDown(threejsObj, collected, prop="type", val="Mesh") {
+    if (threejsObj[prop] === val) {
       collected.push(threejsObj);
       return
     }
@@ -1775,7 +1786,7 @@ class GeoEarth {
     }
 
     var meshes = [];
-    GeoEarth.parseDown(threejsObj, meshes);
+    GeoEarth.parseDown(threejsObj, meshes, "type", "Mesh");
     this.intersectionItems = this.intersectionItems.concat(...meshes);
 
     this.activeGeoJsons[id] = threejsObj;
