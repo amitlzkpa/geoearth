@@ -130,6 +130,7 @@ class GeoEarth {
    * objects themselves as values.
    */
   activeGeoJsons = {};
+  intersectionItems = [];
 
 
 
@@ -264,6 +265,19 @@ class GeoEarth {
     this.targetOnDown.y = this.target.y;
 
     this.container.style.cursor = 'move';
+
+    var mousePosition = new THREE.Vector3(0, 0, 0.5);
+    mousePosition.x = 2 * (event.clientX / this.w) - 1;
+    mousePosition.y = 1 - 2 * (event.clientY / this.h);
+    mousePosition.unproject(this.camera);
+
+    var raycaster = new THREE.Raycaster(this.camera.position, mousePosition.sub(this.camera.position).normalize());
+    var intersects = raycaster.intersectObjects(this.intersectionItems);
+    for ( var i = 0; i < intersects.length; i++ ) {
+      var o = intersects[i].object;
+      console.log(o);
+    }
+
   }.bind(this)
 
   onMouseMove = function(event) {
@@ -1318,8 +1332,7 @@ class GeoEarth {
       labelGeom.position.set(center.x, center.y, center.z);
       geomContainer.add(labelGeom);
     }
-    
-    var addedObj = this.addToActiveGeoJsons(geomContainer);
+    var addedObj = this.addToActiveGeoJsons(geomContainer);    
 
     return addedObj;
   }
@@ -1725,6 +1738,11 @@ class GeoEarth {
 
     this.activeGeoJsons[id] = threejsObj;
     this.scene.add(threejsObj);
+
+    // currently only adds the first mesh to check for intersections
+    var intMeshes = threejsObj.children.filter(c => c.children[0] && c.children[0].type === "Mesh").map(i => i.children);
+    this.intersectionItems = this.intersectionItems.concat(...intMeshes);
+
     return threejsObj;
   }
 
