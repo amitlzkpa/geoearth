@@ -495,12 +495,14 @@ class GeoEarth {
       opts.color = opts.color || color;
       opts.size = opts.size || size;
       opts.surfaceOffset = opts.surfaceOffset || 0;
+      opts.note = opts.note || null;
     } else {
       opts.geometry = input.geometry.coordinates;
       opts.label = opts.label;
       opts.color = opts.color || color;
       opts.size = opts.size || size;
       opts.surfaceOffset = opts.surfaceOffset || 0;
+      opts.note = opts.note || null;
     }
 
     return opts;
@@ -1316,6 +1318,8 @@ class GeoEarth {
     fineGeometry.computeVertexNormals();
     fineGeometry.attributes.position.needsUpdate = true;
     var mesh = new THREE.Mesh(fineGeometry, material);
+
+    mesh.userData = parsedData;
 
     polygon.add(mesh);
 
