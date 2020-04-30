@@ -871,8 +871,8 @@ class GeoEarth {
   }
 
 
-  static parseDown(threejsObj, collected, prop="type", val="Mesh") {
-    if (threejsObj[prop] === val) {
+  static parseDown(threejsObj, collected, prop="type", vals=["Mesh", "Line"]) {
+    if (vals.includes(threejsObj[prop])) {
       collected.push(threejsObj);
       return
     }
@@ -880,7 +880,7 @@ class GeoEarth {
       return
     }
     for(var i=0; i<threejsObj.children.length; i++) {
-      GeoEarth.parseDown(threejsObj.children[i], collected);
+      GeoEarth.parseDown(threejsObj.children[i], collected, prop, vals);
     }
   }
 
@@ -1786,7 +1786,7 @@ class GeoEarth {
     }
 
     var meshes = [];
-    GeoEarth.parseDown(threejsObj, meshes, "type", "Mesh");
+    GeoEarth.parseDown(threejsObj, meshes, "type", ["Mesh", "Line"]);
     this.intersectionItems = this.intersectionItems.concat(...meshes);
 
     this.activeGeoJsons[id] = threejsObj;
