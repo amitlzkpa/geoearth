@@ -435,6 +435,16 @@ class GeoEarth {
     let opts = options || {};
     let ret;
     switch(type) {
+      case "sphere": {
+        let col = opts.color || 0xffffff;
+        let rad = opts.size || 1;
+        let geometry = new THREE.SphereGeometry(rad, 8, 8);
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let sphereMesh = new THREE.Mesh(geometry, material);
+        ret = sphereMesh;
+        break;
+      }
       case "cylinder": {
         let col = opts.color || 0xffffff;
         let rad = opts.size || 1;
@@ -491,23 +501,20 @@ class GeoEarth {
 
     var opts = opts || input.properties || {};
 
-    var color = 0xffffff;
-    var size = 1;
-
     if (input.constructor === Array) {
       opts.geometry = input;
       opts.label = opts.label;
-      opts.color = opts.color || color;
-      opts.size = opts.size || size;
+      opts.color = opts.color;
+      opts.size = opts.size;
       opts.surfaceOffset = opts.surfaceOffset || 0;
-      opts.note = opts.note || null;
+      opts.note = opts.note;
     } else {
       opts.geometry = input.geometry.coordinates;
       opts.label = opts.label;
-      opts.color = opts.color || color;
-      opts.size = opts.size || size;
+      opts.color = opts.color;
+      opts.size = opts.size;
       opts.surfaceOffset = opts.surfaceOffset || 0;
-      opts.note = opts.note || null;
+      opts.note = opts.note;
     }
 
     return opts;
@@ -945,16 +952,12 @@ class GeoEarth {
 
     var coords = JSON.parse(JSON.stringify(parsedData.geometry));
 
-    var geometry = new THREE.SphereGeometry(parsedData.size, 8, 8);
-    var material = new THREE.MeshBasicMaterial({
-      color: parsedData.color
-    });
     var geomContainer = new THREE.Object3D();
 
     var lng = coords[0];
     var lat = coords[1];
 
-    var point = new THREE.Mesh(geometry, material);
+    var point = this.make3DShape("sphere", parsedData);
     var pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     point.position.x = pt.x;
     point.position.y = pt.y;
@@ -1038,12 +1041,8 @@ class GeoEarth {
       // compute total to get average for the center later
       totLng += lng;
       totLat += lat;
-
-      var geometry = new THREE.SphereGeometry(parsedData.size, 8, 8);
-      var material = new THREE.MeshBasicMaterial({
-        color: parsedData.color
-      });
-      var point = new THREE.Mesh(geometry, material);
+      
+      var point = this.make3DShape("sphere", parsedData);
 
       var pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
       point.position.x = pt.x;
