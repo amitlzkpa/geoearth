@@ -403,18 +403,18 @@ class GeoEarth {
   makeTextSprite(message, opts) {
     let parameters = opts || {};
     let fontface = parameters.fontface || 'Helvetica';
-    let fontsize = parameters.fontsize || 40;
+    let fontSize = parameters.fontSize || 40;
     let canvas = document.createElement('canvas');
     let context = canvas.getContext('2d');
-    context.font = fontsize + "px " + fontface;
+    context.font = fontSize + "px " + fontface;
 
     // get size data (height depends only on font size)
     let metrics = context.measureText(message);
     let textWidth = metrics.width;
 
     // text color
-    context.fillStyle = parameters.color || '#FFFFFF';
-    context.fillText(message, 0, fontsize);
+    context.fillStyle = parameters.fontColor || '#FFFFFF';
+    context.fillText(message, 0, fontSize);
 
     // canvas contents will be used for a texture
     let texture = new THREE.Texture(canvas)
@@ -503,19 +503,15 @@ class GeoEarth {
 
     if (input.constructor === Array) {
       opts.geometry = input;
-      opts.label = opts.label;
-      opts.color = opts.color;
-      opts.size = opts.size;
-      opts.surfaceOffset = opts.surfaceOffset || 0;
-      opts.note = opts.note;
     } else {
       opts.geometry = input.geometry.coordinates;
-      opts.label = opts.label;
-      opts.color = opts.color;
-      opts.size = opts.size;
-      opts.surfaceOffset = opts.surfaceOffset || 0;
-      opts.note = opts.note;
     }
+    opts.label = opts.label;
+    opts.labelProperties = opts.labelProperties;
+    opts.color = opts.color;
+    opts.size = opts.size;
+    opts.surfaceOffset = opts.surfaceOffset || 0;
+    opts.note = opts.note;
 
     return opts;
 
@@ -1371,8 +1367,8 @@ class GeoEarth {
 
     var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     
-    if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label);
+    if (parsedData.label) { 
+      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
       labelGeom.position.set(center.x, center.y, center.z);
       geomContainer.add(labelGeom);
     }
