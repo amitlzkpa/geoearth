@@ -1371,10 +1371,6 @@ class GeoEarth {
     var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + parsedData.labelProperties.surfaceOffset);
     
-    let sp = this.make3DShape("sphere", { color: "red" });
-    sp.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
-    geomContainer.add(sp);
-    
     if (parsedData.label) {
       var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
       labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
