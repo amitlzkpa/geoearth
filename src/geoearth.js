@@ -407,20 +407,21 @@ class GeoEarth {
     let canvas = document.createElement('canvas');
     let context = canvas.getContext('2d');
     context.font = fontSize + "px " + fontface;
+    context.textAlign = "center";
 
     // get size data (height depends only on font size)
     let metrics = context.measureText(message);
     let textWidth = metrics.width;
-
+    
     // text color
     context.fillStyle = parameters.fontColor || '#FFFFFF';
-    context.fillText(message, 0, fontSize);
+    context.fillText(message, canvas.width/2, canvas.height/2);
 
     // canvas contents will be used for a texture
-    let texture = new THREE.Texture(canvas)
+    let texture = new THREE.Texture(canvas);
     texture.minFilter = THREE.LinearFilter;
     texture.needsUpdate = true;
-
+    
     let spriteMaterial = new THREE.SpriteMaterial({
         map: texture,
         useScreenCoordinates: false
