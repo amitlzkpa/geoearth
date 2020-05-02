@@ -414,6 +414,8 @@ class GeoEarth {
     let textWidth = metrics.width;
     
     // text color
+    context.fillStyle = parameters.bgColor || 'transparent';
+    context.fillRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = parameters.fontColor || '#FFFFFF';
     context.fillText(message, canvas.width/2, canvas.height/2);
 
