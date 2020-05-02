@@ -438,7 +438,7 @@ class GeoEarth {
       case "sphere": {
         let col = opts.color || 0xffffff;
         let rad = opts.size || 1;
-        let geometry = new THREE.SphereGeometry(rad, 8, 8);
+        let geometry = new THREE.SphereGeometry(rad, 24, 24);
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
         let material = new THREE.MeshBasicMaterial( {color: col} );
         let sphereMesh = new THREE.Mesh(geometry, material);

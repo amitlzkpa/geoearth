@@ -17,7 +17,7 @@
         var opts = {
           colorFn: 0xff0000,
           textureImage: './textures/earth-black.jpg',
-          // disableAtmosphere: true,
+          disableAtmosphere: true,
           autoStart: false
         };
         var container = document.getElementById("geo-container");
@@ -27,6 +27,9 @@
         await geoearth.animate();
         
         
+        var ptA = [50.00, 0.00];
+        var pointA = await geoearth.addPoint(ptA, {label: 'abc'});
+
 
         // Add polygon as geojson
         var plB = {
@@ -39,12 +42,18 @@
                             [20.00,-10.00],
                             [40.00,-10.00],
                             [40.00,10.00],
-                            [20.00,10.00]
+                            [20.00,10.00],
+                            [20.00,-10.00]
                           ]
                         ]
                     },
                     "properties": {
-                      "label": "jkl",
+                      "label": "abc",
+                      "labelProperties": {
+                        "fontface": "Arial",
+                        "fontSize": 40,
+                        "fontColor": "#00FFFF"
+                      },
                       "note": "A simple note."
                     }
                   };
