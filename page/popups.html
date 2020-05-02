@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Geoearth Sample - Test</title>
+  </head>
+  <body>
+    <div id="geo-container" style="height:100vh"></div>
+    <script src="/build/geoearth.js"></script>
+
+
+    <script type="text/javascript">
+
+      async function main() {
+
+
+        var opts = {
+          colorFn: 0xff0000,
+          textureImage: './textures/earth-black.jpg',
+          // disableAtmosphere: true,
+          autoStart: false
+        };
+        var container = document.getElementById("geo-container");
+        var geoearth = new GeoEarth(container, opts);
+
+        await geoearth.init();
+        await geoearth.animate();
+        
+        
+
+        // Add polygon as geojson
+        var plB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "Polygon", 
+                      "coordinates":
+                        [
+                          [
+                            [20.00,-10.00],
+                            [40.00,-10.00],
+                            [40.00,10.00],
+                            [20.00,10.00]
+                          ]
+                        ]
+                    },
+                    "properties": {
+                      "label": "jkl",
+                      "note": "A simple note."
+                    }
+                  };
+        var polyB = await geoearth.addPolygon(plB);
+
+      }
+
+      main();
+
+    </script>
+
+  </body>
+</html>
