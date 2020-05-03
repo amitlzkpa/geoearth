@@ -411,6 +411,7 @@ class GeoEarth {
     let context = canvas.getContext('2d');
     context.font = fontSize + "px " + fontface;
     context.textAlign = "center";
+    context.textBaseline = "middle";
 
     // get size data (height depends only on font size)
     let metrics = context.measureText(message);
@@ -432,7 +433,7 @@ class GeoEarth {
         useScreenCoordinates: false
     });
     let sprite = new THREE.Sprite(spriteMaterial);
-    sprite.scale.set(100, 50, 1.0);
+    sprite.scale.set(100, 50, 1);
 
     if (this.textOnTop) {
       sprite.renderOrder = 999;
