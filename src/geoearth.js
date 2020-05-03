@@ -994,10 +994,12 @@ class GeoEarth {
     geomContainer.userData = parsedData;
 
     var center = point.position.clone();
-
+    let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
+    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
+    
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label);
-      labelGeom.position.set(center.x, center.y, center.z);
+      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
     
@@ -1085,17 +1087,14 @@ class GeoEarth {
 
     var cntLng = totLng / coords.length;
     var cntLat = totLat / coords.length;
-    var phi = GeoEarth.latToSphericalCoords(cntLat);
-    var theta = GeoEarth.lngToSphericalCoords(cntLng);
 
-    var center = new THREE.Vector3();
-    center.x = this.earthRadius * Math.sin(phi) * Math.cos(theta);
-    center.y = this.earthRadius * Math.cos(phi);
-    center.z = this.earthRadius * Math.sin(phi) * Math.sin(theta);
+    var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
+    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label);
-      labelGeom.position.set(center.x, center.y, center.z);
+      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
 
