@@ -5,7 +5,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Baghdad",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -19,7 +25,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Aleppo",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -33,7 +45,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Mecca",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -47,7 +65,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Alexandria",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -61,7 +85,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Hodeida",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -75,7 +105,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Tripoli",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -89,7 +125,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Marrakesh",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -103,7 +145,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Lisbon",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -131,7 +179,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Marseille",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -145,7 +199,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Bordeaux",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -159,7 +219,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Tunis",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -173,7 +239,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Genoa",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -187,7 +259,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Venice",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -201,7 +279,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Buda",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -215,7 +299,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Cologne",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -229,7 +319,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "London",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -243,7 +339,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Edinburg",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -257,7 +359,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Dublin",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -271,7 +379,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Moscow",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -285,7 +399,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Oslo",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
