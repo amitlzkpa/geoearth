@@ -1221,6 +1221,8 @@ class GeoEarth {
 
     var lines = new THREE.Object3D();
 
+    var totVec = new THREE.Vector3();
+
     for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
 
       var inPts = inLns[inLnsIdx];
@@ -1232,11 +1234,29 @@ class GeoEarth {
       var pts = this.getSpacedPoints(inPts);
 
       var line = this.makeLineGeometry(pts, input, parsedData);
+      
+      var cp = line.children[0].geometry.vertices[Math.floor(line.children[0].geometry.vertices.length/2)];
+
+      totVec.x += cp.x;
+      totVec.y += cp.y;
+      totVec.z += cp.z;
+
       lines.add(line);
     }
 
     var geomContainer = new THREE.Object3D();
     geomContainer.add(lines);
+
+    var center = totVec.clone();
+    center.divideScalar(inLns.length);
+    let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
+    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
+    
+    if (parsedData.label) {
+      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
+      geomContainer.add(labelGeom);
+    }
     
     geomContainer.userData = parsedData;
     
