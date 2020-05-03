@@ -28,11 +28,35 @@
         await geoearth.animate();
         
         
+        // point
         var ptA = [50.00, 0.00];
-        var pointA = await geoearth.addPoint(ptA, {label: 'abc'});
+        var ptAProps =  {
+                          label: "abc",
+                          color: "#FF0000",
+                          size: 4,
+                          "labelProperties": {
+                            "fontColor": "#AA0000",
+                            "surfaceOffset": 10
+                          }
+                        };
+        var pointA = await geoearth.addPoint(ptA, ptAProps);
+
+        
+        // line
+        var lnA = [ [0, 20.00], [0, -20.00] ];
+        var lnAProps =  {
+                          "label": "abc",
+                          "color": "#00FF00",
+                          "labelProperties": {
+                            "fontSize": 20,
+                            "fontColor": "#00FF00",
+                            "surfaceOffset": 20
+                          }
+                        };
+        var lineA = await geoearth.addLineString(lnA, lnAProps);
 
 
-        // Add polygon as geojson
+        // polygon
         var plB = {
                     "type": "Feature",
                     "geometry": {
@@ -50,39 +74,19 @@
                     },
                     "properties": {
                       "label": "abc",
+                      "color": "#00FFFF",
                       "labelProperties": {
                         "fontface": "Arial",
                         "fontSize": 40,
-                        "fontColor": "#00FFFF",
-                        "bgColor": "rgba(255, 0, 0, 0.2)",
+                        "fontColor": "#00BBBB",
                         "surfaceOffset": 10
-                      },
-                      "note": "A simple note."
+                      }
                     }
                   };
         var polyB = await geoearth.addPolygon(plB);
 
         
-        // Add line as geojson
-        var lnB = {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "LineString",
-                      "coordinates": [ [0, 20.00], [0, -20.00] ]
-                    },
-                    "properties": {
-                      "label": "abc",
-                      "labelProperties": {
-                        "fontSize": 20,
-                        "fontColor": "#00FF00",
-                        "surfaceOffset": 30
-                      }
-                    }
-                  };
-        var lineB = await geoearth.addLineString(lnB);
-
-        
-        // Add multiline as geojson
+        // multiline
         var lnsB = {
                     "type": "Feature",
                     "geometry": {
@@ -91,36 +95,37 @@
                     },
                     "properties": {
                       "label": "def",
+                      "color": "#FF00FF",
                       "labelProperties": {
-                        "fontColor": "#FF00FF",
-                        "surfaceOffset": 10
+                        "fontColor": "#FF00FF"
                       }
                     }
                   };
         var linesB = await geoearth.addMultiLineString(lnsB);
         
 
-        // Add multipolygon as geojson
+        // multipolygon
         var mpolyB = {
                         "type": "Feature",
                         "geometry": {
                           "type": "MultiPolygon", 
                           "coordinates":  [
                                             [
-                                              [ [100.00,20.00],[130.00,20.00],[130.00,-10.00] ],
-                                              [ [125.00,1.00],[125.00,16.00],[110.00,16.00] ]
+                                              [ [90.00,20.00],[120.00,20.00],[120.00,-10.00] ],
+                                              [ [115.00,1.00],[115.00,16.00],[100.00,16.00] ]
                                             ],
                                             [
-                                              [ [100.00,10.00],[100.00,-20.00],[130.00,-20.00] ]
+                                              [ [90.00,10.00],[90.00,-20.00],[120.00,-20.00] ]
                                             ]
                                           ]
                         },
                         "properties": {
                           "label": "xyz",
+                          "color": "#FFFF00",
                           "labelProperties": {
                             "fontFace": "Impact",
                             "fontSize": 60,
-                            "fontColor": "#FFFF00",
+                            "fontColor": "#AAAA00",
                             "surfaceOffset": 10
                           }
                         }
