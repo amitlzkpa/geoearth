@@ -5,7 +5,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Pagan",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -19,7 +25,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Tunnan",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 1
+        }
       },
       "geometry": {
         "type": "Point",
@@ -33,7 +45,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Guangzhou",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 1
+        }
       },
       "geometry": {
         "type": "Point",
@@ -61,7 +79,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Kaifeng",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -75,7 +99,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Luoyang",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -103,7 +133,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Nanchang",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -117,27 +153,19 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Zaitun",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
           116.08154296875001,
           25.799891182088334
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "color": "#FF6666",
-        "size": 1
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          111.68701171875,
-          27.293689224852407
         ]
       }
     },
@@ -159,7 +187,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Wuchang",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -173,7 +207,13 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1
+        "size": 1,
+        "label": "Changsha",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
