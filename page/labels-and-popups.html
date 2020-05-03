@@ -57,6 +57,25 @@
                         };
         var lineA = await geoearth.addLineString(lnA, lnAProps);
 
+        
+        // multiline
+        var lnsB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "MultiLineString",
+                      "coordinates": [ [ [80.00, 30.00], [60.00, 10.00] ], [ [60.00, 10.00], [80.00, -10.00], [60.00, -30.00] ] ]
+                    },
+                    "properties": {
+                      "label": "def",
+                      "color": "#FF00FF",
+                      "labelProperties": {
+                        "fontColor": "#FF00FF",
+                        "position": [70, -20]
+                      }
+                    }
+                  };
+        var linesB = await geoearth.addMultiLineString(lnsB);
+
 
         // polygon
         var plB = {
@@ -86,25 +105,6 @@
                     }
                   };
         var polyB = await geoearth.addPolygon(plB);
-
-        
-        // multiline
-        var lnsB = {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "MultiLineString",
-                      "coordinates": [ [ [80.00, 30.00], [60.00, 10.00] ], [ [60.00, 10.00], [80.00, -10.00], [60.00, -30.00] ] ]
-                    },
-                    "properties": {
-                      "label": "def",
-                      "color": "#FF00FF",
-                      "labelProperties": {
-                        "fontColor": "#FF00FF",
-                        "position": [70, -20]
-                      }
-                    }
-                  };
-        var linesB = await geoearth.addMultiLineString(lnsB);
         
 
         // multipolygon
