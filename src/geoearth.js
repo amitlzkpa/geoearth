@@ -549,29 +549,15 @@ class GeoEarth {
   }
 
 
-  getSpacedPoints(inPts) {
-    // var corr = 0;
-    // var mul = 1;
-    // var isCrossingDL = false;
-    // // check if both points are on same east-west hemisphere
-    // // if not check if they are crossing over from the dateline side
-    // // TODO: right now only works for lines with 2 points
-    // if (Math.sign(inPts[0][0]) !== Math.sign(inPts[1][0]) &&
-    //   Math.abs(inPts[0][0]) > 90 && Math.abs(inPts[1][0]) > 90) {
-    //   isCrossingDL = true;
-    //   if (inPts[1][0] > inPts[0][0]) {
-    //     var q = inPts[0];
-    //     inPts[0] = inPts[1];
-    //     inPts[1] = q;
-    //   }
-    // }
-    // if (isCrossingDL) {
-    //   corr = Math.abs(180 - inPts[0][0]) + 180;
-    //   mul = -1;
-    //   inPts[0][0] = 0;
-    //   inPts[1][0] += corr;
-    // }
+  getAveragePoint(pts) {
+    var tot = pts.reduce((prev, curr) => { return [(prev[0] + curr[0]), (prev[1] + curr[1])] }, [0, 0]);
+    tot[0] /= pts.length;
+    tot[1] /= pts.length;
+    return tot;
+  }
 
+
+  getSpacedPoints(inPts) {
     var pts = [];
     var idx = 1;
     while (idx < inPts.length) {
@@ -1152,12 +1138,14 @@ class GeoEarth {
 
     var pts = this.getSpacedPoints(inPts);
 
+    var avgPt = this.getAveragePoint(pts);
+
     var line = this.makeLineGeometry(pts, input, parsedData);
 
     var geomContainer = new THREE.Object3D();
     geomContainer.add(line);
 
-    var center = line.children[0].geometry.vertices[Math.floor(line.children[0].geometry.vertices.length/2)];
+    var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
@@ -1221,7 +1209,7 @@ class GeoEarth {
 
     var lines = new THREE.Object3D();
 
-    var totVec = new THREE.Vector3();
+    var cPts = [];
 
     for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
 
@@ -1233,22 +1221,21 @@ class GeoEarth {
 
       var pts = this.getSpacedPoints(inPts);
 
+      var cPt = this.getAveragePoint(pts);
+      cPts.push(cPt);
+
       var line = this.makeLineGeometry(pts, input, parsedData);
       
-      var cp = line.children[0].geometry.vertices[Math.floor(line.children[0].geometry.vertices.length/2)];
-
-      totVec.x += cp.x;
-      totVec.y += cp.y;
-      totVec.z += cp.z;
-
       lines.add(line);
     }
 
     var geomContainer = new THREE.Object3D();
     geomContainer.add(lines);
 
-    var center = totVec.clone();
-    center.divideScalar(inLns.length);
+    
+    var avgPt = this.getAveragePoint(cPts);
+    cPts.push(avgPt);
+    var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
