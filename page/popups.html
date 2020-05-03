@@ -80,6 +80,24 @@
                     }
                   };
         var lineB = await geoearth.addLineString(lnB);
+
+        
+        // Add multiline as geojson
+        var lnsB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "MultiLineString",
+                      "coordinates": [ [ [80.00, 30.00], [60.00, 10.00] ], [ [60.00, 10.00], [80.00, -10.00], [60.00, -30.00] ] ]
+                    },
+                    "properties": {
+                      "label": "def",
+                      "labelProperties": {
+                        "fontColor": "#FF00FF",
+                        "surfaceOffset": 10
+                      }
+                    }
+                  };
+        var linesB = await geoearth.addMultiLineString(lnsB);
         
 
         // Add multipolygon as geojson
@@ -89,11 +107,11 @@
                           "type": "MultiPolygon", 
                           "coordinates":  [
                                             [
-                                              [ [60.00,20.00],[90.00,20.00],[90.00,-10.00] ],
-                                              [ [85.00,1.00],[85.00,16.00],[70.00,16.00] ]
+                                              [ [100.00,20.00],[130.00,20.00],[130.00,-10.00] ],
+                                              [ [125.00,1.00],[125.00,16.00],[110.00,16.00] ]
                                             ],
                                             [
-                                              [ [60.00,10.00],[60.00,-20.00],[90.00,-20.00] ]
+                                              [ [100.00,10.00],[100.00,-20.00],[130.00,-20.00] ]
                                             ]
                                           ]
                         },
