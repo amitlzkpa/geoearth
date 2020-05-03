@@ -62,6 +62,25 @@
                   };
         var polyB = await geoearth.addPolygon(plB);
 
+        
+        // Add line as geojson
+        var lnB = {
+                    "type": "Feature",
+                    "geometry": {
+                      "type": "LineString",
+                      "coordinates": [ [0, 20.00], [0, -20.00] ]
+                    },
+                    "properties": {
+                      "label": "abc",
+                      "labelProperties": {
+                        "fontSize": 20,
+                        "fontColor": "#00FF00",
+                        "surfaceOffset": 30
+                      }
+                    }
+                  };
+        var lineB = await geoearth.addLineString(lnB);
+
       }
 
       main();
