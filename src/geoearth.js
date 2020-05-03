@@ -406,8 +406,10 @@ class GeoEarth {
     let that = this;
     let parameters = opts || {};
     let fontface = parameters.fontface || 'Helvetica';
-    let fontSize = parameters.fontSize || 20;
+    let fontSize = (parameters.fontSize) ? parameters.fontSize * 10 : 200;
     let canvas = document.createElement('canvas');
+    canvas.width = 3000;
+    canvas.height = 1500;
     let context = canvas.getContext('2d');
     context.font = fontSize + "px " + fontface;
     context.textAlign = "center";
