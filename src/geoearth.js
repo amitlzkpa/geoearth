@@ -33,6 +33,7 @@ class GeoEarth {
   earthRadius;
   srfOffset = 1.001;
   disableAtmosphere;
+  textOnTop;
 
   textureImage;
 
@@ -152,6 +153,7 @@ class GeoEarth {
     this.autoStart = typeof opts.autoStart === "undefined" || opts.autoStart === true;
     this.earthRadius = opts.earthRadius || 200;
     this.disableAtmosphere = opts.disableAtmosphere || false;
+    this.textOnTop = (typeof opts.textOnTop === "boolean") ? opts.textOnTop : true;
 
     this.textureImage = opts.textureImage || '';
 
@@ -401,9 +403,10 @@ class GeoEarth {
   
   // ref: https://bocoup.com/blog/learning-three-js-with-real-world-challenges-that-have-already-been-solved
   makeTextSprite(message, opts) {
+    let that = this;
     let parameters = opts || {};
     let fontface = parameters.fontface || 'Helvetica';
-    let fontSize = parameters.fontSize || 40;
+    let fontSize = parameters.fontSize || 20;
     let canvas = document.createElement('canvas');
     let context = canvas.getContext('2d');
     context.font = fontSize + "px " + fontface;
@@ -430,6 +433,12 @@ class GeoEarth {
     });
     let sprite = new THREE.Sprite(spriteMaterial);
     sprite.scale.set(100, 50, 1.0);
+
+    if (this.textOnTop) {
+      sprite.renderOrder = 999;
+      sprite.onBeforeRender = function() { that.renderer.clearDepth(); };
+    }
+    
     return sprite;
   }
 
