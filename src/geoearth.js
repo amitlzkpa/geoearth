@@ -979,7 +979,12 @@ class GeoEarth {
 
     geomContainer.userData = parsedData;
 
-    var center = point.position.clone();
+    if (parsedData.labelProperties.position.constructor === Array && parsedData.labelProperties.position.length === 2) {
+      let cp = parsedData.labelProperties.position;
+      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    } else {
+      var center = point.position.clone();
+    }
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
