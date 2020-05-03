@@ -549,10 +549,24 @@ class GeoEarth {
   }
 
 
-  getAveragePoint(pts) {
+  getAveragePoint2D(pts) {
     var tot = pts.reduce((prev, curr) => { return [(prev[0] + curr[0]), (prev[1] + curr[1])] }, [0, 0]);
     tot[0] /= pts.length;
     tot[1] /= pts.length;
+    return tot;
+  }
+
+
+  getAveragePoint3D(pts) {
+    var tot = pts.reduce((prev, curr) => { return [
+                                                    (prev[0] + curr[0]),
+                                                    (prev[1] + curr[1]),
+                                                    (prev[2] + curr[2])
+                                                  ]
+                                          }, [0, 0, 0]);
+    tot[0] /= pts.length;
+    tot[1] /= pts.length;
+    tot[2] /= pts.length;
     return tot;
   }
 
@@ -1143,7 +1157,7 @@ class GeoEarth {
 
     var pts = this.getSpacedPoints(inPts);
 
-    var avgPt = this.getAveragePoint(pts);
+    var avgPt = this.getAveragePoint2D(pts);
 
     var line = this.makeLineGeometry(pts, input, parsedData);
 
@@ -1226,7 +1240,7 @@ class GeoEarth {
 
       var pts = this.getSpacedPoints(inPts);
 
-      var cPt = this.getAveragePoint(pts);
+      var cPt = this.getAveragePoint2D(pts);
       cPts.push(cPt);
 
       var line = this.makeLineGeometry(pts, input, parsedData);
@@ -1238,7 +1252,7 @@ class GeoEarth {
     geomContainer.add(lines);
 
     
-    var avgPt = this.getAveragePoint(cPts);
+    var avgPt = this.getAveragePoint2D(cPts);
     cPts.push(avgPt);
     var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
