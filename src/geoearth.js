@@ -538,7 +538,7 @@ class GeoEarth {
       opts.geometry = input.geometry.coordinates;
     }
     opts.label = opts.label;
-    opts.labelProperties = opts.labelProperties;
+    opts.labelProperties = opts.labelProperties || {};
     opts.color = opts.color;
     opts.size = opts.size;
     opts.surfaceOffset = opts.surfaceOffset || 0;
@@ -1158,6 +1158,16 @@ class GeoEarth {
     var geomContainer = new THREE.Object3D();
     geomContainer.add(line);
     
+    var center = line.children[0].geometry.vertices[Math.floor(line.children[0].geometry.vertices.length/2)];
+    let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
+    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
+    
+    if (parsedData.label) {
+      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
+      geomContainer.add(labelGeom);
+    }
+    
     geomContainer.userData = parsedData;
 
     var addedObj = this.registerAndAddToScene(geomContainer);
@@ -1397,7 +1407,7 @@ class GeoEarth {
     var cntLat = totLat / totPts;
 
     var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
-    let surfaceOffset = (parsedData.labelProperties && parsedData.labelProperties.surfaceOffset) ? parsedData.labelProperties.surfaceOffset : 0;
+    let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
     if (parsedData.label) {
