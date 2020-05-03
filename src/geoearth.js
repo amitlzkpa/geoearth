@@ -132,6 +132,7 @@ class GeoEarth {
    */
   activeGeoJsons = {};
   intersectionItems = [];
+  visibleOnTopItems = [];
 
 
 
@@ -362,6 +363,15 @@ class GeoEarth {
     this.camera.position.y = this.distance * Math.sin(this.rotation.y);
     this.camera.position.z = this.distance * Math.cos(this.rotation.x) * Math.cos(this.rotation.y);
 
+    this.visibleOnTopItems.forEach(it => {
+      let raycaster = new THREE.Raycaster();
+      let dir = this.camera.position.clone().sub(it.position).normalize();
+      let pos = it.position;
+      raycaster.set(pos, dir);
+      let intersects = raycaster.intersectObjects([this.earthMesh]);
+      it.material.visible = intersects.length < 1;
+    });
+
     this.camera.lookAt(this.earthMesh.position);
 
     this.renderer.render(this.scene, this.camera);
@@ -406,7 +416,7 @@ class GeoEarth {
     let that = this;
     let parameters = opts || {};
     let fontface = parameters.fontface || 'Helvetica';
-    let fontSize = (parameters.fontSize) ? parameters.fontSize * 10 : 200;
+    let fontSize = (parameters.fontSize) ? parameters.fontSize * 10 : 300;
     let canvas = document.createElement('canvas');
     canvas.width = 3000;
     canvas.height = 1500;
@@ -439,8 +449,12 @@ class GeoEarth {
 
     if (this.textOnTop) {
       sprite.renderOrder = 999;
-      sprite.onBeforeRender = function() { that.renderer.clearDepth(); };
+      sprite.onBeforeRender = function() {
+        that.renderer.clearDepth();
+      };
     }
+
+    this.visibleOnTopItems.push(sprite);
     
     return sprite;
   }
