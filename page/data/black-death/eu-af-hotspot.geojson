@@ -180,6 +180,26 @@
       "properties": {
         "color": "#FF6666",
         "size": 1,
+        "label": "Paris",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.349014,
+          48.864716
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "color": "#FF6666",
+        "size": 1,
         "label": "Marseille",
         "labelProperties": {
           "fontSize": 10,
@@ -190,8 +210,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          2.373046875,
-          41.934976500546604
+          5.3700000,
+          43.296398
         ]
       }
     },
