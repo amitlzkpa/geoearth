@@ -528,9 +528,9 @@ class GeoEarth {
   }
 
 
-  parseInputs(input, opts) {
+  parseInputs(input, options) {
 
-    var opts = opts || input.properties || {};
+    var opts = options || input.properties || {};
 
     if (input.constructor === Array) {
       opts.geometry = input;
@@ -618,11 +618,11 @@ class GeoEarth {
   }
 
 
-  makeLineGeometry(pts, input, parsedData) {
+  makeLineGeometry(pts, parsedData) {
 
     var ret = new THREE.Object3D();
 
-    var linetype = (input.properties) ? input.properties.linetype : "line";
+    var linetype = (parsedData) ? parsedData.linetype : "line";
 
     switch(linetype) {
       case ("forward-arrows"): {
@@ -1149,21 +1149,26 @@ class GeoEarth {
     }
 
     var parsedData = this.parseInputs(input, opts);
-    
+
     var inPts = JSON.parse(JSON.stringify(parsedData.geometry));
 
     if (inPts.length < 2) throw ('Need at least 2 points for a line');
 
     var pts = this.getSpacedPoints(inPts);
 
-    var avgPt = this.getAveragePoint2D(pts);
-
-    var line = this.makeLineGeometry(pts, input, parsedData);
+    var line = this.makeLineGeometry(pts, parsedData);
 
     var geomContainer = new THREE.Object3D();
     geomContainer.add(line);
 
-    var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    let cp = parsedData.labelProperties.position;
+    if (cp && cp.constructor === Array && cp.length === 2) {
+      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    } else {
+      var avgPt = this.getAveragePoint2D(pts);
+      var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    }
+
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
@@ -1242,7 +1247,7 @@ class GeoEarth {
       var cPt = this.getAveragePoint2D(pts);
       cPts.push(cPt);
 
-      var line = this.makeLineGeometry(pts, input, parsedData);
+      var line = this.makeLineGeometry(pts, parsedData);
       
       lines.add(line);
     }
@@ -1250,10 +1255,14 @@ class GeoEarth {
     var geomContainer = new THREE.Object3D();
     geomContainer.add(lines);
 
-    
-    var avgPt = this.getAveragePoint2D(cPts);
-    cPts.push(avgPt);
-    var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    let cp = parsedData.labelProperties.position;
+    if (cp && cp.constructor === Array && cp.length === 2) {
+      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    } else {
+      var avgPt = this.getAveragePoint2D(cPts);
+      var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    }
+
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
