@@ -1436,10 +1436,16 @@ class GeoEarth {
 
     geomContainer.userData = parsedData;
 
-    var cntLng = totLng / totPts;
-    var cntLat = totLat / totPts;
+    let cp = parsedData.labelProperties.position;
+    if (cp && cp.constructor === Array && cp.length === 2) {
+      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    } else {
+      var cntLng = totLng / totPts;
+      var cntLat = totLat / totPts;
+  
+      var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    }
 
-    var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
@@ -1631,11 +1637,17 @@ class GeoEarth {
     geomContainer.add(polygons);
 
     geomContainer.userData = parsedData;
+    
+    let cp = parsedData.labelProperties.position;
+    if (cp && cp.constructor === Array && cp.length === 2) {
+      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    } else {
+      var cntLng = totLng / totPts;
+      var cntLat = totLat / totPts;
+  
+      var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    }
 
-    var cntLng = totLng / totPts;
-    var cntLat = totLat / totPts;
-
-    var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
