@@ -80,6 +80,34 @@
                     }
                   };
         var lineB = await geoearth.addLineString(lnB);
+        
+
+        // Add multipolygon as geojson
+        var mpolyB = {
+                        "type": "Feature",
+                        "geometry": {
+                          "type": "MultiPolygon", 
+                          "coordinates":  [
+                                            [
+                                              [ [60.00,20.00],[90.00,20.00],[90.00,-10.00] ],
+                                              [ [85.00,1.00],[85.00,16.00],[70.00,16.00] ]
+                                            ],
+                                            [
+                                              [ [60.00,10.00],[60.00,-20.00],[90.00,-20.00] ]
+                                            ]
+                                          ]
+                        },
+                        "properties": {
+                          "label": "xyz",
+                          "labelProperties": {
+                            "fontFace": "Impact",
+                            "fontSize": 60,
+                            "fontColor": "#FFFF00",
+                            "surfaceOffset": 10
+                          }
+                        }
+                      };
+        var mpolygonB = await geoearth.addMultiPolygon(mpolyB);
 
       }
 
