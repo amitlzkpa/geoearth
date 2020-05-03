@@ -993,8 +993,8 @@ class GeoEarth {
 
     geomContainer.userData = parsedData;
 
-    if (parsedData.labelProperties.position.constructor === Array && parsedData.labelProperties.position.length === 2) {
-      let cp = parsedData.labelProperties.position;
+    let cp = parsedData.labelProperties.position;
+    if (cp && cp.constructor === Array && cp.length === 2) {
       var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
     } else {
       var center = point.position.clone();
@@ -1065,23 +1065,18 @@ class GeoEarth {
     var coords = JSON.parse(JSON.stringify(parsedData.geometry));
 
     var points = new THREE.Object3D();
-    var totLng = 0;
-    var totLat = 0;
     var lng, lat;
+    var ptsArr = [];
 
     for (var ptIdx = 0; ptIdx < coords.length; ptIdx++) {
       lng = coords[ptIdx][0];
       lat = coords[ptIdx][1];
-      // compute total to get average for the center later
-      totLng += lng;
-      totLat += lat;
       
       var point = this.make3DShape("sphere", parsedData);
 
       var pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
-      point.position.x = pt.x;
-      point.position.y = pt.y;
-      point.position.z = pt.z;
+      point.position.set(pt.x, pt.y, pt.z);
+      ptsArr.push([pt.x, pt.y, pt.z]);
 
       points.add(point);
     }
@@ -1090,10 +1085,14 @@ class GeoEarth {
 
     geomContainer.userData = parsedData;
 
-    var cntLng = totLng / coords.length;
-    var cntLat = totLat / coords.length;
-
-    var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    let cp = parsedData.labelProperties.position;
+    if (cp && cp.constructor === Array && cp.length === 2) {
+      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    } else {
+      var cc = this.getAveragePoint3D(ptsArr);
+      var center = new THREE.Vector3(cc[0], cc[1], cc[2]);
+    }
+    
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
     var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
