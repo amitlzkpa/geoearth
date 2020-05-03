@@ -1397,7 +1397,8 @@ class GeoEarth {
     var cntLat = totLat / totPts;
 
     var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
-    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + parsedData.labelProperties.surfaceOffset);
+    let surfaceOffset = (parsedData.labelProperties && parsedData.labelProperties.surfaceOffset) ? parsedData.labelProperties.surfaceOffset : 0;
+    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
     
     if (parsedData.label) {
       var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
