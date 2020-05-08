@@ -412,120 +412,6 @@ class GeoEarth {
   |_|_| |_|\__\___|_|  |_| |_|\__,_|_|
 
   */
-  
-  // ref: https://bocoup.com/blog/learning-three-js-with-real-world-challenges-that-have-already-been-solved
-  makeTextSprite(message, opts) {
-    let that = this;
-    let parameters = opts || {};
-    let fontface = parameters.fontface || 'Helvetica';
-    let fontSize = (parameters.fontSize) ? parameters.fontSize * 10 : 300;
-    let canvas = document.createElement('canvas');
-    canvas.width = 3000;
-    canvas.height = 1500;
-    let context = canvas.getContext('2d');
-    context.font = fontSize + "px " + fontface;
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-
-    // get size data (height depends only on font size)
-    let metrics = context.measureText(message);
-    let textWidth = metrics.width;
-    
-    // text color
-    context.fillStyle = parameters.bgColor || 'transparent';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = parameters.fontColor || '#FFFFFF';
-    context.fillText(message, canvas.width/2, canvas.height/2);
-
-    // canvas contents will be used for a texture
-    let texture = new THREE.Texture(canvas);
-    texture.minFilter = THREE.LinearFilter;
-    texture.needsUpdate = true;
-    
-    let spriteMaterial = new THREE.SpriteMaterial({
-        map: texture,
-        useScreenCoordinates: false
-    });
-    let sprite = new THREE.Sprite(spriteMaterial);
-    sprite.scale.set(100, 50, 1);
-
-    if (this.textOnTop) {
-      sprite.renderOrder = 999;
-      sprite.onBeforeRender = function() {
-        that.renderer.clearDepth();
-      };
-    }
-
-    this.visibleOnTopItems.push(sprite);
-    
-    return sprite;
-  }
-
-
-  make3DShape(type, options) {
-    let opts = options || {};
-    let ret;
-    switch(type) {
-      case "sphere": {
-        let col = opts.color || 0xffffff;
-        let rad = opts.size || 1;
-        let geometry = new THREE.SphereGeometry(rad, 24, 24);
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
-        let material = new THREE.MeshBasicMaterial( {color: col} );
-        let sphereMesh = new THREE.Mesh(geometry, material);
-        ret = sphereMesh;
-        break;
-      }
-      case "cylinder": {
-        let col = opts.color || 0xffffff;
-        let rad = opts.size || 1;
-        let dep = opts.depth || 1;
-        let geometry = new THREE.CylinderGeometry(rad, rad, dep, 16);
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
-        let material = new THREE.MeshBasicMaterial( {color: col} );
-        let cylinderMesh = new THREE.Mesh(geometry, material);
-        ret = cylinderMesh;
-        break;
-      }
-      case "arrow-head": {
-        let col = opts.color || 0xffffff;
-        let size = opts.size || 1;
-        let dep = opts.depth || 1;
-        let arrowShape = new THREE.Shape();
-        arrowShape.moveTo(-size, -size);
-        arrowShape.lineTo(0, size * 2);
-        arrowShape.lineTo(size, -size);
-        arrowShape.lineTo(-size, -size);
-        let extrudeSettings = {amount: dep, bevelEnabled: false};
-        let geometry = new THREE.ExtrudeBufferGeometry(arrowShape, extrudeSettings);
-        let material = new THREE.MeshBasicMaterial( {color: col} );
-        let arrowHeadMesh = new THREE.Mesh( geometry, material );
-        ret = arrowHeadMesh;
-        break;
-      }
-      case "rectangle": {
-        let col = opts.color || 0xffffff;
-        let size = opts.size || 1;
-        let dep = opts.depth || 1;
-        let rectShape = new THREE.Shape();
-        rectShape.moveTo(-size, -size);
-        rectShape.lineTo(-size, size);
-        rectShape.lineTo(size, size);
-        rectShape.lineTo(size, -size);
-        rectShape.lineTo(-size, -size);
-        let extrudeSettings = {amount: dep, bevelEnabled: false};
-        let geometry = new THREE.ExtrudeBufferGeometry(rectShape, extrudeSettings);
-        let material = new THREE.MeshBasicMaterial( {color: col} );
-        let rectMesh = new THREE.Mesh( geometry, material );
-        ret = rectMesh;
-        break;
-      }
-      default: {
-        ret = null;
-      }
-    }
-    return ret;
-  }
 
 
   parseInputs(input, options) {
@@ -765,6 +651,120 @@ class GeoEarth {
 
   }
 
+
+  make3DShape(type, options) {
+    let opts = options || {};
+    let ret;
+    switch(type) {
+      case "sphere": {
+        let col = opts.color || 0xffffff;
+        let rad = opts.size || 1;
+        let geometry = new THREE.SphereGeometry(rad, 24, 24);
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let sphereMesh = new THREE.Mesh(geometry, material);
+        ret = sphereMesh;
+        break;
+      }
+      case "cylinder": {
+        let col = opts.color || 0xffffff;
+        let rad = opts.size || 1;
+        let dep = opts.depth || 1;
+        let geometry = new THREE.CylinderGeometry(rad, rad, dep, 16);
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let cylinderMesh = new THREE.Mesh(geometry, material);
+        ret = cylinderMesh;
+        break;
+      }
+      case "arrow-head": {
+        let col = opts.color || 0xffffff;
+        let size = opts.size || 1;
+        let dep = opts.depth || 1;
+        let arrowShape = new THREE.Shape();
+        arrowShape.moveTo(-size, -size);
+        arrowShape.lineTo(0, size * 2);
+        arrowShape.lineTo(size, -size);
+        arrowShape.lineTo(-size, -size);
+        let extrudeSettings = {amount: dep, bevelEnabled: false};
+        let geometry = new THREE.ExtrudeBufferGeometry(arrowShape, extrudeSettings);
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let arrowHeadMesh = new THREE.Mesh( geometry, material );
+        ret = arrowHeadMesh;
+        break;
+      }
+      case "rectangle": {
+        let col = opts.color || 0xffffff;
+        let size = opts.size || 1;
+        let dep = opts.depth || 1;
+        let rectShape = new THREE.Shape();
+        rectShape.moveTo(-size, -size);
+        rectShape.lineTo(-size, size);
+        rectShape.lineTo(size, size);
+        rectShape.lineTo(size, -size);
+        rectShape.lineTo(-size, -size);
+        let extrudeSettings = {amount: dep, bevelEnabled: false};
+        let geometry = new THREE.ExtrudeBufferGeometry(rectShape, extrudeSettings);
+        let material = new THREE.MeshBasicMaterial( {color: col} );
+        let rectMesh = new THREE.Mesh( geometry, material );
+        ret = rectMesh;
+        break;
+      }
+      default: {
+        ret = null;
+      }
+    }
+    return ret;
+  }
+  
+
+  // ref: https://bocoup.com/blog/learning-three-js-with-real-world-challenges-that-have-already-been-solved
+  makeTextSprite(message, opts) {
+    let that = this;
+    let parameters = opts || {};
+    let fontface = parameters.fontface || 'Helvetica';
+    let fontSize = (parameters.fontSize) ? parameters.fontSize * 10 : 300;
+    let canvas = document.createElement('canvas');
+    canvas.width = 3000;
+    canvas.height = 1500;
+    let context = canvas.getContext('2d');
+    context.font = fontSize + "px " + fontface;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+
+    // get size data (height depends only on font size)
+    let metrics = context.measureText(message);
+    let textWidth = metrics.width;
+    
+    // text color
+    context.fillStyle = parameters.bgColor || 'transparent';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = parameters.fontColor || '#FFFFFF';
+    context.fillText(message, canvas.width/2, canvas.height/2);
+
+    // canvas contents will be used for a texture
+    let texture = new THREE.Texture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    texture.needsUpdate = true;
+    
+    let spriteMaterial = new THREE.SpriteMaterial({
+        map: texture,
+        useScreenCoordinates: false
+    });
+    let sprite = new THREE.Sprite(spriteMaterial);
+    sprite.scale.set(100, 50, 1);
+
+    if (this.textOnTop) {
+      sprite.renderOrder = 999;
+      sprite.onBeforeRender = function() {
+        that.renderer.clearDepth();
+      };
+    }
+
+    this.visibleOnTopItems.push(sprite);
+    
+    return sprite;
+  }
 
 
   // ----------------------------------------------------------------------------
