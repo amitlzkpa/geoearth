@@ -133,6 +133,7 @@ class GeoEarth {
   activeGeoJsons = {};
   intersectionItems = [];
   visibleOnTopItems = [];
+  activePopups = [];
 
 
 
@@ -274,6 +275,14 @@ class GeoEarth {
     mousePosition.y = 1 - 2 * (event.clientY / this.h);
     mousePosition.unproject(this.camera);
 
+    var that = this;
+    var clkObj, clkUserData;
+    var g, int;
+    var noteProps = {
+      fontSize: 20,
+      bgColor: "rgba(0, 0, 0, 0.3)"
+    };
+
     function userDataCheck (obj) {
       return obj.userData && JSON.stringify(obj.userData) !== JSON.stringify({});
     }
@@ -281,9 +290,15 @@ class GeoEarth {
     var raycaster = new THREE.Raycaster(this.camera.position, mousePosition.sub(this.camera.position).normalize());
     var intersects = raycaster.intersectObjects(this.intersectionItems);
     for ( var i = 0; i < intersects.length; i++ ) {
-      var o = intersects[i].object;
-      var p = GeoEarth.parseUp(o, userDataCheck, "parent")
-      console.log(p);
+      int = intersects[i].point.clone().multiplyScalar(1.1);
+      clkObj = GeoEarth.parseUp(intersects[i].object, userDataCheck, "parent");
+      clkUserData = (clkObj.userData && clkObj.userData !== {}) ? clkObj.userData : null;
+      if (clkUserData.note) {
+        g = that.makeTextSprite(clkUserData.note, noteProps);
+        g.position.set(int.x, int.y, int.z);
+        that.scene.add(g);
+        that.activePopups.push(g);
+      }
     }
 
   }.bind(this)
