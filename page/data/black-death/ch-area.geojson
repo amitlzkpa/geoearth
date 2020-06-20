@@ -4,7 +4,8 @@
       {
         "type": "Feature",
         "properties": {
-          "color": "#653434"
+          "color": "#653434",
+          "note": "Chinese historians kept records of plagues as far back as 244 BCE: they noted symptoms similar to those of bubonic plague in an outbreak in 642 CE. The Black Death probably began in Hebei province in 1331, where it killed up to 90 percent of the population and hastened the end of Mongol rule in China."
         },
         "geometry": {
           "type": "MultiPolygon",
