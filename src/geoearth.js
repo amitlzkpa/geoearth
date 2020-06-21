@@ -278,7 +278,7 @@ class GeoEarth {
     var that = this;
     var clkObj, clkUserData;
     var g, int;
-    var noteProps = {
+    var defaultNoteProps = {
       fontSize: 20,
       bgColor: "rgba(0, 0, 0, 0.3)",
       keepOpen: false
@@ -303,8 +303,23 @@ class GeoEarth {
       int = intersects[i].point.clone().multiplyScalar(1.1);
       clkObj = GeoEarth.parseUp(intersects[i].object, userDataCheck, "parent");
       clkUserData = (clkObj.userData && clkObj.userData !== {}) ? clkObj.userData : null;
-      if (clkUserData.note) {
+      if (typeof clkUserData.note === "string") {
+        let noteProps = defaultNoteProps;
         g = that.makeTextSprite(clkUserData.note, noteProps);
+        g.position.set(int.x, int.y, int.z);
+        that.scene.add(g);
+        that.activePopups.push({
+          object: g,
+          props: noteProps
+        });
+      }
+      if (typeof clkUserData.note === "object") {
+        let noteProps = {
+          fontSize: clkUserData.note.properties.fontSize || defaultNoteProps.fontSize,
+          bgColor: clkUserData.note.properties.bgColor || defaultNoteProps.bgColor,
+          keepOpen: clkUserData.note.properties.keepOpen || defaultNoteProps.keepOpen
+        };
+        g = that.makeTextSprite(clkUserData.note.text, noteProps);
         g.position.set(int.x, int.y, int.z);
         that.scene.add(g);
         that.activePopups.push({
