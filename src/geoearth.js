@@ -276,17 +276,8 @@ class GeoEarth {
     mousePosition.unproject(this.camera);
 
     var that = this;
-    var clkObj, clkUserData;
-    var g, int;
-    var defaultNoteProps = {
-      fontSize: 20,
-      bgColor: "rgba(0, 0, 0, 0.3)",
-      keepOpen: false
-    };
-
-    function userDataCheck (obj) {
-      return obj.userData && JSON.stringify(obj.userData) !== JSON.stringify({});
-    }
+    var clkObj;
+    var int;
 
     let closedPopups = [];
     for(let activePopup of that.activePopups) {
@@ -301,25 +292,11 @@ class GeoEarth {
     var intersects = raycaster.intersectObjects(this.intersectionItems);
     for ( var i = 0; i < intersects.length; i++ ) {
       int = intersects[i].point.clone().multiplyScalar(1.1);
-      clkObj = GeoEarth.parseUp(intersects[i].object, userDataCheck, "parent");
-      clkUserData = (clkObj.userData && clkObj.userData !== {}) ? clkObj.userData : null;
-      if (typeof clkUserData.note === "string") {
-        let noteProps = defaultNoteProps;
-        g = that.makeTextSprite(clkUserData.note, noteProps);
-        g.position.set(int.x, int.y, int.z);
-        that.scene.add(g);
-        that.activePopups.push({
-          object: g,
-          props: noteProps
-        });
-      }
-      if (typeof clkUserData.note === "object") {
-        let noteProps = {
-          fontSize: clkUserData.note.properties.fontSize || defaultNoteProps.fontSize,
-          bgColor: clkUserData.note.properties.bgColor || defaultNoteProps.bgColor,
-          keepOpen: clkUserData.note.properties.keepOpen || defaultNoteProps.keepOpen
-        };
-        g = that.makeTextSprite(clkUserData.note.text, noteProps);
+      clkObj = GeoEarth.parseUp(intersects[i].object, that.userDataCheck, "parent");
+      let noteObj = that.parseNote(clkObj);
+      if(noteObj !== null) {
+        let g = noteObj.object;
+        let noteProps = noteObj.noteProps;
         g.position.set(int.x, int.y, int.z);
         that.scene.add(g);
         that.activePopups.push({
@@ -488,7 +465,50 @@ class GeoEarth {
     opts.note = opts.note;
 
     return opts;
+  }
 
+
+  userDataCheck (obj) {
+    return obj.userData && JSON.stringify(obj.userData) !== JSON.stringify({});
+  }
+
+
+  parseNote(clkObj) {
+
+    let clkUserData = this.userDataCheck(clkObj) ? clkObj.userData : null;
+
+    if(clkUserData === null) return null;
+
+    let defaultNoteProps = {
+      fontSize: 20,
+      bgColor: "rgba(0, 0, 0, 0.3)",
+      keepOpen: false
+    };
+
+    let noteObj = null;
+
+    if (typeof clkUserData.note === "string") {
+      let noteProps = defaultNoteProps;
+      let g = this.makeTextSprite(clkUserData.note, noteProps);
+      noteObj = {
+        object: g,
+        noteProps: defaultNoteProps
+      };
+    }
+    if (typeof clkUserData.note === "object") {
+      let noteProps = {
+        fontSize: clkUserData.note.properties.fontSize || defaultNoteProps.fontSize,
+        bgColor: clkUserData.note.properties.bgColor || defaultNoteProps.bgColor,
+        keepOpen: clkUserData.note.properties.keepOpen || defaultNoteProps.keepOpen
+      };
+      let g = this.makeTextSprite(clkUserData.note.text, noteProps);
+      noteObj = {
+        object: g,
+        noteProps: noteProps
+      };
+    }
+
+    return noteObj;
   }
 
 
@@ -705,7 +725,6 @@ class GeoEarth {
     }
 
     return ret;
-
   }
 
 
