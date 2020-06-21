@@ -290,7 +290,7 @@ class GeoEarth {
 
     let closedPopups = [];
     for(let activePopup of that.activePopups) {
-      if (!activePopup.keepOpen) {
+      if (!activePopup.props.keepOpen) {
         that.scene.remove(activePopup.object);
         closedPopups.push(activePopup);
       }
