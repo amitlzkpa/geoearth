@@ -428,6 +428,20 @@ class GeoEarth {
 
   */
 
+  subtractArray(baseArray, arrayWithItemsToRemove, comp) {
+    if (!comp) {
+      comp = (a, b) => a === b;
+    }
+    let f = baseArray.filter(baseItem => {
+      let r = 
+      arrayWithItemsToRemove.filter(remItem => {
+        return comp(baseItem, remItem);
+      });
+      return r.length > 0;
+    })
+    return f;
+  }
+
 
   parseInputs(input, options) {
 
