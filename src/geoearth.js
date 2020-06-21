@@ -280,12 +280,22 @@ class GeoEarth {
     var g, int;
     var noteProps = {
       fontSize: 20,
-      bgColor: "rgba(0, 0, 0, 0.3)"
+      bgColor: "rgba(0, 0, 0, 0.3)",
+      keepOpen: false
     };
 
     function userDataCheck (obj) {
       return obj.userData && JSON.stringify(obj.userData) !== JSON.stringify({});
     }
+
+    let closedPopups = [];
+    for(let activePopup of that.activePopups) {
+      if (!activePopup.keepOpen) {
+        that.scene.remove(activePopup.object);
+        closedPopups.push(activePopup);
+      }
+    }
+    that.activePopups = this.subtractArray(that.activePopups, closedPopups, (a, b) => a.object.uuid !== b.object.uuid);
 
     var raycaster = new THREE.Raycaster(this.camera.position, mousePosition.sub(this.camera.position).normalize());
     var intersects = raycaster.intersectObjects(this.intersectionItems);
@@ -297,7 +307,10 @@ class GeoEarth {
         g = that.makeTextSprite(clkUserData.note, noteProps);
         g.position.set(int.x, int.y, int.z);
         that.scene.add(g);
-        that.activePopups.push(g);
+        that.activePopups.push({
+          object: g,
+          props: noteProps
+        });
       }
     }
 
