@@ -276,8 +276,8 @@ class GeoEarth {
     mousePosition.unproject(this.camera);
 
     var that = this;
-    var clkObj;
-    var int;
+    var clkObj
+;    var int;
 
     let closedPopups = [];
     for(let activePopup of that.activePopups) {
@@ -801,16 +801,19 @@ class GeoEarth {
     let fontface = parameters.fontface || 'Helvetica';
     let fontSize = (parameters.fontSize) ? parameters.fontSize * 10 : 300;
     let canvas = document.createElement('canvas');
-    canvas.width = 3000;
-    canvas.height = 1500;
+    // canvas.width = 3000;
+    // canvas.height = 1500;
     let context = canvas.getContext('2d');
-    context.font = fontSize + "px " + fontface;
-    context.textAlign = "center";
-    context.textBaseline = "middle";
 
     // get size data (height depends only on font size)
     let metrics = context.measureText(message);
-    let textWidth = metrics.width;
+    let textWidth = metrics.width * 5;
+    canvas.height = fontSize;
+    canvas.width = textWidth;
+
+    context.font = fontSize + "px " + fontface;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
     
     // text color
     context.fillStyle = parameters.bgColor || 'transparent';

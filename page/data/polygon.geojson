@@ -3,7 +3,16 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "note":
+        {
+          "text": "foobar foobar foobar foobar foobar",
+          "properties": {
+            "fontSize": 40,
+            "bgColor": "rgba(100, 0, 0, 0.3)"
+          }
+        }
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
