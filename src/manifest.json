@@ -1,0 +1,15 @@
+{
+  "short_name": "GeoEarth",
+  "name": "GeoEarth",
+  "icons": [
+  {
+    "src":"/assets/icon.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }
+  ],
+  "start_url": "/",
+  "background_color": "#e05a47",
+  "theme_color": "#e05a47",
+  "display": "standalone"
+}

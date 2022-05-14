@@ -1,3 +1,21 @@
+function setupPWA() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async function () {
+      try {
+        let registration = await navigator.serviceWorker.register("build/service-worker.js");
+        console.log("Service worker registered!");
+        console.log(registration);
+
+      } catch(err) {
+        console.log("ServiceWorker registration failed: ", err);
+      }
+    });
+  } else {
+    console.log("Service worker is not supported");
+  }
+}
+
+
 /**
  *
  * Constructor used to create an instance of the geoearth.
@@ -138,6 +156,9 @@ class GeoEarth {
 
 
   constructor(container, opts) {
+
+
+    setupPWA();
 
 
     if (!container) {
