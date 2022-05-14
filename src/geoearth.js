@@ -2,7 +2,7 @@ function setupPWA() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", async function () {
       try {
-        let registration = await navigator.serviceWorker.register("build/service-worker.js");
+        let registration = await navigator.serviceWorker.register("service-worker.js");
         console.log("Service worker registered!");
         console.log(registration);
 
