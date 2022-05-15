@@ -4,7 +4,6 @@ function setupPWA() {
       try {
         let registration = await navigator.serviceWorker.register("service-worker.js");
         console.log("Service worker registered!");
-        console.log(registration);
 
       } catch(err) {
         console.log("ServiceWorker registration failed: ", err);
