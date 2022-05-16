@@ -147,6 +147,13 @@ class GeoEarth {
    * An object containing all active objects on given instance with object ids as key and
    * objects themselves as values.
    */
+  listOfTimeIntervals = [];
+
+
+  /**
+   * An object containing all active objects on given instance with object ids as key and
+   * objects themselves as values.
+   */
   activeGeoJsons = {};
   intersectionItems = [];
   visibleOnTopItems = [];
@@ -1740,6 +1747,7 @@ class GeoEarth {
       }
     }
 
+    console.log(this.listOfTimeIntervals);
     return ret;
   }
 
@@ -1771,6 +1779,16 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
+    this.listOfTimeIntervals.push(...node.properties.timedStates.map(n => {
+      return {
+        node: node,
+        timedState: node.properties.timedStates
+      }
+    }));
+    this.listOfTimeIntervals.sort(
+      (a, b) => new Date(a.timedState.start).getTime() < new Date(b.timedState.start).getTime() ? -1 : 1
+    );
+    
     var ftType = node.geometry.type;
     var ret = null;
     switch (ftType) {
