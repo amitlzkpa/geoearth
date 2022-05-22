@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "color": "#FF6666",
+        "size": 3,
+        "label": "India",
+        "timeperiods": [
+          "1 Jan 2017 00:00:00 UTC - 31 Dec 2017 00:00:00 UTC",
+          "1 Jan 2020 00:00:00 UTC - 31 Dec 2020 00:00:00 UTC"
+        ],
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.3984375,
+          23.079731762449878
+        ]
+      }
+    }
+  ]
+}
