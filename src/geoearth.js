@@ -147,7 +147,7 @@ class GeoEarth {
    * An object containing all active objects on given instance with object ids as key and
    * objects themselves as values.
    */
-  listOfTimeIntervals = [];
+  listOfTimedFeatures = [];
 
 
   /**
@@ -1749,10 +1749,6 @@ class GeoEarth {
     return ret;
   }
 
-  processTimeStamps(node) {
-    console.log(node);
-  }
-
   /**
      Adds a given node in a geojson object and returns corresponding threejs object.
      Awaits till the instance is ready to be worked with.
@@ -1780,34 +1776,6 @@ class GeoEarth {
       await this.wait(this.sleepTime);
       if(!this.isReady) return;
     }
-
-    /*
-    timestamp[1]
-    timeperiod[2]
-    timestamps[3]
-    timeperiods[4]
-
-    if none
-      always active
-    if [1]
-      invisible on start; visible after timestamp
-    if [2]
-      invisible on start; visible after between timeperiod
-    if [3]
-      invisible on start; visible only when time is within one day of any of the timestamps; invisible otherwise
-    if [4]
-      invisible on start; visible only between any of the timeperiods
-    */
-    this.processTimeStamps(node)
-    // this.listOfTimeIntervals.push(...node.properties.timedStates.map(n => {
-    //   return {
-    //     node: node,
-    //     timedState: node.properties.timedStates
-    //   }
-    // }));
-    // this.listOfTimeIntervals.sort(
-    //   (a, b) => new Date(a.timedState.start).getTime() < new Date(b.timedState.start).getTime() ? -1 : 1
-    // );
     
     var ftType = node.geometry.type;
     var ret = null;
@@ -1922,6 +1890,33 @@ class GeoEarth {
 
 
 
+
+  /*
+  timestamp[1]
+  timeperiod[2]
+  timestamps[3]
+  timeperiods[4]
+
+  if none
+    always active
+  if [1]
+    invisible on start; visible after timestamp
+  if [2]
+    invisible on start; visible after between timeperiod
+  if [3]
+    invisible on start; visible only when time is within one day of any of the timestamps; invisible otherwise
+  if [4]
+    invisible on start; visible only between any of the timeperiods
+  */
+  processTimeStamps(node) {
+    let hasTimeAssignment =
+      !!( node.userData.timeperiods
+      ||  node.userData.timestamps
+      ||  node.userData.timeperiod
+      ||  node.userData.timestamp);
+    if (!hasTimeAssignment) return;
+    this.listOfTimedFeatures.push(node);
+  }
   
   registerAndAddToScene(threejsObj) {
     var id = (threejsObj && threejsObj.uuid) ? threejsObj.uuid : null;
@@ -1935,6 +1930,8 @@ class GeoEarth {
 
     this.activeGeoJsons[id] = threejsObj;
     this.scene.add(threejsObj);
+
+    this.processTimeStamps(threejsObj);
 
     return threejsObj;
   }
