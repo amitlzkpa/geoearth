@@ -1746,9 +1746,11 @@ class GeoEarth {
         break;
       }
     }
-
-    console.log(this.listOfTimeIntervals);
     return ret;
+  }
+
+  processTimeStamps(node) {
+    console.log(node);
   }
 
   /**
@@ -1779,15 +1781,33 @@ class GeoEarth {
       if(!this.isReady) return;
     }
 
-    this.listOfTimeIntervals.push(...node.properties.timedStates.map(n => {
-      return {
-        node: node,
-        timedState: node.properties.timedStates
-      }
-    }));
-    this.listOfTimeIntervals.sort(
-      (a, b) => new Date(a.timedState.start).getTime() < new Date(b.timedState.start).getTime() ? -1 : 1
-    );
+    /*
+    timestamp[1]
+    timeperiod[2]
+    timestamps[3]
+    timeperiods[4]
+
+    if none
+      always active
+    if [1]
+      invisible on start; visible after timestamp
+    if [2]
+      invisible on start; visible after between timeperiod
+    if [3]
+      invisible on start; visible only when time is within one day of any of the timestamps; invisible otherwise
+    if [4]
+      invisible on start; visible only between any of the timeperiods
+    */
+    this.processTimeStamps(node)
+    // this.listOfTimeIntervals.push(...node.properties.timedStates.map(n => {
+    //   return {
+    //     node: node,
+    //     timedState: node.properties.timedStates
+    //   }
+    // }));
+    // this.listOfTimeIntervals.sort(
+    //   (a, b) => new Date(a.timedState.start).getTime() < new Date(b.timedState.start).getTime() ? -1 : 1
+    // );
     
     var ftType = node.geometry.type;
     var ret = null;
