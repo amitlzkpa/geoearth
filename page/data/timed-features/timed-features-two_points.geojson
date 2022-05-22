@@ -6,30 +6,60 @@
       "properties": {
         "color": "#FF6666",
         "size": 1,
-        "label": "India",
+        "label": "France",
+        "timestamp": "1 Jun 2017 00:00:00 UTC",
         "labelProperties": {
           "fontSize": 10,
           "fontColor": "#DEDEDE",
           "surfaceOffset": 10
-        },
-        "timedStates": [
-          {
-            "stateName": "visible",
-            "start": "1 Jan 2017 00:00:00 UTC",
-            "end": "31 Dec 2017 00:00:00 UTC",
-            "onStart": "",
-            "onStay": "",
-            "onEnd": ""
-          },
-          {
-            "stateName": "visible",
-            "start": "1 Jan 2020 00:00:00 UTC",
-            "end": "31 Dec 2020 00:00:00 UTC",
-            "onStart": "",
-            "onStay": "",
-            "onEnd": ""
-          }
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.349014,
+          48.864716
         ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "color": "#FF6666",
+        "size": 1,
+        "label": "Nigeria",
+        "timeperiod": "1 Jun 2017 00:00:00 UTC - 31 Dec 2018 00:00:00 UTC",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.207031249999999,
+          10.14193168613103
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "color": "#FF6666",
+        "size": 1,
+        "label": "India",
+        "timestamps": [
+          "1 Jan 2017 00:00:00 UTC",
+          "1 Jun 2017 00:00:00 UTC",
+          "1 Jun 2018 00:00:00 UTC",
+          "1 Jun 2019 00:00:00 UTC"
+        ],
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
       },
       "geometry": {
         "type": "Point",
@@ -44,28 +74,22 @@
       "properties": {
         "color": "#FF6666",
         "size": 1,
-        "label": "India",
+        "label": "USA",
+        "timeperiods": [
+          "1 Jan 2017 00:00:00 UTC - 31 Dec 2017 00:00:00 UTC",
+          "1 Jan 2020 00:00:00 UTC - 31 Dec 2020 00:00:00 UTC"
+        ],
         "labelProperties": {
           "fontSize": 10,
           "fontColor": "#DEDEDE",
           "surfaceOffset": 10
-        },
-        "timedStates": [
-          {
-            "stateName": "visible",
-            "start": "1 Jun 2017 00:00:00 UTC",
-            "end": "31 Dec 2018 00:00:00 UTC",
-            "onStart": "",
-            "onStay": "",
-            "onEnd": ""
-          }
-        ]
+        }
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          7.207031249999999,
-          10.14193168613103
+          -104.991531,
+          39.742043
         ]
       }
     }
