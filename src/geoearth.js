@@ -1893,6 +1893,7 @@ class GeoEarth {
 
   _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
+  // SHOW_ONLY_CONTAINED = false;
   SHOW_ONLY_CONTAINED = true;
 
   dateDiffInDays(a, b) {
@@ -1914,43 +1915,55 @@ class GeoEarth {
   }
 
 
+  splitTimeperiod(tp) {
+    let cleanedTpStr = tp.replace(/ - /g, "-");
+    let splitTp = cleanedTpStr.split("-");
+    return splitTp;
+  }
+
+
+  parseAsDate(d) {
+    return new Date(d);
+  }
+
+
   async updateVisibilityBasedOnCurrentTime() {
-    for(let ti of this.listOfTimedFeatures) {
+    for(let timedFeature of this.listOfTimedFeatures) {
       // if timeperiod is specified check; if any of the active periods match any of the specified timeperiod
-      if (ti.userData.timeperiods) {
-        let tsChecks = ti.userData.timeperiods.map(tp => {
-          let splitTs = tp.split(" - ");
-          let st = new Date(splitTs[0]);
-          let ed = new Date(splitTs[1]);
+      if (timedFeature.userData.timeperiods) {
+        // loop through all timeperiods on this feature
+        let ftTimeChecks = timedFeature.userData.timeperiods.map(ftTimeperiod => {
+          // get start and end timestamps for this period
+          let splitFtTp = this.splitTimeperiod(ftTimeperiod);
+          let ftTsSt = this.parseAsDate(splitFtTp[0]);
+          let ftTsEd = this.parseAsDate(splitFtTp[1]);
+          // initialize return bool
           let isMatch = false;
-          for(let tsUnderConsideration of this.currentlyActiveTimeSpans) {
-            if (tsUnderConsideration.includes("-")) {
-              let splitTsUdrC = tsUnderConsideration.split(" - ");
-              let tsSt = new Date(splitTsUdrC[0]);
-              let tsEd = new Date(splitTsUdrC[1]);
-              let ftStTsStDiff = this.dateDiffInDays(st, tsSt);
-              let ftStTsEdDiff = this.dateDiffInDays(st, tsEd);
-              let ftStIsBfTsSt = ftStTsStDiff < 0;
-              let ftStIsBfTsEd = ftStTsEdDiff < 0;
-              let ftEdTsStDiff = this.dateDiffInDays(ed, tsSt);
-              let ftEdTsEdDiff = this.dateDiffInDays(ed, tsEd);
-              let ftEdIsBfTsSt = ftEdTsStDiff < 0;
-              let ftEdIsBfTsEd = ftEdTsEdDiff < 0;
-              let isContained = !ftStIsBfTsSt && ftStIsBfTsEd && ftEdIsBfTsEd && !ftEdIsBfTsSt;
-              let isOverlapping = ftStIsBfTsEd && ftEdIsBfTsSt;
+          for(let currActiveTsItem of this.currentlyActiveTimeSpans) {
+            // is this a timeperiod kind of interval
+            if (currActiveTsItem.includes("-")) {
+              let splitTsUdrC = this.splitTimeperiod(currActiveTsItem);
+              let currActiveTsSt = this.parseAsDate(splitTsUdrC[0]);
+              let currActiveTsEd = this.parseAsDate(splitTsUdrC[1]);
+              let ftStIsAfCurrActiveTsSt = this.dateDiffInDays(currActiveTsSt, ftTsSt) > 0;
+              let currActiveTsEdIsAfFtEd = this.dateDiffInDays(ftTsEd, currActiveTsEd) > 0;
+              let currActiveTsEdIsAfFtSt = this.dateDiffInDays(ftTsSt, currActiveTsEd) > 0;
+              let ftEdIsAfCurrActiveTsSt = this.dateDiffInDays(currActiveTsSt, ftTsEd) > 0;
+              let isContained = ftStIsAfCurrActiveTsSt && currActiveTsEdIsAfFtEd;
+              let isOverlapping = currActiveTsEdIsAfFtSt && ftEdIsAfCurrActiveTsSt;
               isMatch = this.SHOW_ONLY_CONTAINED ? isContained : isOverlapping;
             } else {
-              let t = new Date(tsUnderConsideration);
-              let stDiff = this.dateDiffInDays(st, t);
-              let edDiff = this.dateDiffInDays(ed, t);
-              let isContained = stDiff > 0 && edDiff < 0;
+              let t = this.parseAsDate(currActiveTsItem);
+              let tIsAfTsSt = this.dateDiffInDays(ftTsSt, t) > 0;
+              let tsEdIsAfT = this.dateDiffInDays(t, ftTsEd) > 0;
+              let isContained = tIsAfTsSt && tsEdIsAfT;
               isMatch = isContained;
             }
             return isMatch;
           }
         });
-        let finVal = tsChecks.reduce((a, b) => a || b, false);
-        ti.visible = finVal;
+        let finVal = ftTimeChecks.reduce((a, b) => a || b, false);
+        timedFeature.visible = finVal;
       }
     }
   }
