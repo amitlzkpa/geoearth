@@ -51,6 +51,7 @@ class GeoEarth {
   srfOffset = 1.001;
   disableAtmosphere;
   textOnTop;
+  currentlyActiveTimeSpans = [];
 
   textureImage;
 
@@ -1890,6 +1891,69 @@ class GeoEarth {
 
 
 
+  _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+  SHOW_ONLY_CONTAINED = true;
+
+  dateDiffInDays(a, b) {
+    // Discard the time and time-zone information.
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  
+    return Math.floor((utc2 - utc1) / this._MS_PER_DAY);
+  }
+
+  async setCurrentTime(timeStamp, opts) {
+    let defaultOpts = {
+      overrideAll: true,
+    };
+    let activeOpts = { ...defaultOpts, ...(opts || {}) };
+    this.currentlyActiveTimeSpans = activeOpts.overrideAll ? [] : this.currentlyActiveTimeSpans;
+    this.currentlyActiveTimeSpans.push(timeStamp);
+    await this.updateVisibilityBasedOnCurrentTime();
+  }
+
+
+  async updateVisibilityBasedOnCurrentTime() {
+    for(let ti of this.listOfTimedFeatures) {
+      // if timeperiod is specified check; if any of the active periods match any of the specified timeperiod
+      if (ti.userData.timeperiods) {
+        let tsChecks = ti.userData.timeperiods.map(tp => {
+          let splitTs = tp.split(" - ");
+          let st = new Date(splitTs[0]);
+          let ed = new Date(splitTs[1]);
+          let isMatch = false;
+          for(let tsUnderConsideration of this.currentlyActiveTimeSpans) {
+            if (tsUnderConsideration.includes("-")) {
+              let splitTsUdrC = tsUnderConsideration.split(" - ");
+              let tsSt = new Date(splitTsUdrC[0]);
+              let tsEd = new Date(splitTsUdrC[1]);
+              let ftStTsStDiff = this.dateDiffInDays(st, tsSt);
+              let ftStTsEdDiff = this.dateDiffInDays(st, tsEd);
+              let ftStIsBfTsSt = ftStTsStDiff < 0;
+              let ftStIsBfTsEd = ftStTsEdDiff < 0;
+              let ftEdTsStDiff = this.dateDiffInDays(ed, tsSt);
+              let ftEdTsEdDiff = this.dateDiffInDays(ed, tsEd);
+              let ftEdIsBfTsSt = ftEdTsStDiff < 0;
+              let ftEdIsBfTsEd = ftEdTsEdDiff < 0;
+              let isContained = !ftStIsBfTsSt && ftStIsBfTsEd && ftEdIsBfTsEd && !ftEdIsBfTsSt;
+              let isOverlapping = ftStIsBfTsEd && ftEdIsBfTsSt;
+              isMatch = this.SHOW_ONLY_CONTAINED ? isContained : isOverlapping;
+            } else {
+              let t = new Date(tsUnderConsideration);
+              let stDiff = this.dateDiffInDays(st, t);
+              let edDiff = this.dateDiffInDays(ed, t);
+              let isContained = stDiff > 0 && edDiff < 0;
+              isMatch = isContained;
+            }
+            return isMatch;
+          }
+        });
+        let finVal = tsChecks.reduce((a, b) => a || b, false);
+        ti.visible = finVal;
+      }
+    }
+  }
 
   /*
   timestamp[1]
