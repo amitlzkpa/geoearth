@@ -25,10 +25,8 @@
 
 
         var json = await fetch('./data/timed-features/timed-features-two_points.geojson');
-        var geoOpts = {
-          color: '#5DAF57'
-        };
-        geoearth.addGeoJson(await json.json(), geoOpts);
+        var geoJson = await json.json();
+        geoearth.addGeoJson(geoJson);
 
 
       }
