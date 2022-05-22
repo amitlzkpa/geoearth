@@ -5,7 +5,7 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1,
+        "size": 3,
         "label": "France",
         "timestamp": "1 Jun 2017 00:00:00 UTC",
         "labelProperties": {
@@ -26,7 +26,7 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1,
+        "size": 3,
         "label": "Nigeria",
         "timeperiod": "1 Jun 2017 00:00:00 UTC - 31 Dec 2018 00:00:00 UTC",
         "labelProperties": {
@@ -47,7 +47,7 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1,
+        "size": 3,
         "label": "India",
         "timestamps": [
           "1 Jan 2017 00:00:00 UTC",
@@ -73,7 +73,7 @@
       "type": "Feature",
       "properties": {
         "color": "#FF6666",
-        "size": 1,
+        "size": 3,
         "label": "USA",
         "timeperiods": [
           "1 Jan 2017 00:00:00 UTC - 31 Dec 2017 00:00:00 UTC",
@@ -90,6 +90,26 @@
         "coordinates": [
           -104.991531,
           39.742043
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "color": "#FF6666",
+        "size": 3,
+        "label": "Japan",
+        "labelProperties": {
+          "fontSize": 10,
+          "fontColor": "#DEDEDE",
+          "surfaceOffset": 10
+        }
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          139.839478,
+          35.652832
         ]
       }
     }
