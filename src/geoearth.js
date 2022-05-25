@@ -201,7 +201,7 @@ class GeoEarth {
     for(var i=0; i<this.dependencies.length; i++) {
       var resource = await fetch(this.dependencies[i]);
       var resourceText = await resource.text();
-      eval.apply(window, [resourceText]);
+      // eval.apply(window, [resourceText]);
     }
 
     var shader, uniforms, material;
