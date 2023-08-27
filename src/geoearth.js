@@ -15,6 +15,9 @@ function setupPWA() {
 }
 
 
+const MAX_RETRY_ADD_ACTION = 8;
+
+
 /**
  *
  * Constructor used to create an instance of the geoearth.
@@ -311,7 +314,7 @@ class GeoEarth {
     for ( var i = 0; i < intersects.length; i++ ) {
       var o = intersects[i].object;
       var p = GeoEarth.parseUp(o, userDataCheck, "parent")
-      console.log(p);
+      // console.log(p);
     }
 
   }.bind(this)
@@ -998,9 +1001,11 @@ class GeoEarth {
    */
   async addPoint(input, opts) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var parsedData = this.parseInputs(input, opts);
@@ -1083,9 +1088,11 @@ class GeoEarth {
    */
   async addMultiPoint(input, opts) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var parsedData = this.parseInputs(input, opts);
@@ -1171,9 +1178,11 @@ class GeoEarth {
    */
   async addLineString(input, opts) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var parsedData = this.parseInputs(input, opts);
@@ -1249,9 +1258,11 @@ class GeoEarth {
    */
   async addMultiLineString(input, opts) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var parsedData = this.parseInputs(input, opts);
@@ -1340,9 +1351,11 @@ class GeoEarth {
    */
   async addPolygon(input, opts) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var parsedData = this.parseInputs(input, opts);
@@ -1536,9 +1549,11 @@ class GeoEarth {
    */
   async addMultiPolygon(input, opts) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var parsedData = this.parseInputs(input, opts);
@@ -1726,9 +1741,11 @@ class GeoEarth {
    */
   async addGeoJson(geoJson, options) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var ret;
@@ -1773,9 +1790,11 @@ class GeoEarth {
    */
   async addFeature(node, options) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
     
     var ftType = node.geometry.type;
@@ -1870,9 +1889,11 @@ class GeoEarth {
    */
   async addFeatureCollection(node, options) {
 
+    var retryCount = 0;
     while (!this.isReady) {
+      if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
-      if(!this.isReady) return;
+      retryCount++;
     }
 
     var ftType = node.type;
