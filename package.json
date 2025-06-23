@@ -9,7 +9,7 @@
     "docs": "gulp docs",
     "dev": "gulp dev",
     "serve": "gulp serve",
-    "postinstall": "gulp build",
+    "postinstall": "npm install --legacy-peer-deps && gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -22,5 +22,8 @@
     "gulp-exec": "^4.0.0",
     "gulp-jsdoc3": "^2.0.0",
     "gulp-rename": "^1.4.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
