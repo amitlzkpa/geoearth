@@ -2,10 +2,11 @@ function setupPWA() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", async function () {
       try {
-        let registration = await navigator.serviceWorker.register("service-worker.js");
+        let registration = await navigator.serviceWorker.register(
+          "service-worker.js"
+        );
         console.log("Service worker registered!");
-
-      } catch(err) {
+      } catch (err) {
         console.log("ServiceWorker registration failed: ", err);
       }
     });
@@ -14,9 +15,7 @@ function setupPWA() {
   }
 }
 
-
 const MAX_RETRY_ADD_ACTION = 8;
-
 
 /**
  *
@@ -39,11 +38,7 @@ const MAX_RETRY_ADD_ACTION = 8;
  *
  */
 class GeoEarth {
-
-  dependencies = [
-    "/js/three.min.js",
-    "/js/TessellateModifier.js"
-  ];
+  dependencies = ["/js/three.min.js", "/js/TessellateModifier.js"];
 
   isReady = false;
   sleepTime = 400;
@@ -59,51 +54,51 @@ class GeoEarth {
   textureImage;
 
   Shaders = {
-    'earth': {
+    earth: {
       uniforms: {
-        'texture': {
-          type: 't',
-          value: null
-        }
+        texture: {
+          type: "t",
+          value: null,
+        },
       },
       vertexShader: [
-        'varying vec3 vNormal;',
-        'varying vec2 vUv;',
-        'void main() {',
-        'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-        'vNormal = normalize( normalMatrix * normal );',
-        'vUv = uv;',
-        '}'
-      ].join('\n'),
+        "varying vec3 vNormal;",
+        "varying vec2 vUv;",
+        "void main() {",
+        "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+        "vNormal = normalize( normalMatrix * normal );",
+        "vUv = uv;",
+        "}",
+      ].join("\n"),
       fragmentShader: [
-        'uniform sampler2D texture;',
-        'varying vec3 vNormal;',
-        'varying vec2 vUv;',
-        'void main() {',
-        'vec3 diffuse = texture2D( texture, vUv ).xyz;',
-        'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
-        'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
-        'gl_FragColor = vec4( diffuse + atmosphere, 1.0 );',
-        '}'
-      ].join('\n')
+        "uniform sampler2D texture;",
+        "varying vec3 vNormal;",
+        "varying vec2 vUv;",
+        "void main() {",
+        "vec3 diffuse = texture2D( texture, vUv ).xyz;",
+        "float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );",
+        "vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );",
+        "gl_FragColor = vec4( diffuse + atmosphere, 1.0 );",
+        "}",
+      ].join("\n"),
     },
-    'atmosphere': {
+    atmosphere: {
       uniforms: {},
       vertexShader: [
-        'varying vec3 vNormal;',
-        'void main() {',
-        'vNormal = normalize( normalMatrix * normal );',
-        'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-        '}'
-      ].join('\n'),
+        "varying vec3 vNormal;",
+        "void main() {",
+        "vNormal = normalize( normalMatrix * normal );",
+        "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+        "}",
+      ].join("\n"),
       fragmentShader: [
-        'varying vec3 vNormal;',
-        'void main() {',
-        'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 12.0 );',
-        'gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;',
-        '}'
-      ].join('\n')
-    }
+        "varying vec3 vNormal;",
+        "void main() {",
+        "float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 12.0 );",
+        "gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;",
+        "}",
+      ].join("\n"),
+    },
   };
 
   container;
@@ -121,38 +116,35 @@ class GeoEarth {
 
   mouse = {
     x: 0,
-    y: 0
+    y: 0,
   };
   mouseOnDown = {
     x: 0,
-    y: 0
+    y: 0,
   };
   rotation = {
     x: 0,
-    y: 0
+    y: 0,
   };
   target = {
-    x: Math.PI * 3 / 2,
-    y: Math.PI / 6.0
+    x: (Math.PI * 3) / 2,
+    y: Math.PI / 6.0,
   };
   targetOnDown = {
     x: 0,
-    y: 0
+    y: 0,
   };
 
   distance = 100000;
   distanceTarget = 100000;
 
-
   frameCount = 0;
-
 
   /**
    * An object containing all active objects on given instance with object ids as key and
    * objects themselves as values.
    */
   listOfTimedFeatures = [];
-
 
   /**
    * An object containing all active objects on given instance with object ids as key and
@@ -162,14 +154,8 @@ class GeoEarth {
   intersectionItems = [];
   visibleOnTopItems = [];
 
-
-
-
   constructor(container, opts) {
-
-
     setupPWA();
-
 
     if (!container) {
       container = document.createElement("div");
@@ -178,30 +164,25 @@ class GeoEarth {
       document.body.appendChild(container);
     }
 
-
     this.instance = this;
     this.container = container;
     this.opts = opts || {};
-    this.autoStart = typeof opts.autoStart === "undefined" || opts.autoStart === true;
+    this.autoStart =
+      typeof opts.autoStart === "undefined" || opts.autoStart === true;
     this.earthRadius = opts.earthRadius || 200;
     this.disableAtmosphere = opts.disableAtmosphere || false;
-    this.textOnTop = (typeof opts.textOnTop === "boolean") ? opts.textOnTop : true;
+    this.textOnTop =
+      typeof opts.textOnTop === "boolean" ? opts.textOnTop : true;
 
-    this.textureImage = opts.textureImage || '';
-
-
+    this.textureImage = opts.textureImage || "";
 
     if (this.autoStart) {
       this.init(this.animate.bind(this));
     }
-
-
   }
 
-
   async init(next) {
-
-    for(var i=0; i<this.dependencies.length; i++) {
+    for (var i = 0; i < this.dependencies.length; i++) {
       var resource = await fetch(this.dependencies[i]);
       var resourceText = await resource.text();
       eval.apply(window, [resourceText]);
@@ -218,35 +199,31 @@ class GeoEarth {
 
     var geometry = new THREE.SphereGeometry(this.earthRadius, 128, 128);
 
-    shader = this.Shaders['earth'];
+    shader = this.Shaders["earth"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-    uniforms['texture'].value = THREE.ImageUtils.loadTexture(this.textureImage);
+    uniforms["texture"].value = THREE.ImageUtils.loadTexture(this.textureImage);
 
     material = new THREE.ShaderMaterial({
-
       uniforms: uniforms,
       vertexShader: shader.vertexShader,
-      fragmentShader: shader.fragmentShader
-
+      fragmentShader: shader.fragmentShader,
     });
 
     this.earthMesh = new THREE.Mesh(geometry, material);
     this.earthMesh.rotation.y = Math.PI;
     this.scene.add(this.earthMesh);
 
-    shader = this.Shaders['atmosphere'];
+    shader = this.Shaders["atmosphere"];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
     material = new THREE.ShaderMaterial({
-
       uniforms: uniforms,
       vertexShader: shader.vertexShader,
       fragmentShader: shader.fragmentShader,
       side: THREE.BackSide,
       blending: THREE.AdditiveBlending,
-      transparent: true
-
+      transparent: true,
     });
 
     if (!this.disableAtmosphere) {
@@ -256,41 +233,55 @@ class GeoEarth {
     }
 
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true
+      antialias: true,
     });
     this.renderer.setSize(this.w, this.h);
 
     this.container.appendChild(this.renderer.domElement);
 
-    this.container.addEventListener('mousedown', this.onMouseDown, false);
+    this.container.addEventListener("mousedown", this.onMouseDown, false);
 
-    this.container.addEventListener('mousewheel', this.onMouseWheel.bind(this), false);
+    this.container.addEventListener(
+      "mousewheel",
+      this.onMouseWheel.bind(this),
+      false
+    );
 
-    document.addEventListener('keydown', this.onDocumentKeyDown.bind(this), false);
+    document.addEventListener(
+      "keydown",
+      this.onDocumentKeyDown.bind(this),
+      false
+    );
 
-    window.addEventListener('resize', this.onWindowResize.bind(this), false);
+    window.addEventListener("resize", this.onWindowResize.bind(this), false);
 
-    this.container.addEventListener('mouseover', function() {
-      this.overRenderer = true;
-    }.bind(this), false);
+    this.container.addEventListener(
+      "mouseover",
+      function () {
+        this.overRenderer = true;
+      }.bind(this),
+      false
+    );
 
-    this.container.addEventListener('mouseout', function() {
-      this.overRenderer = false;
-    }.bind(this), false);
+    this.container.addEventListener(
+      "mouseout",
+      function () {
+        this.overRenderer = false;
+      }.bind(this),
+      false
+    );
 
-    
     this.isReady = true;
-    
-    if(next) next();
 
+    if (next) next();
   }
 
-  onMouseDown = function(event) {
+  onMouseDown = function (event) {
     event.preventDefault();
 
-    this.container.addEventListener('mousemove', this.onMouseMove, false);
-    this.container.addEventListener('mouseup', this.onMouseUp, false);
-    this.container.addEventListener('mouseout', this.onMouseOut, false);
+    this.container.addEventListener("mousemove", this.onMouseMove, false);
+    this.container.addEventListener("mouseup", this.onMouseUp, false);
+    this.container.addEventListener("mouseout", this.onMouseOut, false);
 
     this.mouseOnDown.x = -event.clientX;
     this.mouseOnDown.y = event.clientY;
@@ -298,60 +289,69 @@ class GeoEarth {
     this.targetOnDown.x = this.target.x;
     this.targetOnDown.y = this.target.y;
 
-    this.container.style.cursor = 'move';
+    this.container.style.cursor = "move";
 
     var mousePosition = new THREE.Vector3(0, 0, 0.5);
     mousePosition.x = 2 * (event.clientX / this.w) - 1;
     mousePosition.y = 1 - 2 * (event.clientY / this.h);
     mousePosition.unproject(this.camera);
 
-    function userDataCheck (obj) {
-      return obj.userData && JSON.stringify(obj.userData) !== JSON.stringify({});
+    function userDataCheck(obj) {
+      return (
+        obj.userData && JSON.stringify(obj.userData) !== JSON.stringify({})
+      );
     }
 
-    var raycaster = new THREE.Raycaster(this.camera.position, mousePosition.sub(this.camera.position).normalize());
+    var raycaster = new THREE.Raycaster(
+      this.camera.position,
+      mousePosition.sub(this.camera.position).normalize()
+    );
     var intersects = raycaster.intersectObjects(this.intersectionItems);
-    for ( var i = 0; i < intersects.length; i++ ) {
+    for (var i = 0; i < intersects.length; i++) {
       var o = intersects[i].object;
-      var p = GeoEarth.parseUp(o, userDataCheck, "parent")
+      var p = GeoEarth.parseUp(o, userDataCheck, "parent");
       // console.log(p);
     }
+  }.bind(this);
 
-  }.bind(this)
-
-  onMouseMove = function(event) {
+  onMouseMove = function (event) {
     this.mouse.x = -event.clientX;
     this.mouse.y = event.clientY;
 
     var zoomDamp = this.distance / 1000;
 
-    this.target.x = this.targetOnDown.x + (this.mouse.x - this.mouseOnDown.x) * 0.005 * zoomDamp;
-    this.target.y = this.targetOnDown.y + (this.mouse.y - this.mouseOnDown.y) * 0.005 * zoomDamp;
+    this.target.x =
+      this.targetOnDown.x +
+      (this.mouse.x - this.mouseOnDown.x) * 0.005 * zoomDamp;
+    this.target.y =
+      this.targetOnDown.y +
+      (this.mouse.y - this.mouseOnDown.y) * 0.005 * zoomDamp;
 
-    this.target.y = this.target.y > (Math.PI / 2) ? (Math.PI / 2) : this.target.y;
-    this.target.y = this.target.y < -(Math.PI / 2) ? -(Math.PI / 2) : this.target.y;
-  }.bind(this)
+    this.target.y = this.target.y > Math.PI / 2 ? Math.PI / 2 : this.target.y;
+    this.target.y =
+      this.target.y < -(Math.PI / 2) ? -(Math.PI / 2) : this.target.y;
+  }.bind(this);
 
-  onMouseUp = function(event) {
-    this.container.removeEventListener('mousemove', this.onMouseMove, false);
-    this.container.removeEventListener('mouseup', this.onMouseUp, false);
-    this.container.removeEventListener('mouseout', this.onMouseOut, false);
-    this.container.style.cursor = 'auto';
-  }.bind(this)
+  onMouseUp = function (event) {
+    this.container.removeEventListener("mousemove", this.onMouseMove, false);
+    this.container.removeEventListener("mouseup", this.onMouseUp, false);
+    this.container.removeEventListener("mouseout", this.onMouseOut, false);
+    this.container.style.cursor = "auto";
+  }.bind(this);
 
-  onMouseOut = function(event) {
-    this.container.removeEventListener('mousemove', this.onMouseMove, false);
-    this.container.removeEventListener('mouseup', this.onMouseUp, false);
-    this.container.removeEventListener('mouseout', this.onMouseOut, false);
-  }.bind(this)
+  onMouseOut = function (event) {
+    this.container.removeEventListener("mousemove", this.onMouseMove, false);
+    this.container.removeEventListener("mouseup", this.onMouseUp, false);
+    this.container.removeEventListener("mouseout", this.onMouseOut, false);
+  }.bind(this);
 
-  onMouseWheel = function(event) {
+  onMouseWheel = function (event) {
     event.preventDefault();
     if (this.overRenderer) {
       this.zoom(event.wheelDeltaY * 0.3);
     }
     return false;
-  }.bind(this)
+  }.bind(this);
 
   onDocumentKeyDown(event) {
     switch (event.keyCode) {
@@ -367,14 +367,19 @@ class GeoEarth {
   }
 
   onWindowResize(event) {
-    this.camera.aspect = this.container.offsetWidth / this.container.offsetHeight;
+    this.camera.aspect =
+      this.container.offsetWidth / this.container.offsetHeight;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
+    this.renderer.setSize(
+      this.container.offsetWidth,
+      this.container.offsetHeight
+    );
   }
 
   zoom(delta) {
     this.distanceTarget -= delta;
-    this.distanceTarget = this.distanceTarget > 1000 ? 1000 : this.distanceTarget;
+    this.distanceTarget =
+      this.distanceTarget > 1000 ? 1000 : this.distanceTarget;
     this.distanceTarget = this.distanceTarget < 210 ? 210 : this.distanceTarget;
   }
 
@@ -390,12 +395,14 @@ class GeoEarth {
     this.rotation.y += (this.target.y - this.rotation.y) * 0.1;
     this.distance += (this.distanceTarget - this.distance) * 0.3;
 
-    this.camera.position.x = this.distance * Math.sin(this.rotation.x) * Math.cos(this.rotation.y);
+    this.camera.position.x =
+      this.distance * Math.sin(this.rotation.x) * Math.cos(this.rotation.y);
     this.camera.position.y = this.distance * Math.sin(this.rotation.y);
-    this.camera.position.z = this.distance * Math.cos(this.rotation.x) * Math.cos(this.rotation.y);
+    this.camera.position.z =
+      this.distance * Math.cos(this.rotation.x) * Math.cos(this.rotation.y);
 
     if (this.textOnTop) {
-      this.visibleOnTopItems.forEach(it => {
+      this.visibleOnTopItems.forEach((it) => {
         let raycaster = new THREE.Raycaster();
         let dir = this.camera.position.clone().sub(it.position).normalize();
         let pos = it.position;
@@ -412,12 +419,9 @@ class GeoEarth {
     this.frameCount++;
   }
 
-
   async wait(ms) {
     return new Promise((resolve, reject) => setTimeout(() => resolve(), ms));
   }
-
-
 
   // ----------------------------------------------------------------------------
   /*
@@ -430,8 +434,6 @@ class GeoEarth {
 
   */
 
-
-
   // ----------------------------------------------------------------------------
   /*
 
@@ -443,17 +445,17 @@ class GeoEarth {
   |_|_| |_|\__\___|_|  |_| |_|\__,_|_|
 
   */
-  
+
   // ref: https://bocoup.com/blog/learning-three-js-with-real-world-challenges-that-have-already-been-solved
   makeTextSprite(message, opts) {
     let that = this;
     let parameters = opts || {};
-    let fontface = parameters.fontface || 'Helvetica';
-    let fontSize = (parameters.fontSize) ? parameters.fontSize * 10 : 300;
-    let canvas = document.createElement('canvas');
+    let fontface = parameters.fontface || "Helvetica";
+    let fontSize = parameters.fontSize ? parameters.fontSize * 10 : 300;
+    let canvas = document.createElement("canvas");
     canvas.width = 3000;
     canvas.height = 1500;
-    let context = canvas.getContext('2d');
+    let context = canvas.getContext("2d");
     context.font = fontSize + "px " + fontface;
     context.textAlign = "center";
     context.textBaseline = "middle";
@@ -461,48 +463,49 @@ class GeoEarth {
     // get size data (height depends only on font size)
     let metrics = context.measureText(message);
     let textWidth = metrics.width;
-    
+
     // text color
-    context.fillStyle = parameters.bgColor || 'transparent';
+    context.fillStyle = parameters.bgColor || "transparent";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = parameters.fontColor || '#FFFFFF';
-    context.fillText(message, canvas.width/2, canvas.height/2);
+    context.fillStyle = parameters.fontColor || "#FFFFFF";
+    context.fillText(message, canvas.width / 2, canvas.height / 2);
 
     // canvas contents will be used for a texture
     let texture = new THREE.Texture(canvas);
     texture.minFilter = THREE.LinearFilter;
     texture.needsUpdate = true;
-    
+
     let spriteMaterial = new THREE.SpriteMaterial({
-        map: texture,
-        useScreenCoordinates: false
+      map: texture,
+      useScreenCoordinates: false,
     });
     let sprite = new THREE.Sprite(spriteMaterial);
     sprite.scale.set(100, 50, 1);
 
     if (this.textOnTop) {
       sprite.renderOrder = 999;
-      sprite.onBeforeRender = function() {
+      sprite.onBeforeRender = function () {
         that.renderer.clearDepth();
       };
     }
 
     this.visibleOnTopItems.push(sprite);
-    
+
     return sprite;
   }
-
 
   make3DShape(type, options) {
     let opts = options || {};
     let ret;
-    switch(type) {
+    switch (type) {
       case "sphere": {
         let col = opts.color || 0xffffff;
         let rad = opts.size || 1;
         let geometry = new THREE.SphereGeometry(rad, 24, 24);
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
-        let material = new THREE.MeshBasicMaterial( {color: col} );
+        geometry.applyMatrix(
+          new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90))
+        );
+        let material = new THREE.MeshBasicMaterial({ color: col });
         let sphereMesh = new THREE.Mesh(geometry, material);
         ret = sphereMesh;
         break;
@@ -512,8 +515,10 @@ class GeoEarth {
         let rad = opts.size || 1;
         let dep = opts.depth || 1;
         let geometry = new THREE.CylinderGeometry(rad, rad, dep, 16);
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
-        let material = new THREE.MeshBasicMaterial( {color: col} );
+        geometry.applyMatrix(
+          new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90))
+        );
+        let material = new THREE.MeshBasicMaterial({ color: col });
         let cylinderMesh = new THREE.Mesh(geometry, material);
         ret = cylinderMesh;
         break;
@@ -527,10 +532,13 @@ class GeoEarth {
         arrowShape.lineTo(0, size * 2);
         arrowShape.lineTo(size, -size);
         arrowShape.lineTo(-size, -size);
-        let extrudeSettings = {amount: dep, bevelEnabled: false};
-        let geometry = new THREE.ExtrudeBufferGeometry(arrowShape, extrudeSettings);
-        let material = new THREE.MeshBasicMaterial( {color: col} );
-        let arrowHeadMesh = new THREE.Mesh( geometry, material );
+        let extrudeSettings = { amount: dep, bevelEnabled: false };
+        let geometry = new THREE.ExtrudeBufferGeometry(
+          arrowShape,
+          extrudeSettings
+        );
+        let material = new THREE.MeshBasicMaterial({ color: col });
+        let arrowHeadMesh = new THREE.Mesh(geometry, material);
         ret = arrowHeadMesh;
         break;
       }
@@ -544,10 +552,13 @@ class GeoEarth {
         rectShape.lineTo(size, size);
         rectShape.lineTo(size, -size);
         rectShape.lineTo(-size, -size);
-        let extrudeSettings = {amount: dep, bevelEnabled: false};
-        let geometry = new THREE.ExtrudeBufferGeometry(rectShape, extrudeSettings);
-        let material = new THREE.MeshBasicMaterial( {color: col} );
-        let rectMesh = new THREE.Mesh( geometry, material );
+        let extrudeSettings = { amount: dep, bevelEnabled: false };
+        let geometry = new THREE.ExtrudeBufferGeometry(
+          rectShape,
+          extrudeSettings
+        );
+        let material = new THREE.MeshBasicMaterial({ color: col });
+        let rectMesh = new THREE.Mesh(geometry, material);
         ret = rectMesh;
         break;
       }
@@ -558,9 +569,7 @@ class GeoEarth {
     return ret;
   }
 
-
   parseInputs(input, options) {
-
     var opts = options || input.properties || {};
 
     if (input.constructor === Array) {
@@ -576,31 +585,32 @@ class GeoEarth {
     opts.note = opts.note;
 
     return opts;
-
   }
 
-
   getAveragePoint2D(pts) {
-    var tot = pts.reduce((prev, curr) => { return [(prev[0] + curr[0]), (prev[1] + curr[1])] }, [0, 0]);
+    var tot = pts.reduce(
+      (prev, curr) => {
+        return [prev[0] + curr[0], prev[1] + curr[1]];
+      },
+      [0, 0]
+    );
     tot[0] /= pts.length;
     tot[1] /= pts.length;
     return tot;
   }
 
-
   getAveragePoint3D(pts) {
-    var tot = pts.reduce((prev, curr) => { return [
-                                                    (prev[0] + curr[0]),
-                                                    (prev[1] + curr[1]),
-                                                    (prev[2] + curr[2])
-                                                  ]
-                                          }, [0, 0, 0]);
+    var tot = pts.reduce(
+      (prev, curr) => {
+        return [prev[0] + curr[0], prev[1] + curr[1], prev[2] + curr[2]];
+      },
+      [0, 0, 0]
+    );
     tot[0] /= pts.length;
     tot[1] /= pts.length;
     tot[2] /= pts.length;
     return tot;
   }
-
 
   getSpacedPoints(inPts) {
     var pts = [];
@@ -610,8 +620,10 @@ class GeoEarth {
       var firstPt = inPts[idx - 1];
 
       // TODO: use haversine distance for the length
-      var d = Math.sqrt(Math.pow(secondPt[0] - firstPt[0], 2)
-                      + Math.pow(secondPt[1] - firstPt[1], 2));
+      var d = Math.sqrt(
+        Math.pow(secondPt[0] - firstPt[0], 2) +
+          Math.pow(secondPt[1] - firstPt[1], 2)
+      );
       var divs = Math.ceil(d * 8);
 
       var pt1, pt2, q1, q2, v, t, s;
@@ -627,7 +639,7 @@ class GeoEarth {
       var tgtQt = new THREE.Quaternion();
 
       for (var j = 0; j < divs; j++) {
-        t = j/divs;
+        t = j / divs;
 
         THREE.Quaternion.slerp(q1, q2, tgtQt, t);
 
@@ -638,8 +650,7 @@ class GeoEarth {
 
         var lng = GeoEarth.xCoordToLng(s.theta);
         var lat = GeoEarth.yCoordToLat(s.phi);
-        pts.push([lng, lat])
-
+        pts.push([lng, lat]);
       }
 
       idx++;
@@ -648,15 +659,13 @@ class GeoEarth {
     return pts;
   }
 
-
   makeLineGeometry(pts, parsedData) {
-
     var ret = new THREE.Object3D();
 
-    var linetype = (parsedData) ? parsedData.linetype : "line";
+    var linetype = parsedData ? parsedData.linetype : "line";
 
-    switch(linetype) {
-      case ("forward-arrows"): {
+    switch (linetype) {
+      case "forward-arrows": {
         let sz = parsedData.size || 1;
         let gap = sz * 10;
         let p1, pt1;
@@ -665,14 +674,22 @@ class GeoEarth {
         let fwd = new THREE.Vector3();
         let qt = new THREE.Quaternion();
         let g;
-        for(let i=0; i<pts.length-gap; i+=gap) {
+        for (let i = 0; i < pts.length - gap; i += gap) {
           // read first point
           p1 = pts[i];
-          pt1 = GeoEarth.get3DPoint(p1[0], p1[1], this.earthRadius * this.srfOffset);
-          
+          pt1 = GeoEarth.get3DPoint(
+            p1[0],
+            p1[1],
+            this.earthRadius * this.srfOffset
+          );
+
           // read next point on curve
           p2 = pts[i + gap];
-          pt2 = GeoEarth.get3DPoint(p2[0], p2[1], this.earthRadius * this.srfOffset);
+          pt2 = GeoEarth.get3DPoint(
+            p2[0],
+            p2[1],
+            this.earthRadius * this.srfOffset
+          );
 
           // normal at first point
           nor = pt1.clone();
@@ -682,7 +699,7 @@ class GeoEarth {
           pl = new THREE.Plane().setFromNormalAndCoplanarPoint(nor, pt1);
           coplPt2 = new THREE.Vector3();
           pl.projectPoint(pt2, coplPt2);
-          
+
           // build vector between the 2; this will be the vector to orient in
           dir = new THREE.Vector3().subVectors(pt1, coplPt2);
           dir.normalize();
@@ -691,7 +708,7 @@ class GeoEarth {
           g = this.make3DShape("arrow-head", parsedData);
           g.position.set(pt1.x, pt1.y, pt1.z);
           g.lookAt(new THREE.Vector3().addVectors(pt1, nor));
-          
+
           // extract forward vector from the geometry
           g.getWorldQuaternion(qt);
           fwd.copy(g.up.clone().negate()).applyQuaternion(qt);
@@ -705,7 +722,7 @@ class GeoEarth {
         }
         break;
       }
-      case ("dashed"): {
+      case "dashed": {
         let sz = parsedData.size || 1;
         let gap = sz * 10;
         let p1, pt1;
@@ -714,14 +731,22 @@ class GeoEarth {
         let fwd = new THREE.Vector3();
         let qt = new THREE.Quaternion();
         let g;
-        for(let i=0; i<pts.length-gap; i+=gap) {
+        for (let i = 0; i < pts.length - gap; i += gap) {
           // read first point
           p1 = pts[i];
-          pt1 = GeoEarth.get3DPoint(p1[0], p1[1], this.earthRadius * this.srfOffset);
-          
+          pt1 = GeoEarth.get3DPoint(
+            p1[0],
+            p1[1],
+            this.earthRadius * this.srfOffset
+          );
+
           // read next point on curve
           p2 = pts[i + gap];
-          pt2 = GeoEarth.get3DPoint(p2[0], p2[1], this.earthRadius * this.srfOffset);
+          pt2 = GeoEarth.get3DPoint(
+            p2[0],
+            p2[1],
+            this.earthRadius * this.srfOffset
+          );
 
           // normal at first point
           nor = pt1.clone();
@@ -731,7 +756,7 @@ class GeoEarth {
           pl = new THREE.Plane().setFromNormalAndCoplanarPoint(nor, pt1);
           coplPt2 = new THREE.Vector3();
           pl.projectPoint(pt2, coplPt2);
-          
+
           // build vector between the 2; this will be the vector to orient in
           dir = new THREE.Vector3().subVectors(pt1, coplPt2);
           dir.normalize();
@@ -740,7 +765,7 @@ class GeoEarth {
           g = this.make3DShape("rectangle", parsedData);
           g.position.set(pt1.x, pt1.y, pt1.z);
           g.lookAt(new THREE.Vector3().addVectors(pt1, nor));
-          
+
           // extract forward vector from the geometry
           g.getWorldQuaternion(qt);
           fwd.copy(g.up.clone().negate()).applyQuaternion(qt);
@@ -754,38 +779,45 @@ class GeoEarth {
         }
         break;
       }
-      case ("dotted"): {
+      case "dotted": {
         let sz = parsedData.size || 1;
         let gap = sz * 10;
         let p, pt;
         let g;
-        for(let i=0; i<pts.length-gap; i+=gap) {
+        for (let i = 0; i < pts.length - gap; i += gap) {
           p = pts[i];
-          pt = GeoEarth.get3DPoint(p[0], p[1], this.earthRadius * this.srfOffset);
+          pt = GeoEarth.get3DPoint(
+            p[0],
+            p[1],
+            this.earthRadius * this.srfOffset
+          );
           g = this.make3DShape("cylinder", parsedData);
           g.position.set(pt.x, pt.y, pt.z);
-          g.up = new THREE.Vector3(1,0,0);
+          g.up = new THREE.Vector3(1, 0, 0);
           g.lookAt(new THREE.Vector3());
           ret.add(g);
         }
         break;
       }
       default: {
-    
         var material = new THREE.LineBasicMaterial({
-          color: parsedData.color
+          color: parsedData.color,
         });
         var c = 0;
         var geometry = new THREE.Geometry();
         var pt;
         do {
-          pt = GeoEarth.get3DPoint(pts[c][0], pts[c][1], this.earthRadius * this.srfOffset);
+          pt = GeoEarth.get3DPoint(
+            pts[c][0],
+            pts[c][1],
+            this.earthRadius * this.srfOffset
+          );
           geometry.vertices.push(pt);
           c++;
-        } while (c < pts.length)
-    
+        } while (c < pts.length);
+
         var line = new THREE.Line(geometry, material);
-        
+
         ret.add(line);
 
         break;
@@ -793,10 +825,7 @@ class GeoEarth {
     }
 
     return ret;
-
   }
-
-
 
   // ----------------------------------------------------------------------------
   /*
@@ -809,7 +838,6 @@ class GeoEarth {
                       |___/ 
 
   */
-
 
   /**
    * Method to convert latitude to X coordinate on the globe's surface.
@@ -841,7 +869,6 @@ class GeoEarth {
     return ((180 - lng) / 180) * Math.PI;
   }
 
-
   /**
    * Method to convert spherical X coordinate on the globe's surface to longitude.
    *
@@ -854,7 +881,7 @@ class GeoEarth {
    *
    */
   static xCoordToLng(val) {
-    return ((val / Math.PI) * 180) - 90;
+    return (val / Math.PI) * 180 - 90;
   }
 
   /**
@@ -869,9 +896,8 @@ class GeoEarth {
    *
    */
   static yCoordToLat(val) {
-    return ((val / Math.PI) * 180) + 90;
+    return (val / Math.PI) * 180 + 90;
   }
-
 
   /**
    * Method to convert longitude, latitude to 3D coordinates for given radius.
@@ -893,8 +919,8 @@ class GeoEarth {
     pt.y = radius * Math.cos(phi);
     pt.z = radius * Math.sin(phi) * Math.sin(theta);
     return pt;
-  } 
-  
+  }
+
   /**
    * Method to calculate haversine distance with the given radius.
    *
@@ -909,7 +935,6 @@ class GeoEarth {
    *
    */
   static getHaversineDistance(p1, p2, radius = 6371) {
-
     // ref: https://www.movable-type.co.uk/scripts/latlong.html
     // WIP
     // needs verification; especially coordinate conversions
@@ -918,9 +943,9 @@ class GeoEarth {
     var Δφ = GeoEarth.latToSphericalCoords(p2[1] - p1[1]);
     var Δλ = GeoEarth.lngToSphericalCoords(p2[0] - p1[0]);
 
-    var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) *
-      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    var a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     var d = radius * c;
@@ -928,29 +953,29 @@ class GeoEarth {
     return d;
   }
 
-
   static parseUp(threejsObj, checkFn, recurProp) {
     if (checkFn(threejsObj)) return threejsObj;
     if (!threejsObj[recurProp]) return null;
     return GeoEarth.parseUp(threejsObj[recurProp], checkFn, recurProp);
   }
 
-
-  static parseDown(threejsObj, collected, prop="type", vals=["Mesh", "Line"]) {
+  static parseDown(
+    threejsObj,
+    collected,
+    prop = "type",
+    vals = ["Mesh", "Line"]
+  ) {
     if (vals.includes(threejsObj[prop])) {
       collected.push(threejsObj);
-      return
+      return;
     }
     if (!threejsObj || threejsObj.children.length < 1) {
-      return
+      return;
     }
-    for(var i=0; i<threejsObj.children.length; i++) {
+    for (var i = 0; i < threejsObj.children.length; i++) {
       GeoEarth.parseDown(threejsObj.children[i], collected, prop, vals);
     }
   }
-
-
-
 
   // ----------------------------------------------------------------------------
   /*
@@ -962,9 +987,6 @@ class GeoEarth {
   |___/         |__/                 
 
   */
-
-
-
 
   /**
      Adds an array or geojson object representing a single point to a threejs 3D object.
@@ -1000,7 +1022,6 @@ class GeoEarth {
     
    */
   async addPoint(input, opts) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1018,7 +1039,11 @@ class GeoEarth {
     var lat = coords[1];
 
     var point = this.make3DShape("sphere", parsedData);
-    var pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+    var pt = GeoEarth.get3DPoint(
+      lng,
+      lat,
+      this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+    );
     point.position.x = pt.x;
     point.position.y = pt.y;
     point.position.z = pt.z;
@@ -1028,19 +1053,29 @@ class GeoEarth {
 
     let cp = parsedData.labelProperties.position;
     if (cp && cp.constructor === Array && cp.length === 2) {
-      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        cp[0],
+        cp[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     } else {
       var center = point.position.clone();
     }
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
-    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
-    
+    var labelCenter = center
+      .clone()
+      .normalize()
+      .multiplyScalar(this.earthRadius + surfaceOffset);
+
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      var labelGeom = this.makeTextSprite(
+        parsedData.label,
+        parsedData.labelProperties
+      );
       labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
-    
+
     var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
@@ -1087,7 +1122,6 @@ class GeoEarth {
     
    */
   async addMultiPoint(input, opts) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1106,10 +1140,14 @@ class GeoEarth {
     for (var ptIdx = 0; ptIdx < coords.length; ptIdx++) {
       lng = coords[ptIdx][0];
       lat = coords[ptIdx][1];
-      
+
       var point = this.make3DShape("sphere", parsedData);
 
-      var pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var pt = GeoEarth.get3DPoint(
+        lng,
+        lat,
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
       point.position.set(pt.x, pt.y, pt.z);
       ptsArr.push([pt.x, pt.y, pt.z]);
 
@@ -1122,17 +1160,27 @@ class GeoEarth {
 
     let cp = parsedData.labelProperties.position;
     if (cp && cp.constructor === Array && cp.length === 2) {
-      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        cp[0],
+        cp[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     } else {
       var cc = this.getAveragePoint3D(ptsArr);
       var center = new THREE.Vector3(cc[0], cc[1], cc[2]);
     }
-    
+
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
-    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
-    
+    var labelCenter = center
+      .clone()
+      .normalize()
+      .multiplyScalar(this.earthRadius + surfaceOffset);
+
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      var labelGeom = this.makeTextSprite(
+        parsedData.label,
+        parsedData.labelProperties
+      );
       labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
@@ -1177,7 +1225,6 @@ class GeoEarth {
     
    */
   async addLineString(input, opts) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1189,7 +1236,7 @@ class GeoEarth {
 
     var inPts = JSON.parse(JSON.stringify(parsedData.geometry));
 
-    if (inPts.length < 2) throw ('Need at least 2 points for a line');
+    if (inPts.length < 2) throw "Need at least 2 points for a line";
 
     var pts = this.getSpacedPoints(inPts);
 
@@ -1200,21 +1247,35 @@ class GeoEarth {
 
     let cp = parsedData.labelProperties.position;
     if (cp && cp.constructor === Array && cp.length === 2) {
-      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        cp[0],
+        cp[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     } else {
       var avgPt = this.getAveragePoint2D(pts);
-      var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        avgPt[0],
+        avgPt[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     }
 
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
-    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
-    
+    var labelCenter = center
+      .clone()
+      .normalize()
+      .multiplyScalar(this.earthRadius + surfaceOffset);
+
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      var labelGeom = this.makeTextSprite(
+        parsedData.label,
+        parsedData.labelProperties
+      );
       labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
-    
+
     geomContainer.userData = parsedData;
 
     var addedObj = this.registerAndAddToScene(geomContainer);
@@ -1257,7 +1318,6 @@ class GeoEarth {
     
    */
   async addMultiLineString(input, opts) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1274,9 +1334,8 @@ class GeoEarth {
     var cPts = [];
 
     for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
-
       var inPts = inLns[inLnsIdx];
-      if (inPts.length < 2) throw ('Need at least 2 points for a line');
+      if (inPts.length < 2) throw "Need at least 2 points for a line";
       var divs = 100;
       // var d = Math.sqrt(Math.pow(inPts[1][0] - inPts[0][0], 2) + Math.pow(inPts[1][0] - inPts[0][0], 2));
       // console.log(d);
@@ -1287,7 +1346,7 @@ class GeoEarth {
       cPts.push(cPt);
 
       var line = this.makeLineGeometry(pts, parsedData);
-      
+
       lines.add(line);
     }
 
@@ -1296,23 +1355,37 @@ class GeoEarth {
 
     let cp = parsedData.labelProperties.position;
     if (cp && cp.constructor === Array && cp.length === 2) {
-      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        cp[0],
+        cp[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     } else {
       var avgPt = this.getAveragePoint2D(cPts);
-      var center = GeoEarth.get3DPoint(avgPt[0], avgPt[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        avgPt[0],
+        avgPt[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     }
 
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
-    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
-    
+    var labelCenter = center
+      .clone()
+      .normalize()
+      .multiplyScalar(this.earthRadius + surfaceOffset);
+
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      var labelGeom = this.makeTextSprite(
+        parsedData.label,
+        parsedData.labelProperties
+      );
       labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
-    
+
     geomContainer.userData = parsedData;
-    
+
     var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
@@ -1350,7 +1423,6 @@ class GeoEarth {
     
    */
   async addPolygon(input, opts) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1375,9 +1447,9 @@ class GeoEarth {
     var totPts = 0;
 
     for (let inLnsIdx = 0; inLnsIdx < inLns.length; inLnsIdx++) {
-
       var inPts = inLns[inLnsIdx];
-      if (inPts.length < 3) throw ('Need at least 3 points for a ring in a polyline');
+      if (inPts.length < 3)
+        throw "Need at least 3 points for a ring in a polyline";
       var divs = 100;
       // var d = Math.sqrt(Math.pow(inPts[1][0] - inPts[0][0], 2) + Math.pow(inPts[1][0] - inPts[0][0], 2));
       // console.log(d);
@@ -1393,14 +1465,13 @@ class GeoEarth {
         var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
         for (var j = 0; j < divs; j++) {
-          pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
+          pts.push([firstPt[0] + j * deltaLng, firstPt[1] + j * deltaLat]);
         }
         idx++;
       }
 
       // if its the first ring make the shape
       if (inLnsIdx === 0) {
-
         // move shape cursor to first point
         var lng = pts[0][0];
         var lat = pts[0][1];
@@ -1419,12 +1490,10 @@ class GeoEarth {
           totLat += lat;
           totPts++;
           c++;
-        } while (c < pts.length)
-
+        } while (c < pts.length);
       }
       // if not first ring add it as a hole
       else {
-
         var path = new THREE.Path();
         // move shape cursor to first point
         var lng = pts[0][0];
@@ -1440,18 +1509,18 @@ class GeoEarth {
           // we flip lng, lat here to match with X, Y
           path.lineTo(lat, lng);
           c++;
-        } while (c < pts.length)
+        } while (c < pts.length);
 
         shape.holes.push(path);
-
       }
-
     }
 
     // convert flat shape to polygon surface mapped to sphere
     var modifier = new THREE.TessellateModifier(4);
-    var roughGeometry = new THREE.Geometry().fromBufferGeometry(new THREE.ShapeBufferGeometry(shape));
-    for(var i=0; i<8; i++) {
+    var roughGeometry = new THREE.Geometry().fromBufferGeometry(
+      new THREE.ShapeBufferGeometry(shape)
+    );
+    for (var i = 0; i < 8; i++) {
       modifier.modify(roughGeometry);
     }
     var fineGeometry = new THREE.BufferGeometry().fromGeometry(roughGeometry);
@@ -1461,7 +1530,11 @@ class GeoEarth {
     for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
       lng = fineGeometry.attributes.position.array[i + 1];
       lat = fineGeometry.attributes.position.array[i];
-      pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      pt = GeoEarth.get3DPoint(
+        lng,
+        lat,
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
       fineGeometry.attributes.position.array[i] = pt.x;
       fineGeometry.attributes.position.array[i + 1] = pt.y;
       fineGeometry.attributes.position.array[i + 2] = pt.z;
@@ -1479,23 +1552,37 @@ class GeoEarth {
 
     let cp = parsedData.labelProperties.position;
     if (cp && cp.constructor === Array && cp.length === 2) {
-      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        cp[0],
+        cp[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     } else {
       var cntLng = totLng / totPts;
       var cntLat = totLat / totPts;
-  
-      var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+
+      var center = GeoEarth.get3DPoint(
+        cntLng,
+        cntLat,
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     }
 
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
-    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
-    
+    var labelCenter = center
+      .clone()
+      .normalize()
+      .multiplyScalar(this.earthRadius + surfaceOffset);
+
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      var labelGeom = this.makeTextSprite(
+        parsedData.label,
+        parsedData.labelProperties
+      );
       labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
-    var addedObj = this.registerAndAddToScene(geomContainer);    
+    var addedObj = this.registerAndAddToScene(geomContainer);
 
     return addedObj;
   }
@@ -1548,7 +1635,6 @@ class GeoEarth {
     
    */
   async addMultiPolygon(input, opts) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1567,18 +1653,17 @@ class GeoEarth {
     var totPts = 0;
 
     for (let inPolyIdx = 0; inPolyIdx < inLns.length; inPolyIdx++) {
-
       var polygon = new THREE.Object3D();
       var shape = new THREE.Shape();
       var material = new THREE.MeshBasicMaterial({
         color: parsedData.color,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
       });
 
       for (let inLnsIdx = 0; inLnsIdx < inLns[inPolyIdx].length; inLnsIdx++) {
-
         var inPts = inLns[inPolyIdx][inLnsIdx];
-        if (inPts.length < 3) throw ('Need at least 3 points for a ring in a polyline');
+        if (inPts.length < 3)
+          throw "Need at least 3 points for a ring in a polyline";
         var divs = 100;
         // var d = Math.sqrt(Math.pow(inPts[1][0] - inPts[0][0], 2) + Math.pow(inPts[1][0] - inPts[0][0], 2));
         // console.log(d);
@@ -1594,14 +1679,13 @@ class GeoEarth {
           var deltaLat = (secondPt[1] - firstPt[1]) / divs;
 
           for (var j = 0; j < divs; j++) {
-            pts.push([firstPt[0] + (j * deltaLng), firstPt[1] + (j * deltaLat)]);
+            pts.push([firstPt[0] + j * deltaLng, firstPt[1] + j * deltaLat]);
           }
           idx++;
         }
 
         // if its the first ring make the shape
         if (inLnsIdx === 0) {
-
           // move shape cursor to first point
           var lng = pts[0][0];
           var lat = pts[0][1];
@@ -1620,12 +1704,10 @@ class GeoEarth {
             totLat += lat;
             totPts++;
             c++;
-          } while (c < pts.length)
-
+          } while (c < pts.length);
         }
         // if not first ring add it as a hole
         else {
-
           var path = new THREE.Path();
           // move shape cursor to first point
           var lng = pts[0][0];
@@ -1641,27 +1723,35 @@ class GeoEarth {
             // we flip lng, lat here to match with X, Y
             path.lineTo(lat, lng);
             c++;
-          } while (c < pts.length)
+          } while (c < pts.length);
 
           shape.holes.push(path);
-
         }
-
       }
 
       // convert flat shape to polygon surface mapped to sphere
       var modifier = new THREE.TessellateModifier(4);
-      var roughGeometry = new THREE.Geometry().fromBufferGeometry(new THREE.ShapeBufferGeometry(shape));
-      for(var i=0; i<8; i++) {
+      var roughGeometry = new THREE.Geometry().fromBufferGeometry(
+        new THREE.ShapeBufferGeometry(shape)
+      );
+      for (var i = 0; i < 8; i++) {
         modifier.modify(roughGeometry);
       }
       var fineGeometry = new THREE.BufferGeometry().fromGeometry(roughGeometry);
 
       var lng, lat, pt;
-      for (var i = 0; i < fineGeometry.attributes.position.array.length; i += 3) {
+      for (
+        var i = 0;
+        i < fineGeometry.attributes.position.array.length;
+        i += 3
+      ) {
         lng = fineGeometry.attributes.position.array[i + 1];
         lat = fineGeometry.attributes.position.array[i];
-        pt = GeoEarth.get3DPoint(lng, lat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+        pt = GeoEarth.get3DPoint(
+          lng,
+          lat,
+          this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+        );
         fineGeometry.attributes.position.array[i] = pt.x;
         fineGeometry.attributes.position.array[i + 1] = pt.y;
         fineGeometry.attributes.position.array[i + 2] = pt.z;
@@ -1672,30 +1762,43 @@ class GeoEarth {
 
       polygon.add(mesh);
 
-      polygons.add(polygon)
-
+      polygons.add(polygon);
     }
 
     var geomContainer = new THREE.Object3D();
     geomContainer.add(polygons);
 
     geomContainer.userData = parsedData;
-    
+
     let cp = parsedData.labelProperties.position;
     if (cp && cp.constructor === Array && cp.length === 2) {
-      var center = GeoEarth.get3DPoint(cp[0], cp[1], (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+      var center = GeoEarth.get3DPoint(
+        cp[0],
+        cp[1],
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     } else {
       var cntLng = totLng / totPts;
       var cntLat = totLat / totPts;
-  
-      var center = GeoEarth.get3DPoint(cntLng, cntLat, (this.earthRadius * this.srfOffset) + parsedData.surfaceOffset);
+
+      var center = GeoEarth.get3DPoint(
+        cntLng,
+        cntLat,
+        this.earthRadius * this.srfOffset + parsedData.surfaceOffset
+      );
     }
 
     let surfaceOffset = parsedData.labelProperties.surfaceOffset || 0;
-    var labelCenter = center.clone().normalize().multiplyScalar(this.earthRadius + surfaceOffset);
-    
+    var labelCenter = center
+      .clone()
+      .normalize()
+      .multiplyScalar(this.earthRadius + surfaceOffset);
+
     if (parsedData.label) {
-      var labelGeom = this.makeTextSprite(parsedData.label, parsedData.labelProperties);
+      var labelGeom = this.makeTextSprite(
+        parsedData.label,
+        parsedData.labelProperties
+      );
       labelGeom.position.set(labelCenter.x, labelCenter.y, labelCenter.z);
       geomContainer.add(labelGeom);
     }
@@ -1704,9 +1807,6 @@ class GeoEarth {
 
     return addedObj;
   }
-
-
-
 
   /**
      Add the given geojson object to the map.
@@ -1740,7 +1840,6 @@ class GeoEarth {
     
    */
   async addGeoJson(geoJson, options) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1749,7 +1848,7 @@ class GeoEarth {
     }
 
     var ret;
-    
+
     switch (geoJson.type) {
       case "Feature": {
         ret = await this.addFeature(geoJson, options);
@@ -1760,7 +1859,7 @@ class GeoEarth {
         break;
       }
       default: {
-        throw (`Unknown geojson type: ${geoJson}`)
+        throw `Unknown geojson type: ${geoJson}`;
         break;
       }
     }
@@ -1789,38 +1888,37 @@ class GeoEarth {
     
    */
   async addFeature(node, options) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
       await this.wait(this.sleepTime);
       retryCount++;
     }
-    
+
     var ftType = node.geometry.type;
     var ret = null;
     switch (ftType) {
-      case 'Point': {
+      case "Point": {
         ret = await this.addPoint(node, options);
         break;
       }
-      case 'MultiPoint': {
+      case "MultiPoint": {
         ret = await this.addMultiPoint(node, options);
         break;
       }
-      case 'LineString': {
+      case "LineString": {
         ret = await this.addLineString(node, options);
         break;
       }
-      case 'MultiLineString': {
+      case "MultiLineString": {
         ret = await this.addMultiLineString(node, options);
         break;
       }
-      case 'Polygon': {
+      case "Polygon": {
         ret = await this.addPolygon(node, options);
         break;
       }
-      case 'MultiPolygon': {
+      case "MultiPolygon": {
         ret = await this.addMultiPolygon(node, options);
         break;
       }
@@ -1888,7 +1986,6 @@ class GeoEarth {
     
    */
   async addFeatureCollection(node, options) {
-
     var retryCount = 0;
     while (!this.isReady) {
       if (retryCount > MAX_RETRY_ADD_ACTION) return;
@@ -1898,7 +1995,7 @@ class GeoEarth {
 
     var ftType = node.type;
     if (ftType !== "FeatureCollection") {
-      throw (`Unexpected typ: '${ftType}'. Expected FeatureCollection`)
+      throw `Unexpected typ: '${ftType}'. Expected FeatureCollection`;
     }
     var ret = [];
     var feats = node.features;
@@ -1910,8 +2007,6 @@ class GeoEarth {
     return ret;
   }
 
-
-
   _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
   // SHOW_ONLY_CONTAINED = false;
@@ -1921,7 +2016,7 @@ class GeoEarth {
     // Discard the time and time-zone information.
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
     const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-  
+
     return Math.floor((utc2 - utc1) / this._MS_PER_DAY);
   }
 
@@ -1930,11 +2025,12 @@ class GeoEarth {
       overrideAll: true,
     };
     let activeOpts = { ...defaultOpts, ...(opts || {}) };
-    this.currentlyActiveTimeSpans = activeOpts.overrideAll ? [] : this.currentlyActiveTimeSpans;
+    this.currentlyActiveTimeSpans = activeOpts.overrideAll
+      ? [] // override any stored existing timeperiods
+      : this.currentlyActiveTimeSpans;
     this.currentlyActiveTimeSpans.push(timeStamp);
     await this.updateVisibilityBasedOnCurrentTime();
   }
-
 
   splitTimeperiod(tp) {
     let cleanedTpStr = tp.replace(/ - /g, "-");
@@ -1942,49 +2038,160 @@ class GeoEarth {
     return splitTp;
   }
 
-
   parseAsDate(d) {
     return new Date(d);
   }
 
-
   async updateVisibilityBasedOnCurrentTime() {
-    for(let timedFeature of this.listOfTimedFeatures) {
+    for (let timedFeature of this.listOfTimedFeatures) {
       // if timeperiod is specified check; if any of the active periods match any of the specified timeperiod
       if (timedFeature.userData.timeperiods) {
         // loop through all timeperiods on this feature
-        let ftTimeChecks = timedFeature.userData.timeperiods.map(ftTimeperiod => {
-          // get start and end timestamps for this period
-          let splitFtTp = this.splitTimeperiod(ftTimeperiod);
-          let ftTsSt = this.parseAsDate(splitFtTp[0]);
-          let ftTsEd = this.parseAsDate(splitFtTp[1]);
-          // initialize return bool
-          let isMatch = false;
-          for(let currActiveTsItem of this.currentlyActiveTimeSpans) {
-            // is this a timeperiod kind of interval
-            if (currActiveTsItem.includes("-")) {
-              let splitTsUdrC = this.splitTimeperiod(currActiveTsItem);
-              let currActiveTsSt = this.parseAsDate(splitTsUdrC[0]);
-              let currActiveTsEd = this.parseAsDate(splitTsUdrC[1]);
-              let ftStIsAfCurrActiveTsSt = this.dateDiffInDays(currActiveTsSt, ftTsSt) > 0;
-              let currActiveTsEdIsAfFtEd = this.dateDiffInDays(ftTsEd, currActiveTsEd) > 0;
-              let currActiveTsEdIsAfFtSt = this.dateDiffInDays(ftTsSt, currActiveTsEd) > 0;
-              let ftEdIsAfCurrActiveTsSt = this.dateDiffInDays(currActiveTsSt, ftTsEd) > 0;
-              let isContained = ftStIsAfCurrActiveTsSt && currActiveTsEdIsAfFtEd;
-              let isOverlapping = currActiveTsEdIsAfFtSt && ftEdIsAfCurrActiveTsSt;
-              isMatch = this.SHOW_ONLY_CONTAINED ? isContained : isOverlapping;
-            } else {
-              let t = this.parseAsDate(currActiveTsItem);
-              let tIsAfTsSt = this.dateDiffInDays(ftTsSt, t) > 0;
-              let tsEdIsAfT = this.dateDiffInDays(t, ftTsEd) > 0;
-              let isContained = tIsAfTsSt && tsEdIsAfT;
-              isMatch = isContained;
+        let ftTimeChecks = timedFeature.userData.timeperiods.map(
+          (ftTimeperiod) => {
+            // get start and end timestamps for this period
+            let splitFtTp = this.splitTimeperiod(ftTimeperiod);
+            let ftTsSt = this.parseAsDate(splitFtTp[0]);
+            let ftTsEd = this.parseAsDate(splitFtTp[1]);
+            // initialize return bool
+            let isMatch = false;
+            for (let currActiveTsItem of this.currentlyActiveTimeSpans) {
+              // is this a timeperiod kind of interval
+              if (currActiveTsItem.includes("-")) {
+                let splitTsUdrC = this.splitTimeperiod(currActiveTsItem);
+                let currActiveTsSt = this.parseAsDate(splitTsUdrC[0]);
+                let currActiveTsEd = this.parseAsDate(splitTsUdrC[1]);
+                let ftStIsAfCurrActiveTsSt =
+                  this.dateDiffInDays(currActiveTsSt, ftTsSt) >= 0;
+                let currActiveTsEdIsAfFtEd =
+                  this.dateDiffInDays(ftTsEd, currActiveTsEd) >= 0;
+                let currActiveTsEdIsAfFtSt =
+                  this.dateDiffInDays(ftTsSt, currActiveTsEd) >= 0;
+                let ftEdIsAfCurrActiveTsSt =
+                  this.dateDiffInDays(currActiveTsSt, ftTsEd) >= 0;
+                let isContained =
+                  ftStIsAfCurrActiveTsSt && currActiveTsEdIsAfFtEd;
+                let isOverlapping =
+                  currActiveTsEdIsAfFtSt && ftEdIsAfCurrActiveTsSt;
+                isMatch = this.SHOW_ONLY_CONTAINED
+                  ? isContained
+                  : isOverlapping;
+              } else {
+                let t = this.parseAsDate(currActiveTsItem);
+                let tIsAfTsSt = this.dateDiffInDays(ftTsSt, t) >= 0;
+                let tsEdIsAfT = this.dateDiffInDays(t, ftTsEd) >= 0;
+                let isContained = tIsAfTsSt && tsEdIsAfT;
+                isMatch = isContained;
+              }
+              return isMatch;
             }
-            return isMatch;
           }
-        });
+        );
         let finVal = ftTimeChecks.reduce((a, b) => a || b, false);
         timedFeature.visible = finVal;
+      } else if (timedFeature.userData.timeperiod) {
+        const ftTimeperiod = timedFeature.userData.timeperiod;
+        // get start and end timestamps for this period
+        let splitFtTp = this.splitTimeperiod(ftTimeperiod);
+        let ftTsSt = this.parseAsDate(splitFtTp[0]);
+        let ftTsEd = this.parseAsDate(splitFtTp[1]);
+        // initialize return bool
+        let isMatch = false;
+        for (let currActiveTsItem of this.currentlyActiveTimeSpans) {
+          // is this a timeperiod kind of interval
+          if (currActiveTsItem.includes("-")) {
+            let splitTsUdrC = this.splitTimeperiod(currActiveTsItem);
+            let currActiveTsSt = this.parseAsDate(splitTsUdrC[0]);
+            let currActiveTsEd = this.parseAsDate(splitTsUdrC[1]);
+            let ftStIsAfCurrActiveTsSt =
+              this.dateDiffInDays(currActiveTsSt, ftTsSt) >= 0;
+            let currActiveTsEdIsAfFtEd =
+              this.dateDiffInDays(ftTsEd, currActiveTsEd) >= 0;
+            let currActiveTsEdIsAfFtSt =
+              this.dateDiffInDays(ftTsSt, currActiveTsEd) >= 0;
+            let ftEdIsAfCurrActiveTsSt =
+              this.dateDiffInDays(currActiveTsSt, ftTsEd) >= 0;
+            let isContained = ftStIsAfCurrActiveTsSt && currActiveTsEdIsAfFtEd;
+            let isOverlapping =
+              currActiveTsEdIsAfFtSt && ftEdIsAfCurrActiveTsSt;
+            isMatch = this.SHOW_ONLY_CONTAINED ? isContained : isOverlapping;
+          } else {
+            let t = this.parseAsDate(currActiveTsItem);
+            let tIsAfTsSt = this.dateDiffInDays(ftTsSt, t) >= 0;
+            let tsEdIsAfT = this.dateDiffInDays(t, ftTsEd) >= 0;
+            let isContained = tIsAfTsSt && tsEdIsAfT;
+            isMatch = isContained;
+          }
+        }
+        timedFeature.visible = isMatch;
+      } else if (timedFeature.userData.timestamps) {
+        // loop through all timeperiods on this feature
+        let ftTimeChecks = timedFeature.userData.timestamps.map(
+          (ftTimestamp) => {
+            let ftTs = this.parseAsDate(ftTimestamp);
+            // initialize return bool
+            let isMatch = false;
+            for (let currActiveTsItem of this.currentlyActiveTimeSpans) {
+              // is this a timeperiod kind of interval
+              if (currActiveTsItem.includes("-")) {
+                let splitTsUdrC = this.splitTimeperiod(currActiveTsItem);
+                let currActiveTsSt = this.parseAsDate(splitTsUdrC[0]);
+                let currActiveTsEd = this.parseAsDate(splitTsUdrC[1]);
+                let daysBetweenStAndFtTs = this.dateDiffInDays(
+                  currActiveTsSt,
+                  ftTs
+                );
+                let ftIsAfCurrActiveTsSt = daysBetweenStAndFtTs >= 0;
+                let daysBetweenEdAndFtTs = this.dateDiffInDays(
+                  currActiveTsEd,
+                  ftTs
+                );
+                let currActiveTsEdIsAfFt = daysBetweenEdAndFtTs <= 0;
+                let isContained = ftIsAfCurrActiveTsSt && currActiveTsEdIsAfFt;
+                isMatch = isContained;
+              } else {
+                let t = this.parseAsDate(currActiveTsItem);
+                let isContained = this.dateDiffInDays(ftTs, t) === 0;
+                isMatch = isContained;
+              }
+              return isMatch;
+            }
+          }
+        );
+        let finVal = ftTimeChecks.reduce((a, b) => a || b, false);
+        timedFeature.visible = finVal;
+      } else if (timedFeature.userData.timestamp) {
+        // loop through all timeperiods on this feature
+        let ftTimestamp = timedFeature.userData.timestamp;
+
+        let ftTs = this.parseAsDate(ftTimestamp);
+        // initialize return bool
+        let isMatch = false;
+        for (let currActiveTsItem of this.currentlyActiveTimeSpans) {
+          // is this a timeperiod kind of interval
+          if (currActiveTsItem.includes("-")) {
+            let splitTsUdrC = this.splitTimeperiod(currActiveTsItem);
+            let currActiveTsSt = this.parseAsDate(splitTsUdrC[0]);
+            let currActiveTsEd = this.parseAsDate(splitTsUdrC[1]);
+            let daysBetweenStAndFtTs = this.dateDiffInDays(
+              currActiveTsSt,
+              ftTs
+            );
+            let ftIsAfCurrActiveTsSt = daysBetweenStAndFtTs >= 0;
+            let daysBetweenEdAndFtTs = this.dateDiffInDays(
+              currActiveTsEd,
+              ftTs
+            );
+            let currActiveTsEdIsAfFt = daysBetweenEdAndFtTs <= 0;
+            let isContained = ftIsAfCurrActiveTsSt && currActiveTsEdIsAfFt;
+            isMatch = isContained;
+          } else {
+            let t = this.parseAsDate(currActiveTsItem);
+            let isContained = this.dateDiffInDays(ftTs, t) === 0;
+            isMatch = isContained;
+          }
+        }
+        timedFeature.visible = isMatch;
       }
     }
   }
@@ -2007,19 +2214,20 @@ class GeoEarth {
     invisible on start; visible only between any of the timeperiods
   */
   processTimeStamps(node) {
-    let hasTimeAssignment =
-      !!( node.userData.timeperiods
-      ||  node.userData.timestamps
-      ||  node.userData.timeperiod
-      ||  node.userData.timestamp);
+    let hasTimeAssignment = !!(
+      node.userData.timeperiods ||
+      node.userData.timestamps ||
+      node.userData.timeperiod ||
+      node.userData.timestamp
+    );
     if (!hasTimeAssignment) return;
     this.listOfTimedFeatures.push(node);
   }
-  
+
   registerAndAddToScene(threejsObj) {
-    var id = (threejsObj && threejsObj.uuid) ? threejsObj.uuid : null;
+    var id = threejsObj && threejsObj.uuid ? threejsObj.uuid : null;
     if (!id) {
-      throw `Invalid object UUID: ${id}`
+      throw `Invalid object UUID: ${id}`;
     }
 
     var meshes = [];
@@ -2033,6 +2241,4 @@ class GeoEarth {
 
     return threejsObj;
   }
-
-
 }

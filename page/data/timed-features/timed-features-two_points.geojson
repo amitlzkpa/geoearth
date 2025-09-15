@@ -7,7 +7,7 @@
         "color": "#FF6666",
         "size": 3,
         "label": "France",
-        "timestamp": "1 Jun 2017 00:00:00 UTC",
+        "timestamp": "1 Jun 2016 00:00:00 UTC",
         "labelProperties": {
           "fontSize": 10,
           "fontColor": "#DEDEDE",
@@ -16,10 +16,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          2.349014,
-          48.864716
-        ]
+        "coordinates": [2.349014, 48.864716]
       }
     },
     {
@@ -28,7 +25,7 @@
         "color": "#FF6666",
         "size": 3,
         "label": "Nigeria",
-        "timeperiod": "1 Jun 2017 00:00:00 UTC - 31 Dec 2018 00:00:00 UTC",
+        "timeperiod": "1 Nov 2016 00:00:00 UTC - 1 Dec 2016 00:00:00 UTC",
         "labelProperties": {
           "fontSize": 10,
           "fontColor": "#DEDEDE",
@@ -37,10 +34,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          7.207031249999999,
-          10.14193168613103
-        ]
+        "coordinates": [7.207031249999999, 10.14193168613103]
       }
     },
     {
@@ -52,8 +46,8 @@
         "timestamps": [
           "1 Jan 2017 00:00:00 UTC",
           "1 Jun 2017 00:00:00 UTC",
-          "1 Jun 2018 00:00:00 UTC",
-          "1 Jun 2019 00:00:00 UTC"
+          "1 Nov 2017 00:00:00 UTC",
+          "1 Dec 2017 00:00:00 UTC"
         ],
         "labelProperties": {
           "fontSize": 10,
@@ -63,10 +57,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          78.3984375,
-          23.079731762449878
-        ]
+        "coordinates": [78.3984375, 23.079731762449878]
       }
     },
     {
@@ -76,8 +67,8 @@
         "size": 3,
         "label": "USA",
         "timeperiods": [
-          "1 Jan 2017 00:00:00 UTC - 31 Dec 2017 00:00:00 UTC",
-          "1 Jan 2020 00:00:00 UTC - 31 Dec 2020 00:00:00 UTC"
+          "1 Jan 2018 00:00:00 UTC - 20 Jan 2018 00:00:00 UTC",
+          "1 Jun 2018 00:00:00 UTC - 1 Jun 2019 00:00:00 UTC"
         ],
         "labelProperties": {
           "fontSize": 10,
@@ -87,10 +78,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -104.991531,
-          39.742043
-        ]
+        "coordinates": [-104.991531, 39.742043]
       }
     },
     {
@@ -107,10 +95,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          139.839478,
-          35.652832
-        ]
+        "coordinates": [139.839478, 35.652832]
       }
     }
   ]

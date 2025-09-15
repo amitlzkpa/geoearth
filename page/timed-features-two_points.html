@@ -1,39 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Geoearth Sample - Timed Features</title>
-  </head>
-  <body>
-    <div id="geo-container" style="height:100vh"></div>
-    <script src="/build/geoearth.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>Geoearth Sample - Timed Features</title>
+</head>
+
+<body>
+  <div id="geo-container" style="height:100vh"></div>
+  <script src="/build/geoearth.js"></script>
 
 
-    <script type="text/javascript">
+  <script type="text/javascript">
 
-      async function main() {
+    async function wait(ms) {
+      return new Promise((resolve, reject) => setTimeout(() => resolve(), ms));
+    }
 
-        var opts = {
-          colorFn: 0xff0000,
-          textureImage: './textures/earth-black.jpg',
-          earthRadius: 160,
-          // disableAtmosphere: true
-          // autoStart: false
-        };
-        var container = document.getElementById("geo-container");
-        var geoearth = new GeoEarth(container, opts);
+    async function main() {
+
+      var opts = {
+        colorFn: 0xff0000,
+        textureImage: './textures/earth-black.jpg',
+        earthRadius: 160,
+        // disableAtmosphere: true
+        // autoStart: false
+      };
+      var container = document.getElementById("geo-container");
+      var geoearth = new GeoEarth(container, opts);
 
 
-        var json = await fetch('./data/timed-features/timed-features-two_points.geojson');
-        var geoJson = await json.json();
-        geoearth.addGeoJson(geoJson);
+      var json = await fetch('./data/timed-features/timed-features-two_points.geojson');
+      var geoJson = await json.json();
+      geoearth.addGeoJson(geoJson);
 
+      const DELAY = 2000;
 
-      }
+      // France
 
-      main();
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2016`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("1 Jan 2016 00:00:00 UTC");
 
-    </script>
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jun 2016`);
+      console.log('show France');
+      geoearth.setCurrentTime("1 Jun 2016 00:00:00 UTC");
 
-  </body>
+      await wait(DELAY);
+      console.log(`Curr time: 2 Jun 2016`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("2 Jun 2016 00:00:00 UTC");
+
+      // Nigeria
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Nov 2016`);
+      console.log('show Nigeria');
+      geoearth.setCurrentTime("1 Nov 2016 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 10 Nov 2016`);
+      console.log('show Nigeria');
+      geoearth.setCurrentTime("10 Nov 2016 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 10 Dec 2016`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("10 Dec 2016 00:00:00 UTC");
+
+      // India
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2017`);
+      console.log('show India');
+      geoearth.setCurrentTime("1 Jan 2017 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 10 Jan 2017`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("10 Jan 2017 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jun 2017`);
+      console.log('show India');
+      geoearth.setCurrentTime("1 Jun 2017 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Nov 2017`);
+      console.log('show India');
+      geoearth.setCurrentTime("1 Nov 2017 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 10 Nov 2017`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("10 Nov 2017 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Dec 2017`);
+      console.log('show India');
+      geoearth.setCurrentTime("1 Dec 2017 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 10 Dec 2017`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("10 Dec 2017 00:00:00 UTC");
+
+      // USA
+
+      await wait(DELAY);
+      console.log(`Curr time: 31 Dec 2017`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("31 Dec 2017 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2018`);
+      console.log('show USA');
+      geoearth.setCurrentTime("1 Jan 2018 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 10 Jan 2018`);
+      console.log('show USA');
+      geoearth.setCurrentTime("10 Jan 2018 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 31 Jan 2018`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("31 Jan 2018 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jun 2018`);
+      console.log('show USA');
+      geoearth.setCurrentTime("1 Jun 2018 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2019`);
+      console.log('show USA');
+      geoearth.setCurrentTime("1 Jan 2019 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 31 Jun 2019`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("31 Jun 2019 00:00:00 UTC");
+
+      // France and Nigeria
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2016`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("1 Jan 2016 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2016 - 1 Nov 2016`);
+      console.log('show France and Nigeria');
+      geoearth.setCurrentTime("1 Jan 2016 00:00:00 UTC - 31 Dec 2016 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Oct 2016 - 1 Nov 2016`);
+      console.log('show only Nigeria');
+      geoearth.setCurrentTime("1 Oct 2016 00:00:00 UTC - 31 Dec 2016 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 May 2016 - 1 Sep 2016`);
+      console.log('show only France');
+      geoearth.setCurrentTime("1 May 2016 00:00:00 UTC - 1 Sep 2016 00:00:00 UTC");
+
+      // Cleanup
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2024`);
+      console.log('show nothing');
+      geoearth.setCurrentTime("1 Jan 2024 00:00:00 UTC");
+
+      await wait(DELAY);
+      console.log(`Curr time: 1 Jan 2010 - 31 Dec 2020`);
+      console.log('show all');
+      geoearth.setCurrentTime("1 Jan 2010 00:00:00 UTC - 31 Dec 2020 00:00:00 UTC");
+
+    }
+
+    main();
+
+  </script>
+
+</body>
+
 </html>

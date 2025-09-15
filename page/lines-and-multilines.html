@@ -1,94 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Geoearth Sample - Lines and MultiLines</title>
-  </head>
-  <body>
-    <div id="geo-container" style="height:100vh"></div>
-    <script src="/build/geoearth.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>Geoearth Sample - Lines and MultiLines</title>
+</head>
+
+<body>
+  <div id="geo-container" style="height:100vh"></div>
+  <script src="/build/geoearth.js"></script>
 
 
-    <script type="text/javascript">
+  <script type="text/javascript">
 
-      async function main() {
+    async function main() {
 
-        var opts = {
-          textureImage: './textures/earth-black.jpg',
-        };
-        var container = document.getElementById("geo-container");
-        var geoearth = new GeoEarth(container, opts);
-        
-
-        // Add line as array
-        var lnA = [ [-60.00, 0.00], [-20.00, 0.00] ];
-        var lineA = await geoearth.addLineString(lnA);
-    
-        // Add line as geojson
-        var lnB = {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "LineString",
-                      "coordinates": [ [-40.00, 20.00], [-40.00, -20.00] ]
-                    }
-                  };
-        var lineB = await geoearth.addLineString(lnB);
-
-        
-        // Add multiline as array
-        var lnsA = [ [ [10.00, 30.00], [30.00, 10.00] ], [ [30.00, 10.00], [10.00, -10.00], [30.00, -30.00] ] ];
-        var linesA = await geoearth.addMultiLineString(lnsA);
-        
-        // Add multiline as geojson
-        var lnsB = {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "MultiLineString",
-                      "coordinates": [ [ [60.00, 30.00], [40.00, 10.00] ], [ [40.00, 10.00], [60.00, -10.00], [40.00, -30.00] ] ]
-                    }
-                  };
-        var linesB = await geoearth.addMultiLineString(lnsB);
-
-        
-
-        // Add line with visual styles
-        var lnsC = {
-                    "type": "Feature",
-                    "properties": {
-                      "linetype": "dotted",
-                      "color": "#00FF00",
-                      "size": 2,
-                      "depth": 20
-                    },
-                    "geometry": {
-                      "type": "LineString",
-                      "coordinates": [ [80.00, 20.00], [80.00, -20.00] ]
-                    }
-                  };
-        var linesC = await geoearth.addLineString(lnsC);
-        
-        // Add multiline with visual styles
-        var lnsB = {
-                    "type": "Feature",
-                    "properties": {
-                      "linetype": "forward-arrows",
-                      "color": "#FF0000",
-                      "size": 3,
-                      "depth": 0.3
-                    },
-                    "geometry": {
-                      "type": "MultiLineString",
-                      "coordinates": [ [ [120.00, 30.00], [100.00, 10.00] ], [ [100.00, 10.00], [120.00, -10.00], [100.00, -30.00] ] ]
-                    }
-                  };
-        var linesB = await geoearth.addMultiLineString(lnsB);
+      var opts = {
+        textureImage: './textures/earth-black.jpg',
+      };
+      var container = document.getElementById("geo-container");
+      var geoearth = new GeoEarth(container, opts);
 
 
-      }
+      // Add line as array
+      var lnA = [[-60.00, 0.00], [-20.00, 0.00]];
+      var lineA = await geoearth.addLineString(lnA);
 
-      main();
+      // Add line as geojson
+      var lnB = {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [[-40.00, 20.00], [-40.00, -20.00]]
+        }
+      };
+      var lineB = await geoearth.addLineString(lnB);
 
-    </script>
 
-  </body>
+      // Add multiline as array
+      var lnsA = [[[10.00, 30.00], [30.00, 10.00]], [[30.00, 10.00], [10.00, -10.00], [30.00, -30.00]]];
+      var linesA = await geoearth.addMultiLineString(lnsA);
+
+      // Add multiline as geojson
+      var lnsB = {
+        "type": "Feature",
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [[[60.00, 30.00], [40.00, 10.00]], [[40.00, 10.00], [60.00, -10.00], [40.00, -30.00]]]
+        }
+      };
+      var linesB = await geoearth.addMultiLineString(lnsB);
+
+
+
+      // Add line with visual styles
+      var lnsC = {
+        "type": "Feature",
+        "properties": {
+          "linetype": "dotted",
+          "color": "#00FF00",
+          "size": 2,
+          "depth": 20
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [[80.00, 20.00], [80.00, -20.00]]
+        }
+      };
+      var linesC = await geoearth.addLineString(lnsC);
+
+      // Add multiline with visual styles
+      var lnsB = {
+        "type": "Feature",
+        "properties": {
+          "linetype": "forward-arrows",
+          "color": "#FF0000",
+          "size": 3,
+          "depth": 0.3
+        },
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [[[120.00, 30.00], [100.00, 10.00]], [[100.00, 10.00], [120.00, -10.00], [100.00, -30.00]]]
+        }
+      };
+      var linesB = await geoearth.addMultiLineString(lnsB);
+
+
+    }
+
+    main();
+
+  </script>
+
+</body>
+
 </html>
